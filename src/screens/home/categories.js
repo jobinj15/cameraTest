@@ -5,6 +5,7 @@ import { View, TouchableWithoutFeedback, Text, Image, FlatList } from 'react-nat
 import { observer, inject } from "mobx-react";
 
 @inject("catHomeStore")
+@observer
 export default class Categories extends Component {
     constructor(props) {
         super(props);
@@ -31,6 +32,13 @@ export default class Categories extends Component {
         );
     }
 
+    navigateTo(){
+        this.props.navigation.navigate('Products', {
+          itemId: 86,
+          otherParam: 'anything you want here',
+        });
+      }
+
     renderRow({ item, index }) {
 
         var rowStyles = {
@@ -41,7 +49,11 @@ export default class Categories extends Component {
 
         return (
 
-            <TouchableWithoutFeedback>
+            <TouchableWithoutFeedback
+            onPress={()=>{
+              this.navigateTo()         
+            }}
+            >
 
                 <View
                     style={[{

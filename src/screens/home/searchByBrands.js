@@ -4,8 +4,8 @@ import global from '../../utility/global';
 import { View, TouchableWithoutFeedback, Text, Image, FlatList } from 'react-native';
 import { observer, inject } from "mobx-react";
 
-@inject("recoHomeStore")
-export default class Reommendations extends Component {
+@inject("searchByBrandsStore")
+export default class SearchByBrands extends Component {
     constructor(props) {
         super(props);
     }
@@ -18,9 +18,10 @@ export default class Reommendations extends Component {
                 <FlatList
                     navigation={this.props.navigation}
                     extraData={this.state}
+                    horizontal
                     contentContainerStyle={{ alignItems: 'center' }}
                     showsVerticalScrollIndicator={false}
-                    data={this.props.recoHomeStore.recomm}
+                    data={this.props.searchByBrandsStore.brands}
                     renderItem={this.renderRow.bind(this)}
                     ItemSeparatorComponent={this.renderSeparator}
                     keyExtractor={(item, index) => index}
@@ -30,14 +31,6 @@ export default class Reommendations extends Component {
         );
     }
 
-    renderSeparator = () => {
-        return (
-            <View
-                style={styles.productSeperator}
-            />
-        );
-    };
-
     renderRow({ item, index }) {
 
         return (
@@ -45,7 +38,7 @@ export default class Reommendations extends Component {
             <TouchableWithoutFeedback>
 
                 <View
-                    style={[styles.recommContainer]}
+                    style={[styles.searchByBrandsContainer]}
                 >
                     <Image
                         style={styles.styleFull}

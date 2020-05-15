@@ -5,6 +5,11 @@ import homeStore from "./homeStore";
 import bannerStore from "./home/bannerStore";
 import catHomeStore from "./home/catHomeStore";
 import recoHomeStore from "./home/recoHomeStore";
+import searchByBrandsStore from "./home/searchByBrandsStore";
+import productsStore from "./home/productsStore";
+import cartStore from "./cartStore";
+import myOrdersStore from "./profile/myOrdersStore";
+
 
 export default {
   counterStore: new CounterStore(),
@@ -13,4 +18,8 @@ export default {
   bannerStore: new bannerStore(),
   catHomeStore: new catHomeStore(),
   recoHomeStore: new recoHomeStore(),
+  searchByBrandsStore: new searchByBrandsStore(),
+  productsStore: new productsStore(),
+  cartStore: new cartStore(),
+  myOrdersStore: new myOrdersStore(),
 };

@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import {View, Text, Image, StyleSheet, Platform} from 'react-native';
-import HomeTab from './home/HomeTab';
+import HomeContainer from './home/homeContainer';
+import ProfileContainer from './profile/profileContainer';
 import ColorsTab from './home/colorsTab';
 import BodyChart from './test/bodychart';
 import LottieExample from './test/lottie_test';
 import Counter from './home/Counter';
+import Cart from './cart/cart';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createMaterialTopTabNavigator,createBottomTabNavigator } from 'react-navigation-tabs';
 
@@ -54,7 +56,11 @@ class MainScreenC extends Component{
       iconName = 'ios-home';
     } else if (routeName === 'Profile') {
       iconName = 'ios-contact';
-    } else if (routeName === 'Search') {
+    } 
+    else if (routeName === 'Cart') {
+      iconName = 'ios-cart';
+    }
+    else if (routeName === 'Search') {
       iconName = 'ios-search';
     }
   
@@ -63,8 +69,9 @@ class MainScreenC extends Component{
 
  const BottomTabNavigator = createMaterialTopTabNavigator(
     {
-      Home:  HomeTab,
-      Profile: LottieExample,
+      Home:  HomeContainer,
+      Cart:  Cart,
+      Profile: ProfileContainer,
       Search: ColorsTab,
     },
     {
@@ -78,8 +85,10 @@ class MainScreenC extends Component{
         activeTintColor: 'black',
         inactiveTintColor: 'gray',
         showIcon : true,
+        showLabel : false,
         style:{
-          backgroundColor : colors.WHITE
+          backgroundColor : colors.WHITE,
+          height:48
         }
       },
     },

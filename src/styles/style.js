@@ -13,6 +13,7 @@ import { Typography, Colors } from 'react-native-ui-lib';
 import COLORS from './colors'
 import GLOBAL from '../utility/global'
 import colors from './colors';
+import global from '../utility/global';
 
 
 const CARD_PREVIEW_WIDTH = 20
@@ -68,13 +69,13 @@ var styles = {
     stripLabel: {
         fontWeight: 'bold',
         fontSize: 18,
-        flex:1,
+        flex: 1,
         color: colors.BLACK
     },
     stripContainer: {
         alignSelf: 'stretch',
         flexDirection: 'row',
-        alignItems:'center',
+        alignItems: 'center',
         marginHorizontal: 15
     },
     bigBold: {
@@ -90,12 +91,52 @@ var styles = {
     styleFull: {
         flex: 1,
     },
-    labelSmall:{
-     color : colors.GREY,
-     fontSize : 16   
+    labelSmall: {
+        color: colors.GREY,
+        fontSize: 16
+    },
+    labelProfile: {
+        color: colors.GREY,
+        fontSize: 20,
+        fontWeight: '500'
+    },
+    plusContainer: {
+        width: 138, height: 38,
+        borderColor: colors.ListViewBG,
+        borderWidth: 1, borderRadius: 3,
+        flexDirection: 'row'
+    },
+    bottomView: {
+        backgroundColor: colors.GREEN_4,
+        position: 'absolute',
+        width: global.DEVICE_WIDTH,
+        bottom: 0,
+        flexDirection: 'row',
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+    },
+    plusBox: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 40, height: 38, fontSize: 30, fontWeight: 'bold',
+        color: colors.DARKGRAY,
+        backgroundColor: colors.ListViewBG
+    },
+    plusText: {
+        fontWeight: 'bold',
+        marginTop: -5,
+        color: colors.DARKGRAY,
+    },
+    addContainer: {
+        width: 140, height: 40,
+        borderColor: colors.GREEN,
     },
     bannerSeperator: {
         width: 10,
+    },
+    productSeperator: {
+        height: 3,
+        backgroundColor: colors.LIGHT_GRAY
     },
     banner: {
         width: '100%',
@@ -157,13 +198,25 @@ var styles = {
         borderWidth: 1,
         borderRadius: 8,
     },
-    recommContainer:{
+    searchByBrandsContainer: {
         alignItems: 'center',
-        width : 120,
-        height : 80,
-        paddingHorizontal:15,
-        paddingVertical:10,
-        justifyContent : 'center'
+        width: 120,
+        height: 80,
+        borderWidth: 1,
+        borderColor: colors.GREY,
+        marginHorizontal: 15,
+        marginVertical: 10,
+        justifyContent: 'center'
+    },
+    recommContainer: {
+        alignItems: 'center',
+        width: 120,
+        height: 80,
+        borderWidth: 1,
+        borderColor: colors.GREY,
+        marginHorizontal: 15,
+        marginVertical: 10,
+        justifyContent: 'center'
     },
     newButton: {
         marginBottom: 0,
