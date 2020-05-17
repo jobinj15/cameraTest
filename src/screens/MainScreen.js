@@ -67,7 +67,7 @@ class MainScreenC extends Component{
     return <IconComponent name={iconName} size={25} color={tintColor} />;
   };
 
- const BottomTabNavigator = createMaterialTopTabNavigator(
+ const BottomTabNavigator = createBottomTabNavigator(
     {
       Home:  HomeContainer,
       Cart:  Cart,
@@ -82,11 +82,11 @@ class MainScreenC extends Component{
       }),
       
       tabBarOptions: {
-        activeTintColor: 'black',
+        activeTintColor: colors.PRIMARY,
         inactiveTintColor: 'gray',
         showIcon : true,
         showLabel : false,
-        style:{
+        style:{ 
           backgroundColor : colors.WHITE,
           height:48
         }

@@ -9,6 +9,8 @@ import searchByBrandsStore from "./home/searchByBrandsStore";
 import productsStore from "./home/productsStore";
 import cartStore from "./cartStore";
 import myOrdersStore from "./profile/myOrdersStore";
+import addAddressStore from "./profile/AddAddressStore";
+import orderDetailsStore from "./profile/OrderDetailsStore";
 
 
 export default {
@@ -22,4 +24,6 @@ export default {
   productsStore: new productsStore(),
   cartStore: new cartStore(),
   myOrdersStore: new myOrdersStore(),
+  addAddressStore: new addAddressStore(),
+  orderDetailsStore: new orderDetailsStore(),
 };

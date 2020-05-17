@@ -5,41 +5,21 @@ import { View, TouchableWithoutFeedback, Text, Image, FlatList } from 'react-nat
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
 
-export default class ProfileList extends Component {
+export default class Adresses extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             data: [
-                {
-                    text: 'Account',
-                    icon: '',
-                    navigate: ''
-                },
-                {
-                    text: 'Address',
-                    icon: '',
-                    navigate: 'Addresses'
-                },
-                {
-                    text: 'Orders',
-                    icon: '',
-                    navigate: 'MyOrders'
-                },
 
             ]
-
         }
     }
 
-    componentDidMount() {
-        constants.NAVIGATION = this.props.navigation
-    }
 
-
-    navigateTo(item) {
-        if (item.navigate)
-            constants.NAVIGATION.navigate(item.navigate, {
+    navigateTo(to) {
+        if (to)
+            constants.NAVIGATION.navigate(to, {
                 // [constants.PARAM_INDEX]: index,
             });
     }
@@ -49,7 +29,7 @@ export default class ProfileList extends Component {
         return (
             <View style={[styles.styleFull, { backgroundColor: colors.ListViewBG }]}>
 
-                <FlatList
+                {/* <FlatList
                     navigation={this.props.navigation}
                     extraData={this.state}
                     showsVerticalScrollIndicator={false}
@@ -57,11 +37,38 @@ export default class ProfileList extends Component {
                     renderItem={this.renderRow.bind(this)}
                     ItemSeparatorComponent={this.renderSeparator}
                     keyExtractor={(item, index) => index.toString()}
-                />
+                /> */}
+
+                {this.bottomView()}
 
             </View>
         );
     }
+
+
+    bottomView() {
+        return (
+            <TouchableWithoutFeedback
+             onPress={()=>{
+                this.navigateTo('AddAddress')
+             }}
+             >
+                <View
+                    style={styles.bottomView}
+                >
+
+                    <Text
+                        style={[styles.stripLabel, { color: colors.WHITE, textAlign: 'center' }]}
+                    >
+                        {constants.TXT_ADD_ADDRESS}
+                    </Text>
+
+                </View>
+
+            </TouchableWithoutFeedback>
+        )
+    }
+
 
     renderSeparator = () => {
         return (

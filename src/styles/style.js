@@ -101,7 +101,7 @@ var styles = {
         fontWeight: '500'
     },
     plusContainer: {
-        width: 138, height: 38,
+        width: 138, height: 40,
         borderColor: colors.ListViewBG,
         borderWidth: 1, borderRadius: 3,
         flexDirection: 'row'
@@ -115,10 +115,16 @@ var styles = {
         paddingVertical: 10,
         paddingHorizontal: 10,
     },
+    largeButton: {
+        backgroundColor: colors.GREEN_4,
+        width: global.DEVICE_WIDTH,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+    },
     plusBox: {
         alignItems: 'center',
         justifyContent: 'center',
-        width: 40, height: 38, fontSize: 30, fontWeight: 'bold',
+        width: 40, height: 40, fontSize: 30, fontWeight: 'bold',
         color: colors.DARKGRAY,
         backgroundColor: colors.ListViewBG
     },

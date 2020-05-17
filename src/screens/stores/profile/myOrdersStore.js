@@ -1,9 +1,5 @@
 import { observable, action, computed } from "mobx";
 
-const colorsItem = ['antiquewhite', 'aqua', 'aquamarine', 'blue', 'blueviolet', 'brown', 'burlywood', 'cadetblue',
-  'cadetblue', 'chartreuse', 'chocolate', 'coral', 'gold', 'goldenrod', 'gray', 'green', 'greenyellow',
-  'hotpink', 'indianred', 'indigo'];
-
 
 export default class MyOrdersStore {
 

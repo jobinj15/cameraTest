@@ -20,11 +20,10 @@ export default class MyOrders extends Component {
     }
 
 
-    navigateTo(item) {
-        if (item.navigate)
-            this.props.navigation.navigate(item.navigate, {
-                // [constants.PARAM_INDEX]: index,
-            });
+    navigateTo() {
+        constants.NAVIGATION.navigate('OrderDetails', {
+            // [constants.PARAM_INDEX]: index,
+        });
     }
 
     //0 4 8 
@@ -94,6 +93,7 @@ export default class MyOrders extends Component {
 
             <TouchableWithoutFeedback
                 onPress={() => {
+                    this.navigateTo()
                 }}
             >
                 <Card style={{ flex: 1, borderRadius: 0 }} key={index}>

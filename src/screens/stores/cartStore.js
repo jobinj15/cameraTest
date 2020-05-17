@@ -67,6 +67,7 @@ class CartStore {
       this.cart = allCart;
     }
     else{
+      this.caluclateTotal(item, constants.TYPE_MINUS)
       allCart.splice(index,1)
       this.cart = allCart;
     }
