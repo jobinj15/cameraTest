@@ -19,7 +19,7 @@ export default class Adresses extends Component {
 
     navigateTo(to) {
         if (to)
-            constants.NAVIGATION.navigate(to, {
+            this.props.navigation.navigate(to, {
                 // [constants.PARAM_INDEX]: index,
             });
     }

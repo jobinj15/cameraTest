@@ -2,17 +2,26 @@ import React, { Component } from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
 import { Card, Button } from 'react-native-ui-lib';
-import { View, TouchableWithoutFeedback, Text, Image, FlatList } from 'react-native';
+import { View, TouchableWithoutFeedback, Text, FlatList, StyleSheet } from 'react-native';
 import { observer, inject } from "mobx-react";
 import constants from '../../utility/constants';
 import colors from '../../styles/colors';
 import PlusView from '../../components/custom_views/plusView';
 
+var apiData = {
+    page_no: 0,
+    per_page: 10,
+    cat_id: '',
+    user_id: 1
+}
+
+var store;
+
+
 @inject(stores => ({
     productsStore: stores.productsStore,
     cartStore: stores.cartStore,
 }))
-
 @observer
 export default class Products extends Component {
     constructor(props) {
@@ -20,9 +29,45 @@ export default class Products extends Component {
 
         this.onPlusClicked = this.onPlusClicked.bind(this);
         this.onMinusClicked = this.onMinusClicked.bind(this);
+        store = this.props.productsStore
     }
 
+    componentDidMount() {
+
+        global.getItem(constants.USER).then(result => {
+            // if (!result) return;
+            // apiData.user_id
+            this.callApi()
+        });
+
+    }
+
+    callApi() {
+        let formdata = new FormData();
+        for (let key in apiData) {
+            formdata.append(key, apiData[key]);
+        }
+        store.getProducts(formdata, apiData.page_no)
+    }
+
+
+    handleRefresh() {
+        apiData.page_no = 0
+        store.refreshing = true
+        this.callApi()
+    }
+
+
+    handleLoadMore() {
+        console.log('handleLoadMore called!')
+        apiData.page_no = apiData.page_no + 1;
+        this.callApi()
+    }
+
+
+
     render() {
+
         return (
             <View style={[styles.styleFull]}>
 
@@ -32,9 +77,23 @@ export default class Products extends Component {
                     showsVerticalScrollIndicator={false}
                     data={this.props.productsStore.products}
                     renderItem={this.renderRow.bind(this)}
+                    onRefresh={this.handleRefresh.bind(this)}
+                    onEndReached={this.handleLoadMore.bind(this)}
+                    onEndReachedThreshold={0.1}
+                    refreshing={store.refreshing}
                     ItemSeparatorComponent={this.renderSeparator}
                     keyExtractor={(item, index) => index.toString()}
                 />
+
+                {
+                    store.loading &&
+                    global.getLoader()
+                }
+
+                {
+                    (store.apiLoaded && !store.products.length)
+                    && global.getNoDataView()
+                }
 
             </View>
         );
@@ -59,12 +118,12 @@ export default class Products extends Component {
     onPlusClicked(index) {
         const item = this.props.productsStore.plusCart(index)
         console.log("Item onPlusClicked: " + JSON.stringify(item))
-        this.props.cartStore.plusCart(null, item.productId)
+        this.props.cartStore.plusCart(null, item.id)
     }
 
     onMinusClicked(index) {
         const item = this.props.productsStore.minusCart(index)
-        this.props.cartStore.minusCart(null, item.productId)
+        this.props.cartStore.minusCart(null, item.id)
     }
 
     onAddToCart(index) {
@@ -75,14 +134,20 @@ export default class Products extends Component {
 
     renderRow({ item, index }) {
 
-        // console.log('Products row ' + JSON.stringify(item))
+
+        var image = require('../../assets/images/pic2.jpg');
+
+        if (Array.isArray(item.images) && item.images.length) {
+            image = { uri: item.images[0].images };
+            // console.log('Products row ' + JSON.stringify(image))
+        }
 
         return (
 
             <TouchableWithoutFeedback
                 onPress={
                     () => {
-                      this.navigateTo(index)
+                        this.navigateTo(index)
                     }
                 }
             >
@@ -92,22 +157,31 @@ export default class Products extends Component {
                         style={{ padding: 10 }}
                     >
                         <View
-                            style={{ flexDirection: 'row' }}
+                            style={{ flexDirection: 'row', flex: 1 }}
                         >
 
-                            <Card.Image imageSource={item.image}
+                            <Card.Image imageSource={image}
                                 style={{ height: 100, width: 100, marginRight: 20 }}
                                 cover={true}
                             />
 
                             <View
                                 style={{
-                                    justifyContent: 'center'
+                                    justifyContent: 'center',
+                                    flex: 1
                                 }}
                             >
 
                                 <Text
-                                    style={[styles.stripLabel, { flex: undefined }]}
+                                    style={[styles.stripLabel]}
+                                    numberOfLines={2}
+                                >
+                                    {item.name}
+                                </Text>
+
+                                <Text
+                                    style={[styles.labelSmall]}
+                                    numberOfLines={2}
                                 >
                                     {item.description}
                                 </Text>
@@ -124,7 +198,7 @@ export default class Products extends Component {
                                     style={[styles.labelSmall, { marginTop: 8, color: colors.GREEN_4 }]}
                                 >
 
-                                    {constants.SYMBOL_RUPEE + item.amount}
+                                    {constants.SYMBOL_RUPEE + item.price}
 
                                 </Text>
 

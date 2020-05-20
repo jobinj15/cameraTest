@@ -70,7 +70,7 @@ export default class ProductDetails extends Component {
                         style={[styles.labelSmall, { marginTop: 8, color: colors.GREEN_4 }]}
                     >
 
-                        {constants.SYMBOL_RUPEE + item.amount}
+                        {constants.SYMBOL_RUPEE + item.price}
 
                     </Text>
 
@@ -162,12 +162,12 @@ export default class ProductDetails extends Component {
     onPlusClicked() {
         const item = this.props.productsStore.plusCart(this.state.index)
         console.log("Item onPlusClicked: " + JSON.stringify(item))
-        this.props.cartStore.plusCart(null, item.productId)
+        this.props.cartStore.plusCart(null, item.id)
     }
 
     onMinusClicked() {
         const item = this.props.productsStore.minusCart(this.state.index)
-        this.props.cartStore.minusCart(null, item.productId)
+        this.props.cartStore.minusCart(null, item.id)
     }
 
     onAddToCart() {

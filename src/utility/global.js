@@ -1,7 +1,8 @@
-import React, { Component, Text } from 'react';
+import React, { Component } from 'react';
 import {
   Dimensions,
   PixelRatio,
+  Text
 } from 'react-native';
 import Snackbar from 'react-native-snackbar'
 import NetInfo from "@react-native-community/netinfo";
@@ -10,7 +11,9 @@ var dateFormat = require('dateformat');
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import constants from './constants';
 import { View } from 'react-native-ui-lib';
+import Loader from '../utility/loader';
 import styles from '../styles/style'
+import colors from '../styles/colors';
 
 const x = Dimensions.get('window').width;
 const y = Dimensions.get('window').height;
@@ -192,6 +195,34 @@ export default global = {
     });
   },
 
+  getNoDataView(message) {
+    return (
+      <View
+        style={[styles.loaderCenter]}
+      >
+        <Text
+        style={[styles.stripLabel,{color:colors.DARKGRAY,fontWeight:'500',flex:undefined}]}
+        >
+          {message?message:constants.TXT_NO_DATA}
+
+        </Text>
+
+      </View>
+    )
+  },
+
+
+  getLoader() {
+    return (
+      <View
+        style={[styles.loaderCenter]}
+      >
+        <Loader />
+
+      </View>
+    )
+  },
+
   isValidEmail(text) {
     console.log(text);
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -239,7 +270,7 @@ export default global = {
       justifyContent: "center"
     }
 
-    return {...circleStyle,...addStyle}
+    return { ...circleStyle, ...addStyle }
 
   },
 

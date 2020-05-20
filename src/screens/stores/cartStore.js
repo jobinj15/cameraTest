@@ -42,12 +42,12 @@ class CartStore {
   }
 
 
-  @action minusCart(index,productId) {
+  @action minusCart(index,id) {
 
-    console.log('minusCart called! ' + productId)
+    console.log('minusCart called! ' + id)
 
     if(index==null)
-    index = this.getIndex(productId);
+    index = this.getIndex(id);
 
     if(index==null)
     return;
@@ -58,7 +58,7 @@ class CartStore {
     console.log('minusCart cart cartStore: ' + JSON.stringify(item))
 
     if (item.count) {
-      if(productId==undefined)
+      if(id==undefined)
       item.count = item.count - 1;
       this.caluclateTotal(item, constants.TYPE_MINUS)
       
@@ -74,12 +74,12 @@ class CartStore {
   }
 
 
-  @action plusCart(index,productId) {
+  @action plusCart(index,id) {
 
     console.log('plusCart called! ' + index)
 
     if(index==null)
-    index = this.getIndex(productId);
+    index = this.getIndex(id);
 
     if(index==null) 
     return;
@@ -90,7 +90,7 @@ class CartStore {
 
     if (item.count) {
       
-      if(productId==undefined)
+      if(id==undefined)
       item.count = item.count + 1;
       
       this.caluclateTotal(item, constants.TYPE_PLUS)
@@ -104,26 +104,31 @@ class CartStore {
 
   caluclateTotal(item, type) {
 
+    if(isNaN(item.price))
+    return;
+
+    const price = parseInt(item.price)
+
     if (type == constants.TYPE_PLUS)
-      this.total = (item.amount + this.total)
+      this.total = (price + this.total)
     else if(type == constants.TYPE_DELETE)
-      this.total = (this.total - (item.amount*item.count))  
-    else this.total = (this.total - item.amount)
+      this.total = (this.total - (price*item.count))  
+    else this.total = (this.total - price)
 
   }
 
-  getIndex(productId){
+  getIndex(id){
     
     // console.log('getIndex cart' + JSON.stringify(this.cart))
 
     // for(let item of this.cart){
-    //   if(item.productId==productId)
+    //   if(item.id==id)
     //   return index;
     // }
     const length = this.cart.length;
 
     for(var i=0;i<length;i++){
-      if(this.cart[i].productId==productId)
+      if(this.cart[i].id==id)
       return i;
     }
 
@@ -140,72 +145,72 @@ class CartStore {
   //     image: require("../../../assets/images/pic1.jpg"),
   //     description: "Loren ipsum item ",
   //     quantity: "5 Kg",
-  //     productId:1,
-  //     amount: 100
+  //     id:1,
+  //     price: 100
   //   },
   //   {
   //     image: require("../../../assets/images/pic2.jpg"),
   //     description: "Loren ipsum new item 2",
   //     quantity: "2 Kg",
-  //     productId:2,
-  //     amount: 60
+  //     id:2,
+  //     price: 60
   //   },
 
   //   {
   //     image: require("../../../assets/images/pic1.jpg"),
   //     description: "Loren ipsum item ",
   //     quantity: "5 Kg",
-  //     productId:3,
-  //     amount: 500
+  //     id:3,
+  //     price: 500
   //   },
   //   {
   //     image: require("../../../assets/images/pic2.jpg"),
   //     description: "Loren ipsum new item 2",
   //     quantity: "2 Kg",
-  //     productId:4,
-  //     amount: 150
+  //     id:4,
+  //     price: 150
   //   },
   //   {
   //     image: require("../../../assets/images/pic1.jpg"),
   //     description: "Loren ipsum item ",
   //     quantity: "5 Kg",
-  //     productId:5,
-  //     amount: 500
+  //     id:5,
+  //     price: 500
   //   },
   //   {
   //     image: require("../../../assets/images/pic2.jpg"),
   //     description: "Loren ipsum new item 2",
   //     quantity: "2 Kg",
-  //     productId:6,
-  //     amount: 150
+  //     id:6,
+  //     price: 150
   //   },
   //   {
   //     image: require("../../../assets/images/pic1.jpg"),
   //     description: "Loren ipsum item ",
   //     quantity: "5 Kg",
-  //     productId:7,
-  //     amount: 500
+  //     id:7,
+  //     price: 500
   //   },
   //   {
   //     image: require("../../../assets/images/pic2.jpg"),
   //     description: "Loren ipsum new item 2",
   //     quantity: "2 Kg",
-  //     productId:8,
-  //     amount: 150
+  //     id:8,
+  //     price: 150
   //   },
   //   {
   //     image: require("../../../assets/images/pic1.jpg"),
   //     description: "Loren ipsum item ",
   //     quantity: "5 Kg",
-  //     productId:9,
-  //     amount: 500
+  //     id:9,
+  //     price: 500
   //   },
   //   {
   //     image: require("../../../assets/images/pic2.jpg"),
   //     description: "Loren ipsum new item 2",
   //     quantity: "2 Kg",
-  //     productId:10,
-  //     amount: 150
+  //     id:10,
+  //     price: 150
   //   },
   // ];
 

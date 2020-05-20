@@ -70,7 +70,7 @@ export default class Cart extends Component {
                 <Text
                     style={[styles.stripLabel, { color: colors.WHITE }]}
                 >
-                    {constants.TXT_TOTAL + constants.SYMBOL_RUPEE +  this.props.cartStore.total}
+                    {constants.TXT_TOTAL + constants.SYMBOL_RUPEE + this.props.cartStore.total}
                 </Text>
 
                 <Text
@@ -89,30 +89,46 @@ export default class Cart extends Component {
 
         // console.log('Products row ' + JSON.stringify(item))
 
+        var image = require('../../assets/images/pic2.jpg');
+
+        if (Array.isArray(item.images) && item.images.length) {
+            image = { uri: item.images[0].images };
+            console.log('Products row ' + JSON.stringify(image))
+        }
+
         return (
 
             <Card style={{ flex: 1, borderRadius: 0 }} key={index}>
 
                 <View
-                    style={{ padding: 10 }}
+                    style={{ padding: 10, flex: 1 }}
                 >
                     <View
-                        style={{ flexDirection: 'row' }}
+                        style={{ flexDirection: 'row', flex: 1 }}
                     >
 
-                        <Card.Image imageSource={item.image}
+                        <Card.Image imageSource={image}
                             style={{ height: 100, width: 100, marginRight: 20 }}
                             cover={true}
                         />
 
                         <View
                             style={{
-                                justifyContent: 'center'
+                                justifyContent: 'center',
+                                flex: 1
                             }}
                         >
 
                             <Text
-                                style={[styles.stripLabel, { flex: undefined }]}
+                                style={[styles.stripLabel,{marginTop:10}]}
+                                numberOfLines={2}
+                            >
+                                {item.name}
+                            </Text>
+
+                            <Text
+                                style={[styles.labelSmall]}
+                                numberOfLines={2}
                             >
                                 {item.description}
                             </Text>
@@ -129,7 +145,7 @@ export default class Cart extends Component {
                                 style={[styles.labelSmall, { marginTop: 8, color: colors.GREEN_4 }]}
                             >
 
-                                {constants.SYMBOL_RUPEE + item.amount}
+                                {constants.SYMBOL_RUPEE + item.price}
 
                             </Text>
 
@@ -206,7 +222,7 @@ export default class Cart extends Component {
                         <Icon name={'ios-close'} size={30} color={colors.BLACK}
                             style={{
                                 position: 'absolute',
-                                top: 10,
+                                top: 5,
                                 padding: 5,
                                 right: 20
                             }}

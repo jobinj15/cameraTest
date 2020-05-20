@@ -3,18 +3,17 @@
 import React, {
     Component
 } from 'react';
+
 import {
     StyleSheet,
     Dimensions,
+    PixelRatio,
     Platform
 } from 'react-native';
 
 import { Typography, Colors } from 'react-native-ui-lib';
 import COLORS from './colors'
-import GLOBAL from '../utility/global'
 import colors from './colors';
-import global from '../utility/global';
-
 
 const CARD_PREVIEW_WIDTH = 20
 const CARD_MARGIN = 5;
@@ -25,9 +24,31 @@ const colorBg = '#263459';
 const colorPrimary = '#c11744';
 const GRIDROW_HEIGHT = (DEVICE_HEIGHT - 150) / 2;
 const GRIDROW_WIDTH = DEVICE_WIDTH / 2;
-
+const base_unit = 16;
+const ratioX = DEVICE_WIDTH < 375 ? (DEVICE_WIDTH < 320 ? 0.75 : 0.875) : 1;
+const ratioY = DEVICE_HEIGHT < 568 ? (DEVICE_HEIGHT < 480 ? 0.75 : 0.875) : 1;
+const unit = base_unit * ratioX;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
+
+const fonts = {
+    _10: normalize(10),
+    _11: normalize(11),
+    _12: normalize(12),
+    _13: normalize(13),
+    _14: normalize(14),
+    _15: normalize(15),
+    _16: normalize(16),
+    _17: normalize(17),
+    _18: normalize(18),
+    _19: normalize(19),
+    _20: normalize(20),
+    FONT_SIZE: em(1),
+    APPBAR_HEIGHT: 56,
+    FONT_SIZE_SMALLER: em(0.75),
+    FONT_SIZE_SMALL: em(0.875),
+    FONT_SIZE_TITLE: em(1.25)
+}
 
 var styles = {
 
@@ -45,6 +66,7 @@ var styles = {
         flexDirection: 'row',
         height: 56,
         width: DEVICE_WIDTH,
+        elevation : 5,
         backgroundColor: colors.LIGHT_GRAY
     },
     statusBar: {
@@ -91,6 +113,20 @@ var styles = {
     styleFull: {
         flex: 1,
     },
+    fullCenter: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    loaderCenter: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        alignItems:'center',
+        justifyContent:'center',
+    },
     labelSmall: {
         color: colors.GREY,
         fontSize: 16
@@ -109,7 +145,7 @@ var styles = {
     bottomView: {
         backgroundColor: colors.GREEN_4,
         position: 'absolute',
-        width: global.DEVICE_WIDTH,
+        width: DEVICE_WIDTH,
         bottom: 0,
         flexDirection: 'row',
         paddingVertical: 10,
@@ -117,7 +153,7 @@ var styles = {
     },
     largeButton: {
         backgroundColor: colors.GREEN_4,
-        width: global.DEVICE_WIDTH,
+        width: DEVICE_WIDTH,
         paddingVertical: 10,
         paddingHorizontal: 10,
     },
@@ -159,7 +195,7 @@ var styles = {
         backgroundColor: '#ffffff',
     },
     buttonText: {
-        fontSize: GLOBAL.FONT.APPBAR_HEIGHT,
+        fontSize: fonts.APPBAR_HEIGHT,
         color: 'white',
         alignSelf: 'center',
         fontFamily: 'FiraSans-Regular',
@@ -234,13 +270,13 @@ var styles = {
         color: colors.PRIMARY_TEXTCOLOR,
         fontFamily: 'FiraSans-Regular',
         fontWeight: 'bold',
-        fontSize: GLOBAL.FONT._14,
+        fontSize: fonts._14,
     },
     row_subtitle: {
         color: colors.SECONDARY_TEXTCOLOR,
         fontFamily: 'FiraSans-Regular',
         marginTop: 3,
-        fontSize: GLOBAL.FONT._13,
+        fontSize: fonts._13,
     },
     todo: {
         marginTop: 100,
@@ -249,7 +285,7 @@ var styles = {
         backgroundColor: '#ffffff',
     },
     txt: {
-        fontSize: GLOBAL.FONT._18,
+        fontSize: fonts._18,
         fontFamily: 'FiraSans-Regular',
         marginLeft: 5,
         marginTop: 2,
@@ -277,7 +313,7 @@ var styles = {
         position: 'absolute',
         bottom: 0,
         flex: 1,
-        width: GLOBAL.DEVICE_DIMENSION.DEVICE_WIDTH
+        width: DEVICE_WIDTH
     },
     separator: {
         height: StyleSheet.hairlineWidth,
@@ -304,15 +340,15 @@ var styles = {
         height: 72
     },
     headertext: {
-        fontSize: GLOBAL.FONT._18,
+        fontSize: fonts._18,
         fontFamily: 'FiraSans-Regular',
     },
     subheadertext: {
-        fontSize: GLOBAL.FONT._14,
+        fontSize: fonts._14,
         fontFamily: 'FiraSans-Regular',
     },
     auto_grow_text: {
-        fontSize: GLOBAL.FONT._14,
+        fontSize: fonts._14,
         fontFamily: 'FiraSans-Regular',
     },
     taginput: {
@@ -324,23 +360,26 @@ var styles = {
         color: colors.BLACK,
         alignSelf: 'center',
         marginRight: 10,
-        fontSize: GLOBAL.FONT._14,
+        fontSize: fonts._14,
         fontFamily: 'FiraSans-Regular',
     },
     row_settings_title:
     {
         color: colors.BLACK,
-        fontSize: GLOBAL.FONT._14,
+        fontSize: fonts._14,
         fontFamily: 'FiraSans-Regular',
     },
     row_settings_subtitle:
     {
         color: colors.SECONDARY_TEXTCOLOR,
-        fontSize: GLOBAL.FONT._13,
+        fontSize: fonts._13,
         fontFamily: 'FiraSans-Regular',
     },
     title: {
-        fontFamily: 'FiraSans-Regular',
+        color : colors.BLACK,
+        fontSize : 26,
+        flex:1,
+        fontWeight : 'bold'
     }
 
 };
@@ -352,6 +391,27 @@ var styles = {
 
 Typography.loadTypographies(styles);
 {/* <Text h1 pink>Hello World</Text> */ }
+
+function em(value) {
+    return unit * value;
+}
+
+
+function normalize(value) {
+
+    console.log('normalize called');
+    if (PixelRatio.get() === 2) {
+        console.log(" 4s,5s, till 6s ,7,8");
+        return value;
+    } else if (PixelRatio.get() === 3) {
+        console.log(" 6splus,7plus,8plus,x ");
+        return (value + 2);
+    } else {
+        console.log(" ipad ");
+        return (value + 3);
+    }
+
+}
 
 
 module.exports = styles;

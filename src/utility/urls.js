@@ -12,7 +12,8 @@ const baseUrl = "http://www.appoctet.com/ecommerce/app_api/";
 export default urls = {
   urlLogin: baseUrl + "login/checkUser",
   urlRegister: baseUrl + 'login/register',
-  urlCategories: baseUrl + 'category',
+  urlCategories: baseUrl + 'categories/categories',
+  urlProductsList: baseUrl + 'products/products',
 };
 
 

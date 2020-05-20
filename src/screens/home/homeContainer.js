@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
-import {createAppContainer} from 'react-navigation';
+import React, { Component } from 'react';
+import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import HomeMain from './homeMain';
 import Products from '../products/products';
 import ProductDetail from '../products/productDetails';
+import ToolBar from '../../components/toolbar';
 
 const onBoardStack = createStackNavigator(
-  { 
+  {
     HomeMain: {
       screen: HomeMain,
     },
@@ -18,11 +19,15 @@ const onBoardStack = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'HomeMain',
-    headerMode: 'none',
-    navigationOptions: {
-      headerVisible: false,
-    },
+    navigationOptions: ({ navigation }) => {
+      return {
+        HeaderTitle: () =>
+          <ToolBar
+            title='Grocerie'
+          />
+      }
+    }
+
   },
 );
 

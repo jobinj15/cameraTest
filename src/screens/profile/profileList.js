@@ -4,8 +4,9 @@ import global from '../../utility/global';
 import { View, TouchableWithoutFeedback, Text, Image, FlatList } from 'react-native';
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
+import ToolBar from '../../components/toolbar';
 
-export default class ProfileList extends Component {
+class ProfileList extends Component {
     constructor(props) {
         super(props);
 
@@ -32,14 +33,27 @@ export default class ProfileList extends Component {
         }
     }
 
+    static navigationOptions = ({ navigation }) => {
+        //return header with Custom View which will replace the original header 
+        return {
+            header: (
+                <ToolBar
+                    title={constants.TXT_PROFILE}
+                    showTitleH={true}
+                    showBackButton={false}
+                />
+            ),
+        };
+    };
+
     componentDidMount() {
-        constants.NAVIGATION = this.props.navigation
+        // this.props.navigation = this.props.navigation
     }
 
 
     navigateTo(item) {
         if (item.navigate)
-            constants.NAVIGATION.navigate(item.navigate, {
+            this.props.navigation.navigate(item.navigate, {
                 // [constants.PARAM_INDEX]: index,
             });
     }
@@ -103,4 +117,4 @@ export default class ProfileList extends Component {
 
 }
 
-
+export default ProfileList

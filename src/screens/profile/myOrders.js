@@ -21,7 +21,7 @@ export default class MyOrders extends Component {
 
 
     navigateTo() {
-        constants.NAVIGATION.navigate('OrderDetails', {
+        this.props.navigation.navigate('OrderDetails', {
             // [constants.PARAM_INDEX]: index,
         });
     }

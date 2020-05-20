@@ -9,14 +9,14 @@ import AddAddress from './AddAddress';
 
 const onBoardStack = createStackNavigator(
   { 
+    ProfileList: {
+      screen: ProfileList,
+    },
     MyOrders: {
       screen: MyOrders,
     },
     OrderDetails: {
       screen: OrderDetails,
-    },
-    ProfileList: {
-      screen: ProfileList,
     },
     Addresses: {
       screen: Addresses,
@@ -26,11 +26,11 @@ const onBoardStack = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'ProfileList',
-    headerMode: 'none',
-    navigationOptions: {
-      headerVisible: false,
-    },
+    // initialRouteName: 'ProfileList',
+    // headerMode: 'none',
+    // navigationOptions: {
+    //   headerVisible: false,
+    // },
   },
 );
 
