@@ -2,17 +2,34 @@ import React, { Component } from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
 import { Card, Button } from 'react-native-ui-lib';
-import { View, TouchableWithoutFeedback, Text, FlatList, StyleSheet } from 'react-native';
+import { View, TouchableWithoutFeedback, Text, FlatList, ActivityIndicator } from 'react-native';
 import { observer, inject } from "mobx-react";
 import constants from '../../utility/constants';
 import colors from '../../styles/colors';
 import PlusView from '../../components/custom_views/plusView';
 
-var apiData = {
+var listApiData = {
     page_no: 0,
     per_page: 10,
     cat_id: '',
-    user_id: 1
+    user_id: ''
+}
+
+var addApiData = {
+    user_id: '',
+    catalogue_id: '',
+    quantity: ''
+}
+
+var updateApiData = {
+    user_id: '',
+    catalogue_id: '',
+    quantity: '',
+    cart_id: ''
+}
+
+var removeCartApiData = {
+    cart_id: ''
 }
 
 var store;
@@ -29,14 +46,15 @@ export default class Products extends Component {
 
         this.onPlusClicked = this.onPlusClicked.bind(this);
         this.onMinusClicked = this.onMinusClicked.bind(this);
+        this.onApiActionDone = this.onApiActionDone.bind(this);
         store = this.props.productsStore
     }
 
     componentDidMount() {
 
         global.getItem(constants.USER).then(result => {
-            // if (!result) return;
-            // apiData.user_id
+            if (!result) return;
+            listApiData.user_id = result.user_id
             this.callApi()
         });
 
@@ -44,15 +62,15 @@ export default class Products extends Component {
 
     callApi() {
         let formdata = new FormData();
-        for (let key in apiData) {
-            formdata.append(key, apiData[key]);
+        for (let key in listApiData) {
+            formdata.append(key, listApiData[key]);
         }
-        store.getProducts(formdata, apiData.page_no)
+        store.getProducts(formdata, listApiData.page_no)
     }
 
 
     handleRefresh() {
-        apiData.page_no = 0
+        listApiData.page_no = 0
         store.refreshing = true
         this.callApi()
     }
@@ -60,7 +78,7 @@ export default class Products extends Component {
 
     handleLoadMore() {
         console.log('handleLoadMore called!')
-        apiData.page_no = apiData.page_no + 1;
+        listApiData.page_no = listApiData.page_no + 1;
         this.callApi()
     }
 
@@ -116,20 +134,93 @@ export default class Products extends Component {
 
 
     onPlusClicked(index) {
-        const item = this.props.productsStore.plusCart(index)
+        const item = this.props.productsStore.plusCart(updateApiData, index, null, constants.TYPE_PLUS)
         console.log("Item onPlusClicked: " + JSON.stringify(item))
         this.props.cartStore.plusCart(null, item.id)
     }
 
     onMinusClicked(index) {
-        const item = this.props.productsStore.minusCart(index)
+        const item = this.props.productsStore.updateCart(updateApiData, index, null, constants.TYPE_MINUS)
         this.props.cartStore.minusCart(null, item.id)
     }
 
     onAddToCart(index) {
-        const item = this.props.productsStore.addToCart(index)
+        const item = this.props.productsStore.addToCart(addApiData, index)
         console.log("Item added: " + JSON.stringify(item))
         this.props.cartStore.addToCart(null, item)
+    }
+
+    onApiActionDone(item, type) {
+        if (type == constants.TYPE_ADDCART)
+            this.props.cartStore.addToCart(null, item)
+        else if (type == constants.TYPE_PLUS)
+            this.props.cartStore.plusCart(null, item.id)
+        else this.props.cartStore.minusCart(null, item.id)
+
+    }
+
+    drawButtonView(item, index) {
+
+        if (item.loading)
+            return (
+                <View
+                    style={[styles.plusContainer, {
+                        marginTop: 10,
+                        justifyContent: 'center',
+                        borderColor: colors.WHITE
+                    }]}
+                >
+                    <ActivityIndicator size="small" color={colors.DARKGRAY} />
+
+
+                </View>
+            )
+
+        if (isNaN(item.count))
+            return (
+                <Button
+                    backgroundColor={colors.GREEN_4}
+                    label={constants.TXT_ADDTOCART}
+                    onPress={() => {
+                        this.onAddToCart(index);
+                    }}
+                    labelStyle={{ fontWeight: 'bold', fontSize: 14 }}
+                    style={[styles.addContainer, { marginTop: 10 }]}
+                    borderRadius={3}
+                    enableShadow
+                />
+
+            )
+
+        return (
+            <View
+                style={[styles.plusContainer, {
+                    marginTop: 10,
+                    borderColor: colors.ListViewBG
+                }]}
+            >
+
+
+                <PlusView
+                    index={index}
+                    type={constants.TYPE_MINUS}
+                    onPress={this.onMinusClicked}
+                />
+                <Text
+                    style={[styles.stripLabel, {
+                        textAlign: 'center', marginTop: 4
+                        , color: colors.GREY
+                    }]}
+                >{item.count}</Text>
+
+                <PlusView
+                    index={index}
+                    type={constants.TYPE_PLUS}
+                    onPress={this.onPlusClicked}
+                />
+            </View>
+        )
+
     }
 
     renderRow({ item, index }) {
@@ -209,7 +300,7 @@ export default class Products extends Component {
                         </View>
 
                         <View
-                            style={{ flexDirection: 'row', flex: 2 }}
+                            style={{ flexDirection: 'row', flex: 1 }}
                         >
                             <View
                                 style={{
@@ -217,52 +308,8 @@ export default class Products extends Component {
                                 }}
                             />
 
-                            {
-                                isNaN(item.count) &&
-                                <Button
-                                    backgroundColor={colors.GREEN_4}
-                                    label={constants.TXT_ADDTOCART}
-                                    onPress={() => {
-                                        this.onAddToCart(index);
-                                    }}
-                                    labelStyle={{ fontWeight: 'bold', fontSize: 14 }}
-                                    style={[styles.addContainer, { marginTop: 10 }]}
-                                    borderRadius={3}
-                                    enableShadow
-                                />
-                            }
+                            {this.drawButtonView(item, index)}
 
-
-                            {
-                                !isNaN(item.count) && (
-
-                                    <View
-                                        style={[styles.plusContainer, {
-                                            marginTop: 10,
-                                        }]}
-                                    >
-
-
-                                        <PlusView
-                                            index={index}
-                                            type={constants.TYPE_MINUS}
-                                            onPress={this.onMinusClicked}
-                                        />
-                                        <Text
-                                            style={[styles.stripLabel, {
-                                                textAlign: 'center', marginTop: 4
-                                                , color: colors.GREY
-                                            }]}
-                                        >{item.count}</Text>
-
-                                        <PlusView
-                                            index={index}
-                                            type={constants.TYPE_PLUS}
-                                            onPress={this.onPlusClicked}
-                                        />
-                                    </View>
-                                )
-                            }
                         </View>
 
                     </View>

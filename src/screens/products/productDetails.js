@@ -36,14 +36,23 @@ export default class ProductDetails extends Component {
         const item = this.props.productsStore.products[this.state.index];
         console.log('ProductDetails ' + JSON.stringify(item))
 
+        var image = require('../../assets/images/pic2.jpg');
+
+        if (Array.isArray(item.images) && item.images.length) {
+            image = { uri: item.images[0].images };
+            // console.log('Products row ' + JSON.stringify(image))
+        }
+
+
         return (
             <View style={[styles.styleFull, { backgroundColor: colors.ListViewBG }]}>
 
-                <Card.Image imageSource={item.image}
+                <Card.Image imageSource={image}
                     style={{
                         height: 180, width: global.DEVICE_WIDTH - 20, marginTop: 10,
                         marginHorizontal: 10
                     }}
+                    cover={false}
                 />
 
                 <View
@@ -53,7 +62,13 @@ export default class ProductDetails extends Component {
                     }}
                 >
                     <Text
-                        style={[styles.stripLabel, { flex: undefined }]}
+                        style={[styles.stripLabel,{backgroundColor:colors.GREEN}]}
+                    >
+                        {item.name}
+                    </Text>
+
+                    <Text
+                        style={[styles.labelSmall]}
                     >
                         {item.description}
                     </Text>
@@ -132,7 +147,7 @@ export default class ProductDetails extends Component {
     bottomBlockView() {
         return (
             <View
-                style={[styles.bottomView, {height:45, backgroundColor: "rgba(255,255,255,0.6)" }]}
+                style={[styles.bottomView, { height: 45, backgroundColor: "rgba(255,255,255,0.6)" }]}
             />
         )
     }
@@ -145,7 +160,7 @@ export default class ProductDetails extends Component {
                 }}
             >
                 <View
-                    style={[styles.bottomView,{height:45}]}
+                    style={[styles.bottomView, { height: 45 }]}
                 >
                     <Text
                         style={[styles.stripLabel, { color: colors.WHITE, textAlign: 'center' }]}

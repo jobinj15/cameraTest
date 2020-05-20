@@ -5,6 +5,8 @@ import global from '../../utility/global'
 import { FloatingTitleTextInputField } from "../../components/custom_views/floatingtext";
 import constants from '../../utility/constants'
 import user_repository from '../../repos/user_repository'
+import { StackActions,NavigationActions} from 'react-navigation';
+
 
 const fields = {
   USER_NAME: 'username',
@@ -41,7 +43,7 @@ export default class Login extends Component {
     }
 
     objToSet.loading = false;
- 
+
     console.log('mapKeysToState: ' + JSON.stringify(objToSet))
     return objToSet
   }
@@ -79,12 +81,12 @@ export default class Login extends Component {
     return formdata;
   }
 
-  handleLogin(){
+  handleLogin() {
 
     var data = this.validateAndGetData();
 
-    if(!data)
-    return;
+    if (!data)
+      return;
 
     this.doLogin(data)
 
@@ -120,9 +122,24 @@ export default class Login extends Component {
 
     this.setState({ loading: false }, () => {
       if (!isError) {
+        global.storeItem(constants.USER, responseData)
         global.showMessage("Login successfull!")
         this._interval = setTimeout(() => {
-          // this.doLogin();
+
+          const resetAction = StackActions.reset({
+            index: 0,
+            key: null,
+            actions: [NavigationActions.navigate({
+              routeName: route, params: {
+                navigator: this.props.navigation
+              }
+            })]
+          });
+
+          this.props.navigation.dispatch(resetAction);
+
+
+
         }, 1000);
       } else {
         global.showMessage(responseData.message);
@@ -157,7 +174,7 @@ export default class Login extends Component {
               style={{
                 marginBottom: 15
               }}
-              disabled = {this.state.loading}
+              disabled={this.state.loading}
               updateMasterState={this._updateMasterState}
               textInputStyles={{ // here you can add additional TextInput styles
                 color: 'green',
@@ -176,7 +193,7 @@ export default class Login extends Component {
               style={{
                 marginBottom: 15
               }}
-              disabled = {this.state.loading}
+              disabled={this.state.loading}
               updateMasterState={this._updateMasterState}
               otherTextInputProps={{   // here you can add other TextInput props of your choice
                 maxLength: 12,

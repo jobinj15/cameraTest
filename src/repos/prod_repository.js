@@ -56,4 +56,82 @@ export default userRepo = {
 
 
 
+  addToCart(data, callback,index,id) {
+
+    console.log('dATA SENT addToCart: ' + JSON.stringify(data))
+ 
+     fetch(URL_FILE.urlAddToCart, {
+       method: "POST",
+       headers: global.getEncodedHeader(),
+       body : data
+     })
+       .then(response => response.json())
+       .then(responseData => {
+         console.log("Data from addToCart Api : " + JSON.stringify(responseData));
+         var hasError = responseData.error;
+         callback(hasError, responseData,index,id);
+ 
+       })
+       .catch(err => {
+         console.log("response error :: " + err);
+         callback(true, GLOBAL.getExceptionMessage());
+       })
+       .done();
+ 
+   },
+
+
+
+   updateCart(data, callback,index,id,type) {
+
+    console.log('dATA SENT updateCart: ' + JSON.stringify(data))
+ 
+     fetch(URL_FILE.urlUpdateCart, {
+       method: "POST",
+       headers: global.getEncodedHeader(),
+       body : data
+     })
+       .then(response => response.json())
+       .then(responseData => {
+         console.log("Data from updateCart Api : " + JSON.stringify(responseData));
+         var hasError = responseData.error;
+         callback(hasError, responseData,index,id,type);
+ 
+       })
+       .catch(err => {
+         console.log("response error :: " + err);
+         callback(true, GLOBAL.getExceptionMessage());
+       })
+       .done();
+ 
+   },
+
+
+
+   removeCart(data, callback) {
+
+    console.log('dATA SENT removeCart: ' + JSON.stringify(data))
+ 
+     fetch(URL_FILE.urlRemoveCart, {
+       method: "POST",
+       headers: global.getEncodedHeader(),
+       body : data
+     })
+       .then(response => response.json())
+       .then(responseData => {
+         console.log("Data from urlRemoveCart Api : " + JSON.stringify(responseData));
+         var hasError = responseData.error;
+         callback(hasError, responseData);
+ 
+       })
+       .catch(err => {
+         console.log("response error :: " + err);
+         callback(true, GLOBAL.getExceptionMessage());
+       })
+       .done();
+ 
+   },
+
+
+
 };

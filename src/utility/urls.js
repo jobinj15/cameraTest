@@ -14,6 +14,9 @@ export default urls = {
   urlRegister: baseUrl + 'login/register',
   urlCategories: baseUrl + 'categories/categories',
   urlProductsList: baseUrl + 'products/products',
+  urlAddToCart: baseUrl + 'cart/add',
+  urlUpdateCart: baseUrl + 'cart/update',
+  urlRemoveCart: baseUrl + 'cart/remove',
 };
 
 

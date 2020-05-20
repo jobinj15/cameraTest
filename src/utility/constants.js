@@ -55,6 +55,7 @@ export default constants = {
     PLUS_SYMBOL :'+',
     TYPE_PLUS : 'Plus',
     TYPE_MINUS : 'Minus',
+    TYPE_ADDCART : 'AddCart',
     TYPE_DELETE : 'Delete',
     MINUS_SYMBOL: '-',
     TXT_CATEGORIES : 'Categories',

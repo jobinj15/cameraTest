@@ -6,11 +6,15 @@ import prod_repository from "../../../repos/prod_repository";
 
 // @inject("cartStore")
 // @observer
+
+var index, id;
+
 class ProductsStore {
 
   @observable loading = false;
   @observable refreshing = false;
   @observable apiLoaded = false;
+  @observable cartUpdating = false;
   @observable products = []
   @observable page = 0
 
@@ -20,8 +24,8 @@ class ProductsStore {
       if (!isNetworkAvailable)
         global.showToast(constants.NO_INTERNET)
       else {
-        
-        this.loading = !this.refreshing && page==0;
+
+        this.loading = !this.refreshing && page == 0;
         this.page = page;
 
         prod_repository.getProducts(
@@ -61,7 +65,53 @@ class ProductsStore {
   }
 
 
-  @action addToCart(index, id) {
+  @action addToCart(data, index, id) {
+
+    global.isOnline().then(isNetworkAvailable => {
+      if (!isNetworkAvailable)
+        global.showToast(constants.NO_INTERNET)
+      else {
+
+        this.cartUpdating = true;
+        this.setItemLoading(index);
+
+        prod_repository.addToCart(
+          data,
+          this.onAddToCart.bind(this),
+          index, id
+        );
+
+      }
+    });
+
+  }
+
+
+
+  onAddToCart(isError, responseData, index, id) {
+
+    // console.log('onAddToCart ' + JSON.stringify(responseData))
+
+    this.cartUpdating = false;
+
+    if (!isError) {
+      this.afterCartAdd(index, id)
+    }
+    else global.showMessage(responseData.message)
+  }
+
+
+  setItemLoading(index) {
+
+    var allProducts = this.products;
+    var item = allProducts[index];
+    item.loading = true;
+
+    this.products = allProducts
+
+  }
+
+  afterCartAdd(index, id) {
 
     console.log('onAddToCart called!')
 
@@ -78,8 +128,8 @@ class ProductsStore {
     var item = allProducts[index];
 
     if (!item.count) {
-
       item.count = 1;
+      item.loading = false;
       this.products = allProducts;
 
       console.log('Modified prod: ' + JSON.stringify(this.products[index]))
@@ -91,7 +141,9 @@ class ProductsStore {
   }
 
 
-  @action minusCart(index, id) {
+
+
+  afterMinusCart(index, id) {
 
     console.log('minusCart called!')
 
@@ -112,7 +164,9 @@ class ProductsStore {
         delete item.count
       else
         item.count = item.count - 1;
-      this.products = allProducts;
+    
+        item.loading = false;
+        this.products = allProducts;
 
       console.log('Modified prod: ' + JSON.stringify(this.products[index]))
       return item;
@@ -122,9 +176,47 @@ class ProductsStore {
   }
 
 
-  @action plusCart(index, id) {
+  @action updateCart(data,index, id, type) {
 
     // console.log('plusCart called!')
+
+    global.isOnline().then(isNetworkAvailable => {
+      if (!isNetworkAvailable)
+        global.showToast(constants.NO_INTERNET)
+      else {
+
+        this.cartUpdating = true;
+        this.setItemLoading(index);
+
+        prod_repository.updateCart(
+          data,
+          this.onUpdateCart.bind(this),
+          index, id, type
+        );
+
+      }
+    });
+
+  }
+
+
+
+  onUpdateCart(isError, responseData, index, id, type) {
+
+    // console.log('onAddToCart ' + JSON.stringify(responseData))
+
+    this.cartUpdating = false;
+
+    if (!isError) {
+      if (type == constants.TYPE_PLUS)
+        this.afterCartAdd(index, id)
+      else this.afterMinusCart(index, id)
+    }
+    else global.showMessage(responseData.message)
+  }
+
+
+  afterPlusCart(index, id) {
 
     if (isNaN(index) && isNaN(id))
       return

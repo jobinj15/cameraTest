@@ -4,6 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Splashscreen from './SplashScreen';
 import Signin from './onboard/login';
 import Signup from './onboard/signup';
+import Home from './MainContainer';
 import Otp from './onboard/otp';
 import Forgot from './onboard/forgot';
 
@@ -16,6 +17,7 @@ const onBoardStack = createStackNavigator(
     Signin: {
       screen: Signin,
     },
+    Home : Home,
     Signup: {
       screen: Signup,
     },

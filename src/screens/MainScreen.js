@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import colors from '../styles/colors';
 import ToolBar from '../components/toolbar';
 import global from '../utility/global';
+import CartBubble from './CartBubble';
 
 class MainScreenC extends Component {
   constructor(props) {
@@ -62,6 +63,7 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
   let IconComponent = Icon;
   let iconName;
+
   if (routeName === 'Home') {
     iconName = 'ios-home';
   } else if (routeName === 'Profile') {
@@ -82,19 +84,10 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
     //   />
     // )
     return (
-      <View
-        style={{
-          width: '100%', height: '100%',
-          alignItems:'center',justifyContent:'center'
-        }}
-      >
-        <IconComponent name={iconName} size={25} color={tintColor} />
-        <View
-          style={[global.getCircleViewStyle(15),
-          { backgroundColor: 'red', top: 7, right: 35, position: 'absolute' }]}
-        >
-        </View>
-      </View>
+      <CartBubble
+       tintColor = {tintColor}
+       icon = {iconName}
+      />  
     )
   }
 

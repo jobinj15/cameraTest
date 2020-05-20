@@ -15,7 +15,7 @@ class CartStore {
     var allCart = [...this.cart];
     allCart.push(item);
 
-    this.caluclateTotal(item,constants.TYPE_PLUS)
+    this.calculateTotal(item,constants.TYPE_PLUS)
     this.cart = allCart
 
     // console.log('Modified cart: ' + JSON.stringify(this.products[index]))
@@ -32,7 +32,7 @@ class CartStore {
     console.log('deleteItemCart called!')
 
     var allCart = [...this.cart];
-    this.caluclateTotal(allCart[index],constants.TYPE_DELETE)
+    this.calculateTotal(allCart[index],constants.TYPE_DELETE)
     allCart.splice(index,1);
     this.cart = allCart
 
@@ -60,14 +60,14 @@ class CartStore {
     if (item.count) {
       if(id==undefined)
       item.count = item.count - 1;
-      this.caluclateTotal(item, constants.TYPE_MINUS)
+      this.calculateTotal(item, constants.TYPE_MINUS)
       
       if(item.count==0)
       allCart.splice(index,1)
       this.cart = allCart;
     }
     else{
-      this.caluclateTotal(item, constants.TYPE_MINUS)
+      this.calculateTotal(item, constants.TYPE_MINUS)
       allCart.splice(index,1)
       this.cart = allCart;
     }
@@ -93,7 +93,7 @@ class CartStore {
       if(id==undefined)
       item.count = item.count + 1;
       
-      this.caluclateTotal(item, constants.TYPE_PLUS)
+      this.calculateTotal(item, constants.TYPE_PLUS)
       this.cart = allCart;
 
       console.log('Plus cart cartStore: ' + JSON.stringify(this.cart))
@@ -102,18 +102,25 @@ class CartStore {
 
   }
 
-  caluclateTotal(item, type) {
+  calculateTotal(item, type) {
 
     if(isNaN(item.price))
     return;
 
     const price = parseInt(item.price)
 
-    if (type == constants.TYPE_PLUS)
+    if (type == constants.TYPE_PLUS){
       this.total = (price + this.total)
-    else if(type == constants.TYPE_DELETE)
+      this.noOfItems++
+    }
+    else if(type == constants.TYPE_DELETE){
       this.total = (this.total - (price*item.count))  
-    else this.total = (this.total - price)
+      this.noOfItems = this.noOfItems - item.count
+    }
+    else {
+      this.total = (this.total - price)
+      this.noOfItems--
+    }
 
   }
 
@@ -139,6 +146,7 @@ class CartStore {
 
 
   @observable total = 0
+  @observable noOfItems = 0
   @observable cart = []
   // @observable cart = [
   //   {

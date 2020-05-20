@@ -88,6 +88,11 @@ var styles = {
         fontSize: 14,
         color: colors.PRIMARY
     },
+    labelMini:{
+      color : colors.WHITE,
+      fontWeight:'bold',
+      fontSize : 9
+    },
     stripLabel: {
         fontWeight: 'bold',
         fontSize: 18,

@@ -195,6 +195,15 @@ export default global = {
     });
   },
 
+  async storeItem(key, item) {
+    try {
+      var jsonOfItem = await AsyncStorage.setItem(key, JSON.stringify(item));
+      return jsonOfItem;
+    } catch (error) {
+      console.log(error.message);
+    }
+  },
+
   getNoDataView(message) {
     return (
       <View

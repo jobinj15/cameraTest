@@ -50,7 +50,7 @@ export default class SplashTest extends Component {
                 route = 'OnBoard'
             }
 
-            route = 'Home'
+            // route = 'Home'
 
             const resetAction = StackActions.reset({
                 index: 0,

@@ -66,6 +66,9 @@ export default class Categories extends Component {
         }
         
 
+        var image = require('../../assets/images/pic1.jpg');
+        // if(item.img)
+        // image = {uri:item.img}
 
         return (
 
@@ -81,7 +84,7 @@ export default class Categories extends Component {
                     }, rowStyles]}
                 >
                     <View
-                        style={global.getCircleViewStyle(80)}
+                        style={[global.getCircleViewStyle(80),{backgroundColor:item.color}]}
                     >
 
                         {/* <Image
@@ -91,8 +94,8 @@ export default class Categories extends Component {
                         /> */}
 
                         <Image
-                            style={styles.styleFull}
-                            source={index%2==0?require('../../assets/images/pic1.jpg'):require('../../assets/images/pic2.jpg')}
+                            style={{height:50,width:50}}
+                            source={image}
                             resizeMode="contain"
                         />
 

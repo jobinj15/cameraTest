@@ -140,6 +140,7 @@ export default class Signup extends Component {
 
     this.setState({ loading: false }, () => {
       if (!isError) {
+        global.storeItem(constants.USER,responseData)
         global.showMessage("Registered successfully!")
         this._interval = setTimeout(() => {
           // this.doLogin();
