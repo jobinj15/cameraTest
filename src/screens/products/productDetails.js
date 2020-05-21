@@ -2,11 +2,32 @@ import React, { Component } from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
 import { Card, Button } from 'react-native-ui-lib';
-import { View, TouchableWithoutFeedback, Text, Image } from 'react-native';
+import { View, TouchableWithoutFeedback, Text, ActivityIndicator } from 'react-native';
 import { observer, inject } from "mobx-react";
 import constants from '../../utility/constants';
 import colors from '../../styles/colors';
 import PlusView from '../../components/custom_views/plusView';
+
+var prodStore, cartStore;
+
+var addApiData = {
+    user_id: '',
+    catalogue_id: '',
+    quantity: ''
+}
+
+var updateApiData = {
+    user_id: '',
+    catalogue_id: '',
+    quantity: '',
+    cart_id: ''
+}
+
+var removeCartApiData = {
+    cart_id: ''
+}
+
+
 
 @inject(stores => ({
     productsStore: stores.productsStore,
@@ -25,15 +46,35 @@ export default class ProductDetails extends Component {
         this.onPlusClicked = this.onPlusClicked.bind(this);
         this.onMinusClicked = this.onMinusClicked.bind(this);
 
+        prodStore = this.props.productsStore
+        cartStore = this.props.cartStore
+
         const { navigation } = this.props
         this.state.index = navigation.getParam(constants.PARAM_INDEX, null)
 
     }
 
+    componentDidMount() {
+
+        global.getItem(constants.USER).then(result => {
+            if (!result) return;
+            this.setUserIdToApiData(result)
+        });
+
+    }
+
+    setUserIdToApiData(result) {
+        addApiData.user_id = result.user_id
+        removeCartApiData.user_id = result.user_id
+        updateApiData.user_id = result.user_id
+    }
+
+
+
 
     render() {
 
-        const item = this.props.productsStore.products[this.state.index];
+        const item = prodStore.products[this.state.index];
         console.log('ProductDetails ' + JSON.stringify(item))
 
         var image = require('../../assets/images/pic2.jpg');
@@ -62,7 +103,7 @@ export default class ProductDetails extends Component {
                     }}
                 >
                     <Text
-                        style={[styles.stripLabel,{backgroundColor:colors.GREEN}]}
+                        style={[styles.stripLabel, { backgroundColor: colors.GREEN }]}
                     >
                         {item.name}
                     </Text>
@@ -99,36 +140,7 @@ export default class ProductDetails extends Component {
                             }}
                         />
 
-
-                        {
-                            !isNaN(item.count) && (
-
-                                <View
-                                    style={[styles.plusContainer, {
-                                        marginTop: 10,
-                                    }]}
-                                >
-
-                                    <PlusView
-                                        index={this.state.index}
-                                        type={constants.TYPE_MINUS}
-                                        onPress={this.onMinusClicked}
-                                    />
-                                    <Text
-                                        style={[styles.stripLabel, {
-                                            textAlign: 'center', marginTop: 4
-                                            , color: colors.GREY
-                                        }]}
-                                    >{item.count}</Text>
-
-                                    <PlusView
-                                        index={this.state.index}
-                                        type={constants.TYPE_PLUS}
-                                        onPress={this.onPlusClicked}
-                                    />
-                                </View>
-                            )
-                        }
+                        {this.drawButtonView(item)}
 
                     </View>
 
@@ -136,13 +148,69 @@ export default class ProductDetails extends Component {
 
                 {this.bottomView()}
                 {
-                    item.count &&
-                    this.bottomBlockView()
+                    item.cart_quantity ? this.bottomBlockView() : <View />
                 }
 
             </View>
         );
     }
+
+    drawButtonView(item) {
+
+        // if (index == 0)
+        //     console.log('drawButtonView: ' + JSON.stringify(item))
+
+        if (item.loading)
+            return (
+                <View
+                    style={[styles.plusContainer, {
+                        marginTop: 10,
+                        justifyContent: 'center',
+                        borderColor: colors.WHITE
+                    }]}
+                >
+                    <ActivityIndicator size="small" color={colors.DARKGRAY} />
+
+
+                </View>
+            )
+
+        if (!item.cart_quantity)
+            return (
+                <View/>
+            )
+
+        return (
+            <View
+                style={[styles.plusContainer, {
+                    marginTop: 10,
+                    borderColor: colors.ListViewBG
+                }]}
+            >
+
+
+                <PlusView
+                    index={this.state.index}
+                    type={constants.TYPE_MINUS}
+                    onPress={this.onMinusClicked}
+                />
+                <Text
+                    style={[styles.stripLabel, {
+                        textAlign: 'center', marginTop: 4
+                        , color: colors.GREY
+                    }]}
+                >{item.cart_quantity}</Text>
+
+                <PlusView
+                    index={this.state.index}
+                    type={constants.TYPE_PLUS}
+                    onPress={this.onPlusClicked}
+                />
+            </View>
+        )
+
+    }
+
 
     bottomBlockView() {
         return (
@@ -175,20 +243,56 @@ export default class ProductDetails extends Component {
 
 
     onPlusClicked() {
-        const item = this.props.productsStore.plusCart(this.state.index)
-        console.log("Item onPlusClicked: " + JSON.stringify(item))
-        this.props.cartStore.plusCart(null, item.id)
+        // const item = prodStore.plusCart(this.state.index)
+        // console.log("Item onPlusClicked: " + JSON.stringify(item))
+        // cartStore.plusCart(null, item.id)
+
+        if (prodStore.cartUpdating)
+            return;
+
+        var item = prodStore.products[this.state.index];
+        updateApiData.catalogue_id = item.id;
+        updateApiData.quantity = item.cart_quantity + 1;
+        updateApiData.cart_id = item.cart_id;
+
+        console.log('ProdDetails: ' + JSON.stringify(updateApiData))
+
+        prodStore.updateCart(global.sendAsFormData(updateApiData), this.state.index, null, constants.TYPE_PLUS)
+
+
     }
 
     onMinusClicked() {
-        const item = this.props.productsStore.minusCart(this.state.index)
-        this.props.cartStore.minusCart(null, item.id)
+        // const item = prodStore.minusCart(this.state.index)
+        // cartStore.minusCart(null, item.id)
+
+        if (prodStore.cartUpdating)
+            return;
+
+        var item = prodStore.products[this.state.index];
+        updateApiData.catalogue_id = item.id;
+        updateApiData.quantity = item.cart_quantity - 1;
+        updateApiData.cart_id = item.cart_id;
+
+        if (item.cart_quantity == 1)
+            prodStore.deleteItem(global.sendAsFormData(updateApiData), this.state.index)
+        else
+            prodStore.updateCart(global.sendAsFormData(updateApiData), this.state.index, null, constants.TYPE_MINUS)
     }
 
     onAddToCart() {
-        const item = this.props.productsStore.addToCart(this.state.index)
-        console.log("Item added: " + JSON.stringify(item))
-        this.props.cartStore.addToCart(null, item)
+        // const item = prodStore.addToCart(this.state.index)
+        // console.log("Item added: " + JSON.stringify(item))
+        // cartStore.addToCart(null, item)
+
+        if (prodStore.cartUpdating)
+            return;
+
+        var item = prodStore.products[this.state.index];
+        addApiData.catalogue_id = item.id;
+        addApiData.quantity = 1;
+
+        prodStore.addToCart(global.sendAsFormData(addApiData), this.state.index)
     }
 
 }

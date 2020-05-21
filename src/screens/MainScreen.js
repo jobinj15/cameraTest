@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, Image, StyleSheet, Platform } from 'react-native';
 import HomeContainer from './home/homeContainer';
+import CartContainer from './cart/CartContainer';
 import ProfileContainer from './profile/profileContainer';
 import ColorsTab from './home/colorsTab';
 import BodyChart from './test/bodychart';
 import LottieExample from './test/lottie_test';
 import Counter from './home/Counter';
-import Cart from './cart/cart';
 import { createStackNavigator, Header, HeaderTitle } from 'react-navigation-stack';
 import { createMaterialTopTabNavigator, createBottomTabNavigator } from 'react-navigation-tabs';
 import { Avatar, AvatarHelper, Typography } from 'react-native-ui-lib';
@@ -98,7 +98,7 @@ const screens = {
   Home: {
     screen: HomeContainer,
   },
-  Cart: Cart,
+  Cart: CartContainer,
   Profile: ProfileContainer,
   Search: ColorsTab,
 }

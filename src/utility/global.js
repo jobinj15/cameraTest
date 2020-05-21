@@ -204,6 +204,15 @@ export default global = {
     }
   },
 
+  sendAsFormData(data){
+    let formdata = new FormData();
+    for (let key in data) {
+        formdata.append(key, data[key]);
+    }
+
+    return formdata;
+},
+
   getNoDataView(message) {
     return (
       <View

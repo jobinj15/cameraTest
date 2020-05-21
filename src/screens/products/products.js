@@ -32,7 +32,7 @@ var removeCartApiData = {
     cart_id: ''
 }
 
-var store;
+var prodStore,cartStore;
 
 
 @inject(stores => ({
@@ -47,17 +47,32 @@ export default class Products extends Component {
         this.onPlusClicked = this.onPlusClicked.bind(this);
         this.onMinusClicked = this.onMinusClicked.bind(this);
         this.onApiActionDone = this.onApiActionDone.bind(this);
-        store = this.props.productsStore
+
+        prodStore = this.props.productsStore
+        cartStore = this.props.cartStore
+
     }
 
     componentDidMount() {
 
+        prodStore.onApiActionDone = this.onApiActionDone;
+
         global.getItem(constants.USER).then(result => {
             if (!result) return;
-            listApiData.user_id = result.user_id
+
+            this.setUserIdToApiData(result)
+
             this.callApi()
         });
 
+
+    }
+
+    setUserIdToApiData(result) {
+        listApiData.user_id = result.user_id
+        addApiData.user_id = result.user_id
+        removeCartApiData.user_id = result.user_id
+        updateApiData.user_id = result.user_id
     }
 
     callApi() {
@@ -65,13 +80,13 @@ export default class Products extends Component {
         for (let key in listApiData) {
             formdata.append(key, listApiData[key]);
         }
-        store.getProducts(formdata, listApiData.page_no)
+        prodStore.getProducts(formdata, listApiData.page_no)
     }
 
 
     handleRefresh() {
         listApiData.page_no = 0
-        store.refreshing = true
+        prodStore.refreshing = true
         this.callApi()
     }
 
@@ -93,23 +108,23 @@ export default class Products extends Component {
                     navigation={this.props.navigation}
                     extraData={this.state}
                     showsVerticalScrollIndicator={false}
-                    data={this.props.productsStore.products}
+                    data={prodStore.products}
                     renderItem={this.renderRow.bind(this)}
                     onRefresh={this.handleRefresh.bind(this)}
                     onEndReached={this.handleLoadMore.bind(this)}
                     onEndReachedThreshold={0.1}
-                    refreshing={store.refreshing}
+                    refreshing={prodStore.refreshing}
                     ItemSeparatorComponent={this.renderSeparator}
                     keyExtractor={(item, index) => index.toString()}
                 />
 
                 {
-                    store.loading &&
+                    prodStore.loading &&
                     global.getLoader()
                 }
 
                 {
-                    (store.apiLoaded && !store.products.length)
+                    (prodStore.apiLoaded && !prodStore.products.length)
                     && global.getNoDataView()
                 }
 
@@ -133,33 +148,68 @@ export default class Products extends Component {
     }
 
 
+
+
     onPlusClicked(index) {
-        const item = this.props.productsStore.plusCart(updateApiData, index, null, constants.TYPE_PLUS)
-        console.log("Item onPlusClicked: " + JSON.stringify(item))
-        this.props.cartStore.plusCart(null, item.id)
+
+        if (prodStore.cartUpdating)
+            return;
+
+        var item = prodStore.products[index];
+        updateApiData.catalogue_id = item.id;
+        updateApiData.quantity = item.cart_quantity + 1;
+        updateApiData.cart_id = item.cart_id;
+
+        prodStore.updateCart(global.sendAsFormData(updateApiData), index, null, constants.TYPE_PLUS)
+        // this.props.cartStore.plusCart(null, item.id)
     }
 
     onMinusClicked(index) {
-        const item = this.props.productsStore.updateCart(updateApiData, index, null, constants.TYPE_MINUS)
-        this.props.cartStore.minusCart(null, item.id)
+
+        if (prodStore.cartUpdating)
+            return;
+
+        var item = prodStore.products[index];
+        updateApiData.catalogue_id = item.id;
+        updateApiData.quantity = item.cart_quantity - 1;
+        updateApiData.cart_id = item.cart_id;
+
+        if(item.cart_quantity==1)
+        prodStore.deleteItem(global.sendAsFormData(updateApiData),index)
+        else
+        prodStore.updateCart(global.sendAsFormData(updateApiData), index, null, constants.TYPE_MINUS)
     }
 
     onAddToCart(index) {
-        const item = this.props.productsStore.addToCart(addApiData, index)
-        console.log("Item added: " + JSON.stringify(item))
-        this.props.cartStore.addToCart(null, item)
+
+        if (prodStore.cartUpdating)
+            return;
+
+        var item = prodStore.products[index];
+        addApiData.catalogue_id = item.id;
+        addApiData.quantity = 1;
+
+        prodStore.addToCart(global.sendAsFormData(addApiData), index)
+        // this.props.cartStore.addToCart(null, item)
     }
 
+
     onApiActionDone(item, type) {
+
+        console.log('onApiActionDone: ' + type + ' ' + JSON.stringify(item))
+
         if (type == constants.TYPE_ADDCART)
-            this.props.cartStore.addToCart(null, item)
+            cartStore.afterAddCart(null, item)
         else if (type == constants.TYPE_PLUS)
-            this.props.cartStore.plusCart(null, item.id)
-        else this.props.cartStore.minusCart(null, item.id)
+            cartStore.afterPlusCart(null, item.cart_id)
+        else cartStore.afterMinusCart(null, item.cart_id)
 
     }
 
     drawButtonView(item, index) {
+
+        if (index == 0)
+            console.log('drawButtonView: ' + JSON.stringify(item))
 
         if (item.loading)
             return (
@@ -176,7 +226,7 @@ export default class Products extends Component {
                 </View>
             )
 
-        if (isNaN(item.count))
+        if (!item.cart_quantity)
             return (
                 <Button
                     backgroundColor={colors.GREEN_4}
@@ -211,7 +261,7 @@ export default class Products extends Component {
                         textAlign: 'center', marginTop: 4
                         , color: colors.GREY
                     }]}
-                >{item.count}</Text>
+                >{item.cart_quantity}</Text>
 
                 <PlusView
                     index={index}

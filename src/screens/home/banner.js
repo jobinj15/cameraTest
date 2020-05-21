@@ -4,6 +4,8 @@ import { View, Card, Image, Text, Spacings } from 'react-native-ui-lib';
 import Carousel from 'react-native-snap-carousel';
 import styles from '../../styles/style';
 
+var store;
+
 import {
     Assets,
     Constants,
@@ -18,6 +20,7 @@ var itemWidth;
 import { observable } from "mobx";
 import { observer, inject } from "mobx-react";
 import global from '../../utility/global';
+import constants from '../../utility/constants';
 
 
 @inject("bannerStore")
@@ -28,20 +31,29 @@ export default class HomeTab extends Component {
         sliderWidth = global.DEVICE_WIDTH;
         itemWidth = global.DEVICE_WIDTH - 80
 
+        store = this.props.bannerStore;
     }
 
-    componentDidMount(){
+    componentDidMount() {
         console.disableYellowBox = true;
+
+        global.getItem(constants.USER).then(result => {
+            if (!result) return;
+            store.getBanners(result.user_id)
+        });
+
     }
 
-    
+
+
+
     render() {
         return (
             <View style={[styles.banner]}>
 
                 <Carousel
                     ref={(c) => { this._carousel = c; }}
-                    data={this.props.bannerStore.banners}
+                    data={store.banners}
                     renderItem={this.renderRow}
                     sliderWidth={sliderWidth}
                     itemWidth={itemWidth}
@@ -55,11 +67,14 @@ export default class HomeTab extends Component {
 
     renderRow({ item, index }) {
 
+        console.log('Banners renderRow ' + JSON.stringify(item))
+
+
         return (
             <Card style={{ flex: 1, borderRadius: 4 }} key={index}>
 
-                <Card.Image imageSource={item.image}
-                    style={{flex: 1}}
+                <Card.Image imageSource={{ uri: item.media }}
+                    style={{ flex: 1 }}
                     cover={true}
                 />
 

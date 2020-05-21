@@ -46,7 +46,7 @@ export default class Categories extends Component {
 
     renderRow({ item, index }) {
 
-        console.log('onCategories renderRow ' + JSON.stringify(item))
+        // console.log('onCategories renderRow ' + JSON.stringify(item))
 
 
         var rowStyles = {
@@ -67,8 +67,8 @@ export default class Categories extends Component {
         
 
         var image = require('../../assets/images/pic1.jpg');
-        // if(item.img)
-        // image = {uri:item.img}
+        if(item.img)
+        image = {uri:item.img}
 
         return (
 

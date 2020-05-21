@@ -4,6 +4,7 @@ import constants from "../../../utility/constants";
 import prod_repository from "../../../repos/prod_repository";
 
 export default class CatHomeStore {
+  
   @observable categories = [];
   @observable loading = false;
 

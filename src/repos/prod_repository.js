@@ -30,6 +30,33 @@ export default userRepo = {
 
   },
 
+  getBanners(userId,callback) {
+
+    console.log('dATA SENT: ' + JSON.stringify(userId))
+
+     var headers = global.getEncodedHeader();
+     headers['user-id'] = userId;
+ 
+     fetch(URL_FILE.urlGetBanners, {
+       method: "GET",
+       headers: headers,
+     })
+       .then(response => response.json())
+       .then(responseData => {
+         console.log("Data from getBanners Api : " + JSON.stringify(responseData));
+         var hasError = responseData.error;
+         callback(hasError, responseData);
+ 
+       })
+       .catch(err => {
+         console.log("response error :: " + err);
+         callback(true, global.getExceptionMessage());
+       })
+       .done();
+ 
+   },
+ 
+
   getProducts(data, callback) {
 
    console.log('dATA SENT: ' + JSON.stringify(data))
@@ -48,12 +75,37 @@ export default userRepo = {
       })
       .catch(err => {
         console.log("response error :: " + err);
-        callback(true, GLOBAL.getExceptionMessage());
+        callback(true, global.getExceptionMessage());
       })
       .done();
 
   },
 
+
+  getCart(data, callback) {
+
+    console.log('dATA SENT: ' + JSON.stringify(data))
+ 
+     fetch(URL_FILE.urlGetCart, {
+       method: "POST",
+       headers: global.getEncodedHeader(),
+       body : data
+     })
+       .then(response => response.json())
+       .then(responseData => {
+         console.log("Data from getCart Api : " + JSON.stringify(responseData));
+         var hasError = responseData.error;
+         callback(hasError, responseData);
+ 
+       })
+       .catch(err => {
+         console.log("response error :: " + err);
+         callback(true, global.getExceptionMessage());
+       })
+       .done();
+ 
+   },
+ 
 
 
   addToCart(data, callback,index,id) {
@@ -74,12 +126,40 @@ export default userRepo = {
        })
        .catch(err => {
          console.log("response error :: " + err);
-         callback(true, GLOBAL.getExceptionMessage());
+         callback(true, global.getExceptionMessage());
        })
        .done();
  
    },
 
+
+
+   removeCart(data, callback,index) {
+
+    console.log('dATA SENT removeCart: ' + JSON.stringify(data))
+ 
+     fetch(URL_FILE.urlRemoveCart, {
+       method: "POST",
+       headers: global.getEncodedHeader(),
+       body : data
+     })
+       .then(response => response.json())
+       .then(responseData => {
+         console.log("Data from removeCart Api : " + index);
+         var hasError = responseData.error;
+        //  callback(hasError, responseData,index);
+         callback(index,null,hasError) 
+       })
+       .catch(err => {
+         console.log("response error :: " + err);
+         callback(true, global.getExceptionMessage());
+       })
+       .done();
+ 
+   },
+
+
+   
 
 
    updateCart(data, callback,index,id,type) {
@@ -100,7 +180,7 @@ export default userRepo = {
        })
        .catch(err => {
          console.log("response error :: " + err);
-         callback(true, GLOBAL.getExceptionMessage());
+         callback(true, global.getExceptionMessage());
        })
        .done();
  
@@ -108,30 +188,7 @@ export default userRepo = {
 
 
 
-   removeCart(data, callback) {
-
-    console.log('dATA SENT removeCart: ' + JSON.stringify(data))
- 
-     fetch(URL_FILE.urlRemoveCart, {
-       method: "POST",
-       headers: global.getEncodedHeader(),
-       body : data
-     })
-       .then(response => response.json())
-       .then(responseData => {
-         console.log("Data from urlRemoveCart Api : " + JSON.stringify(responseData));
-         var hasError = responseData.error;
-         callback(hasError, responseData);
- 
-       })
-       .catch(err => {
-         console.log("response error :: " + err);
-         callback(true, GLOBAL.getExceptionMessage());
-       })
-       .done();
- 
-   },
-
+  
 
 
 };

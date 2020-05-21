@@ -18,6 +18,10 @@ class ProductsStore {
   @observable products = []
   @observable page = 0
 
+  constructor(){
+    this.onApiActionDone = undefined
+  }
+
   @action getProducts(data, page) {
 
     global.isOnline().then(isNetworkAvailable => {
@@ -64,8 +68,56 @@ class ProductsStore {
       this.refreshing = false
   }
 
+   
+  @action deleteItem(data,index) {
+    
+    global.isOnline().then(isNetworkAvailable => {
+      if (!isNetworkAvailable)
+        global.showToast(constants.NO_INTERNET)
+      else {
+
+        this.cartUpdating = true;
+        this.setItemLoading(index);
+
+        prod_repository.removeCart(
+          data,
+          this.afterMinusCart.bind(this),
+          index
+        );
+
+      }
+    });
+  }
+
+
+    // afterCartDelete(isError,responseData,index){
+
+    //   console.log('afterCartDelete : ' + index)
+  
+    //   var allCart = [...this.cart];
+    //   var item = allCart[index];
+  
+  
+    //   if(isError){
+    //     item.loading = false;
+    //     this.cart = allCart;
+    //     return;
+    //   }
+  
+    //   console.log('afterCartDelete index ' + index + ' ' + JSON.stringify(allCart[index]))
+  
+    //   this.calculateTotal(allCart[index],constants.TYPE_DELETE)
+    //   allCart.splice(index,1);
+    //   this.cart = allCart
+    // }
+  
+
 
   @action addToCart(data, index, id) {
+
+//     user_id:1
+// catalogue_id:2
+// quantity:1
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
@@ -88,6 +140,9 @@ class ProductsStore {
 
 
 
+
+
+
   onAddToCart(isError, responseData, index, id) {
 
     // console.log('onAddToCart ' + JSON.stringify(responseData))
@@ -95,23 +150,26 @@ class ProductsStore {
     this.cartUpdating = false;
 
     if (!isError) {
-      this.afterCartAdd(index, id)
     }
     else global.showMessage(responseData.message)
+
+    this.afterCartAdd(index, id,isError,responseData.cart_id)
+
   }
 
 
   setItemLoading(index) {
 
-    var allProducts = this.products;
+    var allProducts = [...this.products];
     var item = allProducts[index];
     item.loading = true;
+    console.log('setItemLoading: ' + JSON.stringify(item))
 
     this.products = allProducts
 
   }
 
-  afterCartAdd(index, id) {
+  afterCartAdd(index, id , isError,cart_id) {
 
     console.log('onAddToCart called!')
 
@@ -127,14 +185,21 @@ class ProductsStore {
     var allProducts = [...this.products];
     var item = allProducts[index];
 
-    if (!item.count) {
-      item.count = 1;
+    if(isError){
+      item.loading = false;
+      this.products = allProducts
+      return;
+    }
+
+    if (!item.cart_quantity) {
+      item.cart_quantity = 1;
+      item.cart_id = cart_id;
       item.loading = false;
       this.products = allProducts;
 
       console.log('Modified prod: ' + JSON.stringify(this.products[index]))
 
-      return item;
+      this.onApiActionDone( item , constants.TYPE_ADDCART);
 
     }
 
@@ -143,7 +208,7 @@ class ProductsStore {
 
 
 
-  afterMinusCart(index, id) {
+  afterMinusCart(index, id,isError) {
 
     console.log('minusCart called!')
 
@@ -159,26 +224,46 @@ class ProductsStore {
     var allProducts = [...this.products];
     var item = allProducts[index];
 
-    if (item.count) {
-      if (item.count == 1)
-        delete item.count
+    if(isError){
+      item.loading = false;
+      this.products = allProducts
+      return;
+    }
+
+    if (item.cart_quantity) {
+      
+      if (item.cart_quantity == 1)
+        item.cart_quantity = 0
+
       else
-        item.count = item.count - 1;
+        item.cart_quantity = item.cart_quantity - 1;
     
         item.loading = false;
         this.products = allProducts;
 
       console.log('Modified prod: ' + JSON.stringify(this.products[index]))
-      return item;
+      this.onApiActionDone( item , constants.TYPE_MINUS);
 
     }
 
   }
 
+  @action onApiActionDone(method){
+    this.onApiActionDone =method
+  }
+
+
+  
+
 
   @action updateCart(data,index, id, type) {
 
     // console.log('plusCart called!')
+
+  //     user_id:1
+  // catalogue_id:2
+  // quantity:1
+  // cart_id:3
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
@@ -208,15 +293,17 @@ class ProductsStore {
     this.cartUpdating = false;
 
     if (!isError) {
-      if (type == constants.TYPE_PLUS)
-        this.afterCartAdd(index, id)
-      else this.afterMinusCart(index, id)
+      
     }
     else global.showMessage(responseData.message)
+
+    if (type == constants.TYPE_PLUS)
+        this.afterPlusCart(index, id,isError)
+      else this.afterMinusCart(index, id,isError)
   }
 
 
-  afterPlusCart(index, id) {
+  afterPlusCart(index, id,isError) {
 
     if (isNaN(index) && isNaN(id))
       return
@@ -232,14 +319,19 @@ class ProductsStore {
 
     console.log('Plus cart productStore: ' + JSON.stringify(item))
 
+    if(isError){
+      item.loading = false;
+      this.products = allProducts
+      return;
+    }
 
-    if (item.count) {
-      item.count = item.count + 1;
-      // this.caluclateTotal(item,constants.TYPE_PLUS)
+    if (item.cart_quantity) {
+      item.cart_quantity = item.cart_quantity + 1;
+      item.loading = false;
       this.products = allProducts;
 
       console.log('Modified prod: ' + JSON.stringify(this.products[index]))
-      return item;
+      this.onApiActionDone( item , constants.TYPE_PLUS);
     }
 
   }
@@ -255,15 +347,7 @@ class ProductsStore {
 
   }
 
-  // caluclateTotal(item,type){
-
-  //   if(type==constants.TYPE_PLUS)
-  //    this.total = (item.price + this.total)
-  //    else this.total = (this.total-item.price)
-
-  // }
-
-
+  
   // @observable products = [
   //   {
   //     image: require("../../../assets/images/pic1.jpg"),
@@ -339,11 +423,11 @@ class ProductsStore {
   // ];
 
   // @action increment() {
-  //   this.count += 1;
+  //   this.cart_quantity += 1;
   // }
 
   // @action decrement() {
-  //   this.count -= 1;
+  //   this.cart_quantity -= 1;
   // }
 }
 

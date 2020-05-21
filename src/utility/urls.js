@@ -17,6 +17,9 @@ export default urls = {
   urlAddToCart: baseUrl + 'cart/add',
   urlUpdateCart: baseUrl + 'cart/update',
   urlRemoveCart: baseUrl + 'cart/remove',
+  urlGetCart: baseUrl + 'cart/get',
+  urlGetBanners: baseUrl + 'dashboard/get_banners',
+  urlRemoveCart: baseUrl + 'cart/remove',
 };
 
 

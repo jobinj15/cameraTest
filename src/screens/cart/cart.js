@@ -2,22 +2,96 @@ import React, { Component } from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
 import { Card, Button } from 'react-native-ui-lib';
-import { View, TouchableWithoutFeedback, Text, Image, FlatList } from 'react-native';
+import { View, TouchableWithoutFeedback, Text, ActivityIndicator, FlatList } from 'react-native';
 import { observer, inject } from "mobx-react";
 import constants from '../../utility/constants';
 import colors from '../../styles/colors';
 import PlusView from '../../components/custom_views/plusView';
 import Icon from 'react-native-vector-icons/Ionicons';
+import ToolBar from '../../components/toolbar'
+
+var listApiData = {
+    page_no: 0,
+    user_id: ''
+}
+
+var addApiData = {
+    user_id: '',
+    catalogue_id: '',
+    quantity: ''
+}
+
+var updateApiData = {
+    user_id: '',
+    catalogue_id: '',
+    quantity: '',
+    cart_id: ''
+}
+
+var removeCartApiData = {
+    cart_id: ''
+}
+
+
+var cartStore;
 
 @inject("cartStore")
 @observer
-export default class Cart extends Component {
+class Cart extends Component {
     constructor(props) {
         super(props);
 
         this.onPlusClicked = this.onPlusClicked.bind(this);
         this.onMinusClicked = this.onMinusClicked.bind(this);
+        cartStore = this.props.cartStore
     }
+
+    static navigationOptions = ({ navigation }) => {
+        //return header with Custom View which will replace the original header 
+        return {
+            header: (
+                <ToolBar
+                    title='Cart'
+                    showTitleH={true}
+                    showBackButton={false}
+                />
+            ),
+        };
+    };
+
+
+    componentDidMount() {
+
+        // store.onApiActionDone = this.onApiActionDone;
+
+        global.getItem(constants.USER).then(result => {
+            if (!result) return;
+
+            this.setUserIdToApiData(result)
+
+            this.callApi()
+        });
+
+
+    }
+
+    setUserIdToApiData(result) {
+        listApiData.user_id = result.user_id
+        addApiData.user_id = result.user_id
+        removeCartApiData.user_id = result.user_id
+        updateApiData.user_id = result.user_id
+    }
+
+
+    callApi() {
+        let formdata = new FormData();
+        for (let key in listApiData) {
+            formdata.append(key, listApiData[key]);
+        }
+        cartStore.getCart(formdata, listApiData.page_no)
+    }
+
+
 
     render() {
         return (
@@ -27,7 +101,7 @@ export default class Cart extends Component {
                     navigation={this.props.navigation}
                     extraData={this.state}
                     showsVerticalScrollIndicator={false}
-                    data={this.props.cartStore.cart}
+                    data={cartStore.cart}
                     renderItem={this.renderRow.bind(this)}
                     ItemSeparatorComponent={this.renderSeparator}
                     keyExtractor={(item, index) => index.toString()}
@@ -35,9 +109,87 @@ export default class Cart extends Component {
 
                 {this.bottomView()}
 
+                {
+                    cartStore.loading &&
+                    global.getLoader()
+                }
+
+                {
+                    (cartStore.apiLoaded && !cartStore.cart.length)
+                    && global.getNoDataView()
+                }
+
             </View>
         );
     }
+
+    drawButtonView(item, index) {
+
+        if (index == 0)
+            console.log('drawButtonView: ' + JSON.stringify(item))
+
+        if (item.loading)
+            return (
+                <View
+                    style={[styles.plusContainer, {
+                        marginTop: 10,
+                        justifyContent: 'center',
+                        borderColor: colors.WHITE
+                    }]}
+                >
+                    <ActivityIndicator size="small" color={colors.DARKGRAY} />
+
+
+                </View>
+            )
+
+        if (!item.cart_quantity)
+            return (
+                <Button
+                    backgroundColor={colors.GREEN_4}
+                    label={constants.TXT_ADDTOCART}
+                    onPress={() => {
+                        this.onAddToCart(index);
+                    }}
+                    labelStyle={{ fontWeight: 'bold', fontSize: 14 }}
+                    style={[styles.addContainer, { marginTop: 10 }]}
+                    borderRadius={3}
+                    enableShadow
+                />
+
+            )
+
+        return (
+            <View
+                style={[styles.plusContainer, {
+                    marginTop: 10,
+                    borderColor: colors.ListViewBG
+                }]}
+            >
+
+
+                <PlusView
+                    index={index}
+                    type={constants.TYPE_MINUS}
+                    onPress={this.onMinusClicked}
+                />
+                <Text
+                    style={[styles.stripLabel, {
+                        textAlign: 'center', marginTop: 4
+                        , color: colors.GREY
+                    }]}
+                >{item.cart_quantity}</Text>
+
+                <PlusView
+                    index={index}
+                    type={constants.TYPE_PLUS}
+                    onPress={this.onPlusClicked}
+                />
+            </View>
+        )
+
+    }
+
 
 
     renderSeparator = () => {
@@ -50,15 +202,15 @@ export default class Cart extends Component {
 
 
     onPlusClicked(index) {
-        this.props.cartStore.plusCart(index)
+        cartStore.plusCart(index)
     }
 
     onMinusClicked(index) {
-        this.props.cartStore.minusCart(index)
+        cartStore.minusCart(index)
     }
 
     onAddToCart(index) {
-        this.props.cartStore.addToCart(index)
+        cartStore.addToCart(index)
     }
 
     bottomView() {
@@ -70,7 +222,7 @@ export default class Cart extends Component {
                 <Text
                     style={[styles.stripLabel, { color: colors.WHITE }]}
                 >
-                    {constants.TXT_TOTAL + constants.SYMBOL_RUPEE + this.props.cartStore.total}
+                    {constants.TXT_TOTAL + constants.SYMBOL_RUPEE + cartStore.total}
                 </Text>
 
                 <Text
@@ -120,7 +272,7 @@ export default class Cart extends Component {
                         >
 
                             <Text
-                                style={[styles.stripLabel,{marginTop:10}]}
+                                style={[styles.stripLabel, { marginTop: 10 }]}
                                 numberOfLines={2}
                             >
                                 {item.name}
@@ -155,7 +307,7 @@ export default class Cart extends Component {
                     </View>
 
                     <View
-                        style={{ flexDirection: 'row', flex: 2 }}
+                        style={{ flexDirection: 'row', flex: 1 }}
                     >
                         <View
                             style={{
@@ -163,60 +315,14 @@ export default class Cart extends Component {
                             }}
                         />
 
-                        {
-                            isNaN(item.count) &&
-                            <Button
-                                backgroundColor={colors.GREEN_4}
-                                label={constants.TXT_ADDTOCART}
-                                onPress={() => {
-                                    this.onAddToCart(index);
-                                }}
-                                labelStyle={{ fontWeight: 'bold', fontSize: 14 }}
-                                style={[styles.addContainer, { marginTop: 10 }]}
-                                borderRadius={3}
-                                enableShadow
-                            />
-                        }
-
-
-                        {
-                            !isNaN(item.count) && (
-
-                                <View
-                                    style={[styles.plusContainer, {
-                                        marginTop: 10,
-                                    }]}
-                                >
-
-
-                                    <PlusView
-                                        index={index}
-                                        type={constants.TYPE_MINUS}
-                                        onPress={this.onMinusClicked}
-                                    />
-                                    <Text
-                                        style={[styles.stripLabel, {
-                                            textAlign: 'center', marginTop: 4
-                                            , color: colors.GREY
-                                        }]}
-                                    >{item.count}</Text>
-
-                                    <PlusView
-                                        index={index}
-                                        type={constants.TYPE_PLUS}
-                                        onPress={this.onPlusClicked}
-                                    />
-                                </View>
-                            )
-                        }
-
-
+                        {this.drawButtonView(item, index)}
 
                     </View>
 
                     <TouchableWithoutFeedback
                         onPress={() => {
-                            this.props.cartStore.deleteItem(index);
+                            removeCartApiData.cart_id = item.id
+                            cartStore.deleteItem(global.sendAsFormData(removeCartApiData), index);
                         }}
                     >
                         <Icon name={'ios-close'} size={30} color={colors.BLACK}
@@ -238,5 +344,7 @@ export default class Cart extends Component {
 
 
 }
+
+export default Cart
 
 
