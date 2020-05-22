@@ -132,9 +132,13 @@ var styles = {
         alignItems:'center',
         justifyContent:'center',
     },
-    labelSmall: {
+    labelSmallX1: {
         color: colors.GREY,
         fontSize: 16
+    },
+    labelSmall: {
+        color: colors.GREY,
+        fontSize: 12
     },
     labelProfile: {
         color: colors.GREY,

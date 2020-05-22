@@ -34,14 +34,14 @@ export default class CatHomeStore {
       var categories = responseData.data;
       var length = categories.length;
 
-      if(length%4!=0){
-        var itemsToAdd = 4-length%4;
-        for(var i=0;i<itemsToAdd;i++)
-        correction.push({
-          blank : true
-        })
-      }
-    
+      // if(length%4!=0){
+      //   var itemsToAdd = 4-length%4;
+      //   for(var i=0;i<itemsToAdd;i++)
+      //   correction.push({
+      //     blank : true
+      //   })
+      // }
+      
       this.categories = [...categories,...correction]
       console.log('onCategories ' + JSON.stringify(this.categories))
     }

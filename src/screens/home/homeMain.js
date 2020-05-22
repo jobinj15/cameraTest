@@ -54,7 +54,7 @@ const TAG = 'HomeTab'
 
   render() {
     return (
-      <View style={[styles.styleFull, { paddingTop: 10, backgroundColor: colors.WHITE }]}>
+      <View style={[styles.styleFull, { padding: 0, backgroundColor: colors.WHITE }]}>
 
         <ScrollView>
           <View>
