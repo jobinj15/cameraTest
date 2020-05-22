@@ -4,7 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import MyOrders from './myOrders';
 import OrderDetails from './OrderDetails';
 import ProfileList from './profileList';
-import Addresses from './Addresses';
+import Addresses from './AddressList';
 import AddAddress from './AddAddress';
 
 const onBoardStack = createStackNavigator(

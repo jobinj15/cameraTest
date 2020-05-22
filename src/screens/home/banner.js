@@ -49,13 +49,14 @@ export default class HomeTab extends Component {
 
     render() {
         return (
-            <View style={[styles.banner]}>
+            <View style={[styles.banner,{marginTop:10}]}>
 
                 <Carousel
                     ref={(c) => { this._carousel = c; }}
                     data={store.banners}
                     renderItem={this.renderRow}
                     sliderWidth={sliderWidth}
+                    sliderHeight={5}
                     itemWidth={itemWidth}
                     loop={true}
                     autoplay={true}

@@ -26,6 +26,8 @@ class CartStore {
 
   }
 
+
+
   @action afterAddCart(index,item){
     console.log('afterAddCart called!' + JSON.stringify(item))
 
@@ -61,6 +63,48 @@ class CartStore {
 
   }
 
+
+  @action updateCart(data,index, id, type) {
+
+    global.isOnline().then(isNetworkAvailable => {
+      if (!isNetworkAvailable)
+        global.showToast(constants.NO_INTERNET)
+      else {
+
+        this.cartUpdating = true;
+        this.setItemLoading(index);
+
+        prod_repository.updateCart(
+          data,
+          this.onUpdateCart.bind(this),
+          index, id, type
+        );
+
+      }
+    });
+
+  }
+
+
+
+  onUpdateCart(isError, responseData, index, id, type) {
+
+    // console.log('onAddToCart ' + JSON.stringify(responseData))
+
+    this.cartUpdating = false;
+
+    if (!isError) {
+      
+    }
+    else global.showMessage(responseData.message)
+
+    if (type == constants.TYPE_PLUS)
+        this.afterPlusCart(index, id,isError)
+      else this.afterMinusCart(index, id,isError)
+  }
+
+
+
   setItemLoading(index) {
 
     var allCart = [...this.cart];
@@ -74,13 +118,14 @@ class CartStore {
 
   }
 
-  afterCartDelete(index,responseData,isError){
+  @action afterCartDelete(index,responseData,isError){
 
     console.log('afterCartDelete : ' + index)
 
+    this.cartUpdating = false;
+
     var allCart = [...this.cart];
     var item = allCart[index];
-
 
     if(isError){
       item.loading = false;
@@ -130,7 +175,7 @@ class CartStore {
 
 
 
-  @action afterMinusCart(index,id) {
+  @action afterMinusCart(index,id,isError) {
 
     console.log('afterMinusCart called! ' + id)
 
@@ -143,15 +188,23 @@ class CartStore {
     var allCart = [...this.cart];
     var item = allCart[index];
     
+    if(isError){
+      item.loading = false;
+      this.cart = allCart
+      return;
+    }
+
     console.log('minusCart cart cartStore: ' + JSON.stringify(item))
 
     if (item.cart_quantity) {
       // if(id==undefined)
       item.cart_quantity = item.cart_quantity - 1;
       this.calculateTotal(item, constants.TYPE_MINUS)
+      item.loading = false;
       
       if(item.cart_quantity==0)
       allCart.splice(index,1)
+
       this.cart = allCart;
     }
     else{
@@ -251,7 +304,7 @@ class CartStore {
 
   }
 
-  @action afterPlusCart(index,id) {
+  @action afterPlusCart(index,id,isError) {
 
     console.log('afterPlusCart called! ' + id)
 
@@ -266,13 +319,19 @@ class CartStore {
 
     var allCart = [...this.cart];
     var item = allCart[index];
-    
+
+    if(isError){
+      item.loading = false;
+      this.cart = allCart
+      return;
+    }
+
 
     if (item.cart_quantity) {
 
       // if(id==undefined)
       item.cart_quantity = item.cart_quantity + 1;
-      
+      item.loading = false;
 
       this.calculateTotal(item, constants.TYPE_PLUS)
       this.cart = allCart;

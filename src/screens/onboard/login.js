@@ -5,7 +5,8 @@ import global from '../../utility/global'
 import { FloatingTitleTextInputField } from "../../components/custom_views/floatingtext";
 import constants from '../../utility/constants'
 import user_repository from '../../repos/user_repository'
-import { StackActions,NavigationActions} from 'react-navigation';
+import { StackActions, NavigationActions } from 'react-navigation';
+import colors from '../../styles/colors';
 
 
 const fields = {
@@ -123,23 +124,20 @@ export default class Login extends Component {
     this.setState({ loading: false }, () => {
       if (!isError) {
         global.storeItem(constants.USER, responseData)
-        global.showMessage("Login successfull!")
+        global.showMessage("Login successful!")
         this._interval = setTimeout(() => {
 
           const resetAction = StackActions.reset({
             index: 0,
             key: null,
             actions: [NavigationActions.navigate({
-              routeName: route, params: {
+              routeName: 'Home', params: {
                 navigator: this.props.navigation
               }
             })]
           });
 
           this.props.navigation.dispatch(resetAction);
-
-
-
         }, 1000);
       } else {
         global.showMessage(responseData.message);
@@ -147,6 +145,12 @@ export default class Login extends Component {
     })
 
   }
+
+  navigateTo() {
+    this.props.navigation.navigate('Signup', {
+        [constants.PARAM_NAV]: this.props.navigation,
+    });
+}
 
   render() {
 
@@ -202,6 +206,28 @@ export default class Login extends Component {
             />
 
           </View>
+
+          <TouchableWithoutFeedback
+          onPress = {
+            ()=>{
+              this.navigateTo()  
+            }
+          }
+          >
+            <View
+              style={{
+                marginTop: 15,
+                alignItems: 'center'
+              }}
+            >
+              <Text
+                style={[styles.stripLabel, { color: colors.PRIMARY }]}
+              >
+                {constants.TXT_SIGNUP}
+              </Text>
+
+            </View>
+          </TouchableWithoutFeedback>
 
         </ScrollView>
 

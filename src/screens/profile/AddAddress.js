@@ -10,12 +10,22 @@ import user_repository from '../../repos/user_repository'
 import colors from '../../styles/colors';
 import stores from '../stores';
 
+var pinApiData = {
+  pincode: ''
+}
+
+var listApiData = {
+  page_no: 0,
+  user_id: ''
+}
+
+
 const fields = {
-  FULL_NAME: 'full_name',
+  FULL_NAME: 'name',
   ADDRESS: 'address',
+  MOBILE: 'number',
   LANDMARK: 'landmark',
-  PINCODE: 'pincode',
-  MOBILE: 'mobile_no',
+  PINCODE: 'pin_code',
   AREA: 'area',
 }
 
@@ -26,30 +36,47 @@ const errors = {
   [fields.ADDRESS]: {
     error: constants.ERROR_ADDRESS,
   },
-  [fields.LANDMARK]: {
-    skipBlankCheck: true,
-  },
   [fields.MOBILE]: {
     error: constants.ERROR_MOBILE,
     additional: global.isValidMobNo
   },
+  [fields.LANDMARK]: {
+    skipBlankCheck: true,
+  },
   [fields.PINCODE]: {
     error: constants.ERROR_PIN,
+    additional: global.isValidPin
   },
   [fields.AREA]: {
     error: constants.ERROR_AREA,
   }
 }
 
+var store;
 
+@inject(stores => ({
+  addStore: stores.addAddressStore,
+  listStore: stores.addressListStore,
+}))
 
-@inject("addAddressStore")
-@observer
 export default class AddAddress extends Component {
 
   constructor(props) {
     super(props);
     this.state = this.mapKeysToState();
+
+    store = this.props.addStore
+ 
+    const { navigation } = this.props
+    this.state.userId = navigation.getParam(constants.PARAM_USER, null)
+    afterAddressAdded = this.afterAddressAdded.bind(this)
+
+  }
+
+  afterAddressAdded() {
+    listApiData.user_id = this.state.userId;
+    this.props.listStore(global.sendAsFormData(listApiData), listApiData.page_no)
+    this.props.navigation.pop()
   }
 
   _updateMasterState = (attrName, value) => {
@@ -71,9 +98,10 @@ export default class AddAddress extends Component {
 
   componentDidMount() {
     // this.doRegister();
+    store.afterAddressAdded = this.afterAddressAdded
   }
 
-  validateAndGetData() {
+  validateAndAddAddress() {
     var item;
 
     for (key in errors) {
@@ -87,6 +115,9 @@ export default class AddAddress extends Component {
         return false;
     }
 
+    if (!store.isValidPin)
+      return global.showMessage(constants.ERROR_PIN)
+
     var key;
     // for (item in fields) {
     //   key = fields[item];
@@ -99,67 +130,35 @@ export default class AddAddress extends Component {
       formdata.append(key, this.state[key]);
     }
 
+    formdata.append('state', store.state)
+    formdata.append('city', store.city)
+    formdata.append('user_id', this.state.userId)
+
+
+    console.log("AllData : " + JSON.stringify(formdata))
+
     return formdata;
   }
 
-  handleRegister() {
+  componentWillUnmount(){
+    store.state = constants.TXT_STATE
+    store.city = constants.TXT_CITY
+  }
 
-    var data = this.validateAndGetData();
+  handleAddAddress() {
+
+    var data = this.validateAndAddAddress();
 
     if (!data)
       return;
 
-    this.doRegister(data)
-
-    console.log('handleRegister ' + JSON.stringify(data))
+    store.addAddress(data)
 
   }
 
 
-  doRegister(data) {
-
-    global.isOnline().then(isNetworkAvailable => {
-      if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
-      else {
-
-        this.setState({ loading: true }, () => {
-
-          user_repository.registerUser(
-            data,
-            this.onRegistered.bind(this)
-          );
-
-        })
-
-      }
-    });
-
-  }
-
-  onRegistered(isError, responseData) {
-
-    console.log('onRegistered ' + JSON.stringify(responseData))
-
-    this.setState({ loading: false }, () => {
-      if (!isError) {
-        global.showMessage("Registered successfully!")
-        this._interval = setTimeout(() => {
-          // this.doLogin();
-        }, 1000);
-      } else {
-        global.showMessage(responseData.message);
-      }
-    })
-
-  }
 
   render() {
-
-    const store = this.props.addAddressStore
-
-    console.log('AddAddress ' +  JSON.stringify(store.stateIndex) )
-    console.log('AddAddress ' +  JSON.stringify(store.states[store.stateIndex]) )
 
     return (
       <View
@@ -171,9 +170,9 @@ export default class AddAddress extends Component {
         <ScrollView
           keyboardShouldPersistTaps='handled'
           style={{
-            padding: 15,backgrounColor: colors.WHITE,
+            padding: 15, backgrounColor: colors.WHITE,
           }}
-          
+
         >
           <View
           >
@@ -184,7 +183,7 @@ export default class AddAddress extends Component {
               style={{
                 marginBottom: 15
               }}
-              disabled={this.state.loading}
+              disabled={store.loading}
               updateMasterState={this._updateMasterState}
               textInputStyles={{ // here you can add additional TextInput styles
                 color: 'green',
@@ -200,7 +199,7 @@ export default class AddAddress extends Component {
               attrName={fields.ADDRESS}
               title={constants.TXT_ADDRESS}
               value={this.state[fields.ADDRESS]}
-              disabled={this.state.loading}
+              disabled={store.loading}
               style={{
                 marginBottom: 15,
               }}
@@ -215,6 +214,25 @@ export default class AddAddress extends Component {
               }}
             />
 
+            <FloatingTitleTextInputField
+              attrName={fields.MOBILE}
+              title='Mobile Number'
+              style={{
+                marginBottom: 15,
+              }}
+              disabled={store.loading}
+              value={this.state[fields.MOBILE]}
+              onChange={mobNo => {
+                this.setState({ [fields.MOBILE]: global.toNumbers(mobNo) })
+              }}
+              updateMasterState={this._updateMasterState}
+              otherTextInputProps={{   // here you can add other TextInput props of your choice
+                keyboardType: "numeric",
+                maxLength: 10
+              }}
+            />
+
+
 
             <FloatingTitleTextInputField
               attrName={fields.LANDMARK}
@@ -222,7 +240,7 @@ export default class AddAddress extends Component {
               style={{
                 marginBottom: 15
               }}
-              disabled={this.state.loading}
+              disabled={store.loading}
               value={this.state[fields.LANDMARK]}
               updateMasterState={this._updateMasterState}
               otherTextInputProps={{   // here you can add other TextInput props of your choice
@@ -238,12 +256,19 @@ export default class AddAddress extends Component {
                 marginBottom: 15
               }}
               onChange={pin => {
-                this.setState({ [fields.PINCODE]: pin.replace(/[^0-9]/g, '') })
+                this.setState({ [fields.PINCODE]: pin.replace(/[^0-9]/g, '') }, () => {
+                  if (pin && pin.length > 5) {
+                    store.isValidPin = false;
+                    pinApiData.pincode = pin;
+                    store.getPin(global.sendAsFormData(pinApiData))
+                  }
+                })
               }}
-              disabled={this.state.loading}
+              disabled={store.loading}
               updateMasterState={this._updateMasterState}
               otherTextInputProps={{   // here you can add other TextInput props of your choice
-                keyboardType: "numeric"
+                keyboardType: "numeric",
+                maxLength: 6,
               }}
             />
 
@@ -254,43 +279,28 @@ export default class AddAddress extends Component {
               style={{
                 marginBottom: 15
               }}
-              disabled={this.state.loading}
+              disabled={store.loading}
               value={this.state[fields.AREA]}
               updateMasterState={this._updateMasterState}
               otherTextInputProps={{   // here you can add other TextInput props of your choice
               }}
             />
 
-            <Dropdown
-              label='Select State'
-              data={store.states}
-              valueExtractor={({ name }) => name}
-              value={store.states[store.stateIndex].name}
-              animationDuration={0}
-              containerStyle={{
+            <Text
+              style={[styles.labelBorder, { marginBottom: 10 }]}
+            >
 
-              }
-              }
-              onChangeText={(value, index, data) => {
-                store.stateIndex = index
-              }}
-            />
+              {store.state}
 
+            </Text>
 
-            <Dropdown
-              label='Select City'
-              data={store.cities}
-              valueExtractor={({ name }) => name}
-              value={store.cities[store.cityIndex].name}
-              animationDuration={0}
-              containerStyle={{
-                marginBottom:50
-              }
-              }
-              onChangeText={(value, index, data) => {
-                store.cityIndex = index
-              }}
-            />
+            <Text
+              style={styles.labelBorder}
+            >
+
+              {store.city}
+
+            </Text>
 
 
           </View>
@@ -298,27 +308,33 @@ export default class AddAddress extends Component {
         </ScrollView>
 
         <View
-          style={[styles.bottomlayout,{bottom:10,marginBottom:10}]}
+          style={[styles.bottomlayout, { bottom: 10, marginBottom: 10 }]}
         >
 
-                  </View>
+        </View>
 
-                  <TouchableWithoutFeedback
-            onPress={() => {
-              // this.handleRegister();
-            }}
+        <TouchableWithoutFeedback
+          onPress={() => {
+            this.handleAddAddress();
+          }}
+        >
+          <View
+            style={[styles.largeButton, { width: undefined, marginLeft: 0, paddingHorizontal: 40 }]}
           >
-            <View
-              style={[styles.largeButton, { width: undefined, marginLeft: 0, paddingHorizontal: 40 }]}
+            <Text
+              style={styles.buttonText}
             >
-              <Text
-                style={styles.buttonText}
-              >
-                {global.capitalize(constants.TXT_ADD)}{" "}
-              </Text>
-            </View>
-          </TouchableWithoutFeedback>
- 
+              {global.capitalize(constants.TXT_ADD)}{" "}
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
+
+
+        {
+          store.loading &&
+          global.getLoader()
+        }
+
 
       </View>
     )

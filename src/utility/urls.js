@@ -20,6 +20,11 @@ export default urls = {
   urlGetCart: baseUrl + 'cart/get',
   urlGetBanners: baseUrl + 'dashboard/get_banners',
   urlRemoveCart: baseUrl + 'cart/remove',
+  urlGetOrderDetails: baseUrl + 'order/get',
+  urlGetOrders: baseUrl + 'order/getall',
+  urlAddresses: baseUrl + 'address/get',
+  urlAddAddress: baseUrl + 'address/add',
+  urlGetPIN: baseUrl + 'pincode/get',
 };
 
 

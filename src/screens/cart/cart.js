@@ -202,11 +202,37 @@ class Cart extends Component {
 
 
     onPlusClicked(index) {
-        cartStore.plusCart(index)
+        // cartStore.plusCart(index)
+
+        if (cartStore.cartUpdating)
+            return;
+
+        var item = cartStore.cart[index];
+        updateApiData.catalogue_id = item.catalogue_id;
+        updateApiData.quantity = item.cart_quantity + 1;
+        updateApiData.cart_id = item.id;
+
+        cartStore.updateCart(global.sendAsFormData(updateApiData), index, null, constants.TYPE_PLUS)
+
+
     }
 
     onMinusClicked(index) {
-        cartStore.minusCart(index)
+        // cartStore.minusCart(index)
+
+        if (cartStore.cartUpdating)
+            return;
+
+        var item = cartStore.cart[index];
+        updateApiData.catalogue_id = item.catalogue_id;
+        updateApiData.quantity = item.cart_quantity - 1;
+        updateApiData.cart_id = item.id;
+
+        if(item.cart_quantity==1)
+        cartStore.deleteItem(global.sendAsFormData(updateApiData),index)
+        else
+        cartStore.updateCart(global.sendAsFormData(updateApiData), index, null, constants.TYPE_MINUS)
+
     }
 
     onAddToCart(index) {

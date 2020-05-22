@@ -99,6 +99,17 @@ var styles = {
         flex: 1,
         color: colors.BLACK
     },
+    labelBorder: {
+        fontSize: 16,
+        fontWeight:'500',
+        flex: 1,
+        paddingBottom:10,
+        paddingHorizontal:6,
+        paddingTop:10,
+        borderBottomWidth:0.5,
+        borderColor: colors.GREY,
+        color: colors.DARKGRAY
+    },
     stripContainer: {
         alignSelf: 'stretch',
         flexDirection: 'row',

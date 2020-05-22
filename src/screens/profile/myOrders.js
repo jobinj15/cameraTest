@@ -7,6 +7,12 @@ import { observer, inject } from "mobx-react";
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
 
+var listApiData = {
+    page_no: 0,
+    user_id: ''
+}
+
+var store;
 
 @inject("myOrdersStore")
 @observer
@@ -17,7 +23,35 @@ export default class MyOrders extends Component {
         this.state = {
 
         }
+
+        store = this.props.myOrdersStore
     }
+
+    componentDidMount() {
+
+        // store.onApiActionDone = this.onApiActionDone;
+
+        global.getItem(constants.USER).then(result => {
+            if (!result) return;
+
+            this.setUserIdToApiData(result)
+
+            this.callApi()
+        });
+
+
+    }
+
+    callApi() {
+        store.getOrders(global.sendAsFormData(listApiData), listApiData.page_no)
+    }
+
+
+    setUserIdToApiData(result) {
+        listApiData.user_id = 1
+        // listApiData.user_id = result.user_id
+    }
+
 
 
     navigateTo() {
@@ -25,6 +59,13 @@ export default class MyOrders extends Component {
             // [constants.PARAM_INDEX]: index,
         });
     }
+
+    handleRefresh() {
+        listApiData.page_no = 0
+        store.refreshing = true
+        this.callApi()
+    }
+
 
     //0 4 8 
     render() {
@@ -37,9 +78,21 @@ export default class MyOrders extends Component {
                     showsVerticalScrollIndicator={false}
                     data={this.props.myOrdersStore.orders}
                     renderItem={this.renderRow.bind(this)}
+                    onRefresh={this.handleRefresh.bind(this)}
+                    refreshing={store.refreshing}
                     ItemSeparatorComponent={this.renderSeparator}
                     keyExtractor={(item, index) => index.toString()}
                 />
+
+                {
+                    store.loading &&
+                    global.getLoader()
+                }
+
+                {
+                    (store.apiLoaded && !store.orders.length)
+                    && global.getNoDataView()
+                }
 
             </View>
         );
@@ -107,19 +160,19 @@ export default class MyOrders extends Component {
                                 flex: 1, flexDirection: 'row'
                             }}
                         >
-                            {this.drawKeyValue(constants.TXT_ORDERNO, item.orderId)}
+                            {this.drawKeyValue(constants.TXT_ORDERNO, item.order_id)}
 
                             <Text
                                 style={[styles.stripLabel, { color: colors.GREEN_4, flex: undefined }]}
                             >
-                                {item.date}
+                                {item.order_date}
 
                             </Text>
 
                         </View>
 
                         {this.drawKeyValue(constants.TXT_TOTAL, item.total, { marginTop: 5 })}
-                        {this.drawKeyValue(constants.TXT_ITEMS, item.items, { marginTop: 5 })}
+                        {this.drawKeyValue(constants.TXT_ITEMS, item.total_quantity, { marginTop: 5 })}
 
                         <Text
                             style={[
@@ -130,7 +183,7 @@ export default class MyOrders extends Component {
                                 flex: 1
                             }}
                         >
-                            {item.status}
+                            {item.order_status}
 
                         </Text>
 

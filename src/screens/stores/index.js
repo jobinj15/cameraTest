@@ -11,6 +11,7 @@ import cartStore from "./cartStore";
 import myOrdersStore from "./profile/myOrdersStore";
 import addAddressStore from "./profile/AddAddressStore";
 import orderDetailsStore from "./profile/OrderDetailsStore";
+import addressListStore from "./profile/addressListStore";
 
 
 export default {
@@ -26,4 +27,5 @@ export default {
   myOrdersStore: new myOrdersStore(),
   addAddressStore: new addAddressStore(),
   orderDetailsStore: new orderDetailsStore(),
+  addressListStore: new addressListStore(),
 };

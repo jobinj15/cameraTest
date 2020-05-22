@@ -195,6 +195,32 @@ export default global = {
     });
   },
 
+  isValidPin(text){
+    if(!text){
+      Snackbar.show({
+        text: constants.ERROR_PIN,
+        duration: Snackbar.LENGTH_SHORT,
+      })
+      return false;
+    }
+
+
+    if(text.trim().length!=6){
+      Snackbar.show({
+        text: constants.ERROR_PIN,
+        duration: Snackbar.LENGTH_SHORT,
+      })
+      return false;
+    }
+
+
+    return true;
+  },
+
+  toNumbers(text) {
+    return (text.replace(/[^0-9]/g, ''))
+  },
+
   async storeItem(key, item) {
     try {
       var jsonOfItem = await AsyncStorage.setItem(key, JSON.stringify(item));

@@ -59,7 +59,7 @@ export default class Signup extends Component {
     }
 
     objToSet.loading = false;
-    objToSet[fields.MOBILE] = 8898678943;
+    objToSet[fields.MOBILE] = '';
     objToSet[fields.GENDER] = constants.MALE
 
     console.log('mapKeysToState: ' + JSON.stringify(objToSet))
@@ -99,12 +99,12 @@ export default class Signup extends Component {
     return formdata;
   }
 
-  handleRegister(){
+  handleRegister() {
 
     var data = this.validateAndGetData();
 
-    if(!data)
-    return;
+    if (!data)
+      return;
 
     this.doRegister(data)
 
@@ -140,16 +140,22 @@ export default class Signup extends Component {
 
     this.setState({ loading: false }, () => {
       if (!isError) {
-        global.storeItem(constants.USER,responseData)
+        global.storeItem(constants.USER, responseData)
         global.showMessage("Registered successfully!")
         this._interval = setTimeout(() => {
-          // this.doLogin();
+          this.navigateTo();
         }, 1000);
       } else {
         global.showMessage(responseData.message);
       }
     })
 
+  }
+
+  navigateTo() {
+    this.props.navigation.navigate('Home', {
+      [constants.PARAM_NAV]: this.props.navigation,
+    });
   }
 
   render() {
@@ -178,7 +184,7 @@ export default class Signup extends Component {
               style={{
                 marginBottom: 15
               }}
-              disabled = {this.state.loading}
+              disabled={this.state.loading}
               updateMasterState={this._updateMasterState}
               textInputStyles={{ // here you can add additional TextInput styles
                 color: 'green',
@@ -194,7 +200,7 @@ export default class Signup extends Component {
               attrName={fields.LAST_NAME}
               title={constants.TXT_LAST_NAME}
               value={this.state[fields.LAST_NAME]}
-              disabled = {this.state.loading}
+              disabled={this.state.loading}
               style={{
                 marginBottom: 15
               }}
@@ -215,13 +221,32 @@ export default class Signup extends Component {
               style={{
                 marginBottom: 15
               }}
-              disabled = {this.state.loading}
+              disabled={this.state.loading}
               value={this.state[fields.EMAIL_ID]}
               updateMasterState={this._updateMasterState}
               otherTextInputProps={{   // here you can add other TextInput props of your choice
                 keyboardType: "email-address",
               }}
             />
+
+            <FloatingTitleTextInputField
+              attrName={fields.MOBILE}
+              title='Mobile Number'
+              style={{
+                marginBottom: 15,
+              }}
+              disabled={this.state.loading}
+              value={this.state[fields.MOBILE]}
+              onChange={mobNo => {
+                this.setState({ [fields.MOBILE]: global.toNumbers(mobNo) })
+              }}
+              updateMasterState={this._updateMasterState}
+              otherTextInputProps={{   // here you can add other TextInput props of your choice
+                keyboardType: "numeric",
+                maxLength: 10
+              }}
+            />
+
 
 
             <FloatingTitleTextInputField
@@ -231,7 +256,7 @@ export default class Signup extends Component {
               style={{
                 marginBottom: 15
               }}
-              disabled = {this.state.loading}
+              disabled={this.state.loading}
               updateMasterState={this._updateMasterState}
               otherTextInputProps={{   // here you can add other TextInput props of your choice
                 maxLength: 12,
