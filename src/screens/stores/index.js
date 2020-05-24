@@ -6,11 +6,12 @@ import bannerStore from "./home/bannerStore";
 import catHomeStore from "./home/catHomeStore";
 import recoHomeStore from "./home/recoHomeStore";
 import searchByBrandsStore from "./home/searchByBrandsStore";
-import productsStore from "./home/productsStore";
+import productsStore from "./products/productsStore";
 import cartStore from "./order/cartStore";
 import myOrdersStore from "./profile/myOrdersStore";
 import addAddressStore from "./profile/AddAddressStore";
-import orderDetailsStore from "./profile/OrderDetailsStore";
+import orderDetailsStore from "./order/OrderDetailsStore";
+import productDetailsStore from "./products/ProductDetailsStore";
 import addressListStore from "./profile/addressListStore";
 import selectAddressStore from "./order/SelectAddressStore";
 import paymentsStore from "./order/PaymentsStore";
@@ -32,4 +33,5 @@ export default {
   addressListStore: new addressListStore(),
   selectAddressStore: new selectAddressStore(),
   paymentsStore: new paymentsStore(),
+  productDetailsStore: new productDetailsStore(),
 };

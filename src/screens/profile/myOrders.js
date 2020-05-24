@@ -48,15 +48,16 @@ export default class MyOrders extends Component {
 
 
     setUserIdToApiData(result) {
-        listApiData.user_id = 1
-        // listApiData.user_id = result.user_id
+        // listApiData.user_id = 1
+        listApiData.user_id = result.user_id
     }
 
 
 
-    navigateTo() {
+    navigateTo(item) {
         this.props.navigation.navigate('OrderDetails', {
-            // [constants.PARAM_INDEX]: index,
+            [constants.PARAM_USER]: listApiData.user_id,
+            [constants.PARAM_ORDER]: item,
         });
     }
 
@@ -126,7 +127,7 @@ export default class MyOrders extends Component {
                 </Text>
 
                 <Text
-                    style={[styles.labelSmall, { marginLeft: 15 }]}
+                    style={[styles.labelSmallX1, { marginLeft: 15 }]}
                 >
                     {value}
 
@@ -140,13 +141,13 @@ export default class MyOrders extends Component {
 
     renderRow({ item, index }) {
 
-        console.log('Orders row ' + JSON.stringify(item))
+        // console.log('Orders row ' + JSON.stringify(item))
 
         return (
 
             <TouchableWithoutFeedback
                 onPress={() => {
-                    this.navigateTo()
+                    this.navigateTo(item)
                 }}
             >
                 <Card style={{ flex: 1, borderRadius: 0 }} key={index}>
@@ -183,7 +184,7 @@ export default class MyOrders extends Component {
                                 flex: 1
                             }}
                         >
-                            {item.order_status}
+                            {item.order_status_name}
 
                         </Text>
 

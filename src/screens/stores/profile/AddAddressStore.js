@@ -10,7 +10,7 @@ export default class AddAddressStore {
   @observable loading = false;
   @observable isValidPin = false;
 
-  constructor(){
+  constructor() {
     this.afterAddressAdded = undefined
   }
 
@@ -34,12 +34,11 @@ export default class AddAddressStore {
 
   onPin(isError, responseData) {
 
-    console.log('onPin ' + JSON.stringify(responseData))
 
     // return;
 
-    if (this.loading)
-      this.loading = false;
+    this.loading = false;
+
 
     if (!isError) {
       if (responseData.data && responseData.data.length) {
@@ -47,16 +46,16 @@ export default class AddAddressStore {
         this.state = data.state
         this.city = data.city
         this.isValidPin = true
+
+        console.log('onPin Loadded' + JSON.stringify(this.state))
+
       }
     }
     else global.showMessage(responseData.message)
   }
 
 
-
-
-
-  @action addAddress(data) {
+  @action addAddress(data,mode) {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
@@ -64,30 +63,40 @@ export default class AddAddressStore {
       else {
 
         this.loading = true;
-        user_repository.addAddress(
-          data,
-          this.onAddressAdded.bind(this)
-        );
+         
+        if(mode==constants.MODE_EDIT){
+          user_repository.updateAddress(
+            data,
+            this.onAddressAdded.bind(this)
+          );  
+        }
+        else{
+          user_repository.addAddress(
+            data,
+            this.onAddressAdded.bind(this)
+          );
+  
+        }
 
+        
       }
     });
   }
 
 
-  onAddressAdded(isError,responseData) {
+  onAddressAdded(isError, responseData) {
 
-     this.loading = false;
+    this.loading = false;
 
-     if(!isError){
-        
-       this.afterAddressAdded()
-        
-     }
-     else global.showMessage(responseData.message)
+    if (!isError) {
+      if (this.afterAddressAdded)
+        this.afterAddressAdded()
+    }
+    else global.showMessage(responseData.message)
 
   }
 
-  @action afterAddressAdded(method){
+  @action afterAddressAdded(method) {
     this.afterAddressAdded = method;
   }
 

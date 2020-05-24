@@ -16,6 +16,11 @@ var addApiData = {
     quantity: ''
 }
 
+var detailApiData = {
+    catlogue_id: '',
+    user_id: ''
+}
+
 var updateApiData = {
     user_id: '',
     catalogue_id: '',
@@ -30,10 +35,9 @@ var removeCartApiData = {
 
 
 @inject(stores => ({
-    productsStore: stores.productsStore,
+    productDetailsStore: stores.productDetailsStore,
     cartStore: stores.cartStore,
 }))
-
 @observer
 export default class ProductDetails extends Component {
 
@@ -46,11 +50,11 @@ export default class ProductDetails extends Component {
         this.onPlusClicked = this.onPlusClicked.bind(this);
         this.onMinusClicked = this.onMinusClicked.bind(this);
 
-        prodStore = this.props.productsStore
+        prodStore = this.props.productDetailsStore
         cartStore = this.props.cartStore
 
         const { navigation } = this.props
-        this.state.index = navigation.getParam(constants.PARAM_INDEX, null)
+        this.state.product = navigation.getParam(constants.PARAM_PRODUCT, null)
 
     }
 
@@ -61,20 +65,93 @@ export default class ProductDetails extends Component {
             this.setUserIdToApiData(result)
         });
 
+        this.callApi();
+
+    }
+
+    componentWillUnmount() {
+        prodStore.isApiLoaded = false;
+        prodStore.product = {}
     }
 
     setUserIdToApiData(result) {
         addApiData.user_id = result.user_id
+        detailApiData.user_id = result.user_id
         removeCartApiData.user_id = result.user_id
         updateApiData.user_id = result.user_id
     }
 
+    callApi() {
+        detailApiData.catlogue_id = this.state.product.id
+        prodStore.getProductDetails(global.sendAsFormData(detailApiData))
+    }
 
+
+    drawVariants(item) {
+
+        if(!item.variants || !item.variants.length)
+        return(
+            <View/>
+        )
+
+        return (
+            <View
+                style={{ flexDirection: 'row', marginTop: 10 }}
+            >
+                <View
+                    style={{ flex: 1 }}
+                />
+
+                <View
+                    style={[styles.wrap]}
+                >
+                    {
+                        item.variants.map((item, index) => {
+                            return (
+                                <Text
+                                    style={[styles.variant]}
+                                >
+                                    {item.name}
+                                </Text>
+                            )
+                        })
+                    }
+
+                </View>
+
+
+            </View>
+        )
+
+        // return (
+        //     item.variants.map((item, index) => {
+        //         return (
+        //             <Text
+        //                 style={[styles.variant]}
+        //             >
+        //                 {item.name}
+        //             </Text>
+        //         )
+        //     })
+        // )
+    }
 
 
     render() {
 
-        const item = prodStore.products[this.state.index];
+
+        if (prodStore.isApiLoaded && !prodStore.product.id)
+            return (
+                global.getNoDataView()
+            )
+
+        if (prodStore.loading) {
+            return (
+                global.getLoader()
+            )
+        }
+
+        const item = prodStore.product;
         console.log('ProductDetails ' + JSON.stringify(item))
 
         var image = require('../../assets/images/pic2.jpg');
@@ -131,6 +208,9 @@ export default class ProductDetails extends Component {
                     </Text>
 
 
+                    {/* {this.drawVariants(item)} */}
+
+
                     <View
                         style={{ flexDirection: 'row' }}
                     >
@@ -177,7 +257,7 @@ export default class ProductDetails extends Component {
 
         if (!item.cart_quantity)
             return (
-                <View/>
+                <View />
             )
 
         return (

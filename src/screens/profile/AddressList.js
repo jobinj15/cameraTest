@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
 import { View, TouchableWithoutFeedback, Text, Image, FlatList } from 'react-native';
+import { RadioButton } from 'react-native-ui-lib';
 import { observer, inject } from "mobx-react";
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
@@ -30,6 +31,10 @@ export default class AdressList extends Component {
 
         store = this.props.addressListStore
         this.onDeleteYes = this.onDeleteYes.bind(this)
+
+        const { navigation } = this.props
+        this.state.mode = navigation.getParam(constants.PARAM_MODE, null)
+
     }
 
 
@@ -45,6 +50,7 @@ export default class AdressList extends Component {
             this.callApi()
         });
 
+        store.setAfterAddressListLoaded(undefined);
 
     }
 
@@ -148,6 +154,10 @@ export default class AdressList extends Component {
         );
     };
 
+    handleRadioClick(index) {
+        store.toggleSelection(index, this.props.navigation)
+    }
+
     renderRow({ item, index }) {
 
         console.log('renderRow addressList: ' + JSON.stringify(item))
@@ -159,30 +169,53 @@ export default class AdressList extends Component {
                     // this.navigateTo(item)
                 }}
             >
-
                 <View
-                    style={[styles.styleFull, {
+                    style={{
+                        flex: 1,
+                        flexDirection: 'row',
                         paddingTop: 20, paddingBottom: 10,
                         paddingHorizontal: 15,
                         backgroundColor: colors.WHITE
-                    }]}
+                    }}
                 >
+                    {
+                        (this.state.mode == constants.MODE_SELECT) &&
+                        <RadioButton
+                            color={colors.PRIMARY}
+                            style={{ marginRight: 10 }}
+                            selected={item.selected}
+                            onPress={() => {
+                                this.handleRadioClick(index)
+                            }}
+                        />
+                    }
 
-                    <Text
-                        style={[styles.stripLabel]}
+                    <View
+                        style={[styles.styleFull, {
+
+                        }]}
                     >
-                        {item.name}
 
-                    </Text>
 
-                    <Text
-                        style={[styles.labelSmallX1, { marginTop: 10 }]}
-                    >
-                        {item.address + ' ' + item.area + ' , ' + item.city + ' , ' + item.state
-                            + ' , ' + item.pin_code
-                        }
 
-                    </Text>
+                        <Text
+                            style={[styles.stripLabel]}
+                        >
+                            {item.name}
+
+                        </Text>
+
+                        <Text
+                            style={[styles.labelSmallX1, { marginTop: 10 }]}
+                        >
+                            {item.address + ' ' + item.area + ' , ' + item.city + ' , ' + item.state
+                                + ' , ' + item.pin_code
+                            }
+
+                        </Text>
+
+
+                    </View>
 
                     <View
                         style={[styles.topRight]}
@@ -190,29 +223,30 @@ export default class AdressList extends Component {
 
                         <TouchableWithoutFeedback
                             onPress={() => {
-                               this.navigateTo('AddAddress',constants.MODE_EDIT,item)
+                                this.navigateTo('AddAddress', constants.MODE_EDIT, item)
                             }}
                         >
                             <Icon name="edit" size={20} color={colors.GREY} />
                         </TouchableWithoutFeedback>
 
-                        <TouchableWithoutFeedback
-                            onPress={() => {
-                                this.state.deleteIndex = index;
-                                global.showAlert(constants.TITLE_DELETE, constants.DES_DEL, this.onDeleteYes)
-                            }}
-                        >
-                            <Icon name="delete" size={20} color={colors.GREY} style={{ marginLeft: 10 }} />
-                        </TouchableWithoutFeedback>
+                        {
+                            !item.selected &&
+                            <TouchableWithoutFeedback
+                                onPress={() => {
+                                    this.state.deleteIndex = index;
+                                    global.showAlert(constants.TITLE_DELETE, constants.DES_DEL, this.onDeleteYes)
+                                }}
+                            >
+                                <Icon name="delete" size={20} color={colors.GREY} style={{ marginLeft: 10 }} />
+                            </TouchableWithoutFeedback>
 
+                        }
 
 
                     </View>
 
 
-
                 </View>
-
 
 
             </TouchableWithoutFeedback>

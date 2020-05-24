@@ -34,7 +34,6 @@ var removeCartApiData = {
 
 var prodStore,cartStore;
 
-
 @inject(stores => ({
     productsStore: stores.productsStore,
     cartStore: stores.cartStore,
@@ -142,8 +141,11 @@ export default class Products extends Component {
     };
 
     navigateTo(index) {
+
+        const item = prodStore.products[index]
+
         this.props.navigation.navigate('ProductDetail', {
-            [constants.PARAM_INDEX]: index,
+            [constants.PARAM_PRODUCT]: item,
         });
     }
 
@@ -208,8 +210,8 @@ export default class Products extends Component {
 
     drawButtonView(item, index) {
 
-        if (index == 0)
-            console.log('drawButtonView: ' + JSON.stringify(item))
+        // if (index == 0)
+        //     console.log('drawButtonView: ' + JSON.stringify(item))
 
         if (item.loading)
             return (
@@ -275,7 +277,7 @@ export default class Products extends Component {
 
     componentWillUnmount(){
         prodStore.products = []
-        prodStore.isApiLoaded = false;
+        prodStore.apiLoaded = false;
     }
 
     renderRow({ item, index }) {

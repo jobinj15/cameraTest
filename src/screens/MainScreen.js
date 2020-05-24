@@ -111,7 +111,7 @@ const BottomTabNavigator = createBottomTabNavigator(
       tabBarIcon: ({ focused, tintColor }) =>
         getTabBarIcon(navigation, focused, tintColor),
     }),
-
+    lazy:false,
     tabBarOptions: {
       activeTintColor: colors.PRIMARY,
       inactiveTintColor: 'gray',

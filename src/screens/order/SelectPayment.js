@@ -46,6 +46,7 @@ class SelectPayment extends Component {
 
     componentWillUnmount(){
         store.paymentList = []
+        store.loading = false;
     }
 
     // static navigationOptions = ({ navigation }) => {

@@ -11,7 +11,7 @@ import user_repository from "../../../repos/user_repository";
 class CartStore {
   // @observable banners = [];
 
-  @action addToCart(index,item) {
+  @action addToCart(index, item) {
 
     console.log('onAddToCart called!' + JSON.stringify(item))
 
@@ -19,7 +19,7 @@ class CartStore {
     item.catalogue_id = item.id
     allCart.push(item);
 
-    this.calculateTotal(item,constants.TYPE_PLUS)
+    this.calculateTotal(item, constants.TYPE_PLUS)
     this.cart = allCart
 
     // console.log('Modified cart: ' + JSON.stringify(this.products[index]))
@@ -29,21 +29,21 @@ class CartStore {
 
 
 
-  @action afterAddCart(index,item){
+  @action afterAddCart(index, item) {
     console.log('afterAddCart called!' + JSON.stringify(item))
 
     var allCart = [...this.cart];
     item.catalogue_id = item.id
     allCart.push(item);
 
-    this.calculateTotal(item,constants.TYPE_PLUS)
+    this.calculateTotal(item, constants.TYPE_PLUS)
     this.cart = allCart
 
   }
 
 
-  @action deleteItem(data,index) {
-    
+  @action deleteItem(data, index) {
+
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
         global.showToast(constants.NO_INTERNET)
@@ -65,7 +65,7 @@ class CartStore {
   }
 
 
-  @action updateCart(data,index, id, type) {
+  @action updateCart(data, index, id, type) {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
@@ -95,13 +95,13 @@ class CartStore {
     this.cartUpdating = false;
 
     if (!isError) {
-      
+
     }
     else global.showMessage(responseData.message)
 
     if (type == constants.TYPE_PLUS)
-        this.afterPlusCart(index, id,isError)
-      else this.afterMinusCart(index, id,isError)
+      this.afterPlusCart(index, id, isError)
+    else this.afterMinusCart(index, id, isError)
   }
 
 
@@ -119,7 +119,7 @@ class CartStore {
 
   }
 
-  @action afterCartDelete(index,responseData,isError){
+  @action afterCartDelete(index, responseData, isError) {
 
     console.log('afterCartDelete : ' + index)
 
@@ -128,7 +128,7 @@ class CartStore {
     var allCart = [...this.cart];
     var item = allCart[index];
 
-    if(isError){
+    if (isError) {
       item.loading = false;
       this.cart = allCart;
       return;
@@ -136,60 +136,60 @@ class CartStore {
 
     console.log('afterCartDelete index ' + index + ' ' + JSON.stringify(allCart[index]))
 
-    this.calculateTotal(allCart[index],constants.TYPE_DELETE)
-    allCart.splice(index,1);
+    this.calculateTotal(allCart[index], constants.TYPE_DELETE)
+    allCart.splice(index, 1);
     this.cart = allCart
   }
 
 
-  @action minusCart(index,id) {
+  @action minusCart(index, id) {
 
     console.log('minusCart called! ' + id)
 
-    if(index==null)
-    index = this.getIndex(id);
+    if (index == null)
+      index = this.getIndex(id);
 
-    if(index==null)
-    return;
+    if (index == null)
+      return;
 
     var allCart = [...this.cart];
     var item = allCart[index];
-    
+
     console.log('minusCart cart cartStore: ' + JSON.stringify(item))
 
     if (item.cart_quantity) {
-      
-      if(id==undefined)
-      item.cart_quantity = item.cart_quantity - 1;
+
+      if (id == undefined)
+        item.cart_quantity = item.cart_quantity - 1;
       this.calculateTotal(item, constants.TYPE_MINUS)
-      
-      if(item.cart_quantity==0)
-      allCart.splice(index,1)
+
+      if (item.cart_quantity == 0)
+        allCart.splice(index, 1)
       this.cart = allCart;
     }
-    else{
+    else {
       this.calculateTotal(item, constants.TYPE_MINUS)
-      allCart.splice(index,1)
+      allCart.splice(index, 1)
       this.cart = allCart;
     }
   }
 
 
 
-  @action afterMinusCart(index,id,isError) {
+  @action afterMinusCart(index, id, isError) {
 
     console.log('afterMinusCart called! ' + id)
 
-    if(index==null)
-    index = this.getIndex(id);
+    if (index == null)
+      index = this.getIndex(id);
 
-    if(index==null)
-    return;
+    if (index == null)
+      return;
 
     var allCart = [...this.cart];
     var item = allCart[index];
-    
-    if(isError){
+
+    if (isError) {
       item.loading = false;
       this.cart = allCart
       return;
@@ -202,20 +202,20 @@ class CartStore {
       item.cart_quantity = item.cart_quantity - 1;
       this.calculateTotal(item, constants.TYPE_MINUS)
       item.loading = false;
-      
-      if(item.cart_quantity==0)
-      allCart.splice(index,1)
+
+      if (item.cart_quantity == 0)
+        allCart.splice(index, 1)
 
       this.cart = allCart;
     }
-    else{
+    else {
       this.calculateTotal(item, constants.TYPE_MINUS)
-      allCart.splice(index,1)
+      allCart.splice(index, 1)
       this.cart = allCart;
     }
   }
 
-  
+
 
 
 
@@ -254,7 +254,7 @@ class CartStore {
       // if(responseData.total_items)
       this.noOfItems = responseData.total_items
 
-      
+
       if (this.page == 0)
         this.cart = responseData.data
       else {
@@ -319,25 +319,25 @@ class CartStore {
 
 
 
-  @action plusCart(index,id) {
+  @action plusCart(index, id) {
 
     console.log('plusCart called! ' + index)
 
-    if(index==null)
-    index = this.getIndex(id);
+    if (index == null)
+      index = this.getIndex(id);
 
-    if(index==null) 
-    return;
+    if (index == null)
+      return;
 
     var allCart = [...this.cart];
     var item = allCart[index];
-    
+
 
     if (item.cart_quantity) {
-      
-      if(id==undefined)
-      item.cart_quantity = item.cart_quantity + 1;
-      
+
+      if (id == undefined)
+        item.cart_quantity = item.cart_quantity + 1;
+
       this.calculateTotal(item, constants.TYPE_PLUS)
       this.cart = allCart;
 
@@ -346,61 +346,60 @@ class CartStore {
     }
 
 
-    
+
 
   }
 
-  @action afterPlusCart(index,id,isError) {
+  @action afterPlusCart(index, id, isError) {
 
     console.log('afterPlusCart called! ' + id)
 
-    if(index==null)
-    index = this.getIndex(id);
+    if (index == null)
+      index = this.getIndex(id);
 
     console.log('afterPlusCart called index! ' + index)
 
 
-    if(index==null) 
-    return;
+    if (index == null)
+      return;
 
     var allCart = [...this.cart];
     var item = allCart[index];
 
-    if(isError){
+    if (isError) {
       item.loading = false;
       this.cart = allCart
       return;
     }
 
+    item.cart_quantity = item.cart_quantity + 1;
+    item.loading = false;
 
-    if (item.cart_quantity) {
+    this.calculateTotal(item, constants.TYPE_PLUS)
+    this.cart = allCart;
 
-      // if(id==undefined)
-      item.cart_quantity = item.cart_quantity + 1;
-      item.loading = false;
+    console.log('Plus cart cartStore: ' + JSON.stringify(this.cart))
 
-      this.calculateTotal(item, constants.TYPE_PLUS)
-      this.cart = allCart;
+    // if (item.cart_quantity) {
 
-      console.log('Plus cart cartStore: ' + JSON.stringify(this.cart))
 
-    }
+    // }
   }
 
 
   calculateTotal(item, type) {
 
-    if(isNaN(item.price))
-    return;
+    if (isNaN(item.price))
+      return;
 
     const price = parseInt(item.price)
 
-    if (type == constants.TYPE_PLUS){
+    if (type == constants.TYPE_PLUS) {
       this.total = (price + this.total)
       this.noOfItems++
     }
-    else if(type == constants.TYPE_DELETE){
-      this.total = (this.total - (price*item.cart_quantity))  
+    else if (type == constants.TYPE_DELETE) {
+      this.total = (this.total - (price * item.cart_quantity))
       this.noOfItems = this.noOfItems - item.cart_quantity
     }
     else {
@@ -410,8 +409,8 @@ class CartStore {
 
   }
 
-  getIndex(id){
-    
+  getIndex(id) {
+
     // console.log('getIndex cart' + JSON.stringify(this.cart))
 
     // for(let item of this.cart){
@@ -420,14 +419,14 @@ class CartStore {
     // }
     const length = this.cart.length;
 
-    for(var i=0;i<length;i++){
-      if(this.cart[i].id==id)
-      return i;
+    for (var i = 0; i < length; i++) {
+      if (this.cart[i].id == id)
+        return i;
     }
 
     return null
 
-  } 
+  }
 
 
   @observable loading = false;
@@ -513,4 +512,4 @@ class CartStore {
 
 }
 
-export default  CartStore
+export default CartStore

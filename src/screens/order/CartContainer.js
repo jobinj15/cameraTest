@@ -4,6 +4,8 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Cart from './cart';
 import SelectAddress from './SelectAddress';
 import SelectPayment from './SelectPayment';
+import AddAddress from '../profile/AddAddress';
+import AddressList from '../profile/AddressList';
 import OrderSuccess from './OrderSuccess';
 
 const onBoardStack = createStackNavigator(
@@ -19,6 +21,12 @@ const onBoardStack = createStackNavigator(
     },
     OrderSuccess: {
       screen: OrderSuccess,
+    },
+    AddAddress: {
+      screen: AddAddress,
+    },
+    AddressList: {
+      screen: AddressList,
     },
   },
   {

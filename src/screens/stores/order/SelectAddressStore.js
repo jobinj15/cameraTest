@@ -11,6 +11,9 @@ class SelectAddressStore {
   @observable loadingCharges = false;
   @observable addressList = [];
 
+    constructor(){
+      this.afterAddressListLoaded = undefined;
+    }
 
   @action getAddressList(data) {
 
@@ -29,6 +32,11 @@ class SelectAddressStore {
 
   }
 
+  @action setAfterAddressListLoaded(method){
+    this.afterAddressListLoaded = method;
+  }
+
+
   onAddressList(isError, responseData) {
 
     console.log('onAddressList: ' + JSON.stringify(responseData))
@@ -37,6 +45,7 @@ class SelectAddressStore {
 
     if (!isError) {
       this.addressList = responseData.data
+      this.afterAddressListLoaded()
     }
     else global.showMessage(responseData.message)
 

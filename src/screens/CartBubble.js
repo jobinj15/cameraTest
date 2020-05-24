@@ -43,7 +43,7 @@ export default class CartBubble extends Component {
                     alignItems: 'center', justifyContent: 'center'
                 }}
             >
-                <Icon name={this.props.icon} size={25} color={this.props.tintcolor} />
+                <Icon name={this.props.icon} size={25} color={this.props.tintColor} />
 
                  {this.getBubble(store)} 
             </View>

@@ -15,7 +15,7 @@ var addressApiData = {
     user_id: ''
 }
 
-@inject("selectAddressStore")
+@inject("addressListStore")
 @observer
 export default class SelectAddress extends Component {
     constructor(props) {
@@ -25,13 +25,30 @@ export default class SelectAddress extends Component {
           selectedAddress:undefined
         }
 
-        store = this.props.selectAddressStore;
+        store = this.props.addressListStore
 
         const { navigation } = this.props
         this.state.total = navigation.getParam('total', null)
         this.state.userId = navigation.getParam(constants.PARAM_USER, null)
+        this.onFirstAddressAdded = this.onFirstAddressAdded.bind(this)
+        this.afterAddressListLoaded= this.afterAddressListLoaded.bind(this)
+
 
     }
+
+    onFirstAddressAdded(){
+        store.getAddressList(global.sendAsFormData(addressApiData))
+    }
+
+    afterAddressListLoaded(){
+
+        console.log('afterAddressListLoaded\n ' + JSON.stringify(this.props.navigation))
+
+        if(store.addressList.length==0)
+        this.navigateTo('AddAddress',constants.MODE_FIRST_ADD)
+    }
+
+
 
     // static navigationOptions = ({ navigation }) => {
     //     return {
@@ -48,28 +65,43 @@ export default class SelectAddress extends Component {
     componentDidMount() {
         // this.props.navigation = this.props.navigation
         addressApiData.user_id = this.state.userId;
-        store.getAddressList(global.sendAsFormData(addressApiData))
+        store.setAfterAddressListLoaded(this.afterAddressListLoaded);
+        store.getAddressList(global.sendAsFormData(addressApiData),0)
     }
 
+    componentWillUnmount(){
+        // store.addressList = [];
+        store.loadingCharges = false;
+        store.loadingAddress = false;
+        store.setAfterAddressListLoaded(undefined);
+    }
 
-    navigateTo() {
+    navigateTo(route,mode) {
 
         console.log('navigateTo: ' + JSON.stringify(this.props.navigation))
 
-        this.props.navigation.navigate('SelectPayment', {
-            [constants.PARAM_ADDRESS] : this.state.selectedAddress,
+        this.props.navigation.navigate(route, {
+            [constants.PARAM_ADDRESS] : store.selectedAddress,
             [constants.PARAM_USER] : this.state.userId,
+            [constants.PARAM_MODE] : mode,
+            'onFirstAddressAdded' : this.onFirstAddressAdded,
             total : this.state.total
         });    
     }
 
 
     bottomView() {
+
+        if(!store.selectedAddress.id)
+        return(
+            <View/>
+        )
+
         return (
             <TouchableWithoutFeedback
             onPress={
                 ()=>{
-                    this.navigateTo()
+                    this.navigateTo('SelectPayment')
                 }
             }
             >
@@ -94,6 +126,15 @@ export default class SelectAddress extends Component {
         )
     }
 
+    handleChangeAddress(){
+        if(store.addressList.length==0){
+          this.navigateTo('AddAddress',constants.MODE_FIRST_ADD)
+        }
+        else this.navigateTo('AddressList',constants.MODE_SELECT)
+    }
+
+
+
 
     render() {
         return (
@@ -110,7 +151,7 @@ export default class SelectAddress extends Component {
 
                         <TouchableWithoutFeedback
                             onPress={() => {
-                                // this.handleRegister();
+                                this.handleChangeAddress();
                             }}
                         >
                             <View
@@ -141,14 +182,10 @@ export default class SelectAddress extends Component {
 
     drawAddressCard() {
 
-        const addressList = store.addressList;
-        var address;
-
-        if (addressList.length == 0)
+        var address = store.selectedAddress;
+        
+        if (!address.id)
             return (<View />)
-
-        address = addressList[0];
-        this.state.selectedAddress = address
 
         return (
             <Card

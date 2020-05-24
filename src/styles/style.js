@@ -66,7 +66,7 @@ var styles = {
         flexDirection: 'row',
         height: 56,
         width: DEVICE_WIDTH,
-        elevation : 5,
+        elevation: 5,
         backgroundColor: colors.LIGHT_GRAY
     },
     statusBar: {
@@ -88,10 +88,10 @@ var styles = {
         fontSize: 14,
         color: colors.PRIMARY
     },
-    labelMini:{
-      color : colors.WHITE,
-      fontWeight:'bold',
-      fontSize : 9
+    labelMini: {
+        color: colors.WHITE,
+        fontWeight: 'bold',
+        fontSize: 9
     },
     stripLabel: {
         fontWeight: 'bold',
@@ -101,20 +101,20 @@ var styles = {
     },
     labelBorder: {
         fontSize: 16,
-        fontWeight:'500',
+        fontWeight: '500',
         flex: 1,
-        paddingBottom:10,
-        paddingHorizontal:6,
-        paddingTop:10,
-        borderBottomWidth:0.5,
+        paddingBottom: 10,
+        paddingHorizontal: 6,
+        paddingTop: 10,
+        borderBottomWidth: 0.5,
         borderColor: colors.GREY,
         color: colors.DARKGRAY
     },
-    topRight:{
-      position : 'absolute',
-      top : 8,
-      right : 12,
-      flexDirection:'row'
+    topRight: {
+        position: 'absolute',
+        top: 8,
+        right: 12,
+        flexDirection: 'row'
     },
     stripContainer: {
         alignSelf: 'stretch',
@@ -146,12 +146,26 @@ var styles = {
         left: 0,
         bottom: 0,
         right: 0,
-        alignItems:'center',
-        justifyContent:'center',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     labelSmallX1: {
         color: colors.GREY,
         fontSize: 16
+    },
+    variant:{
+        padding : 8,
+        fontSize : 16,
+        backgroundColor: colors.GREY,
+        color : colors.WHITE
+    },
+    wrap: {
+        flex: 1,
+        flexDirection: 'row',
+        borderColor : colors.GREY,
+        borderWidth : 1,
+        borderRadius:3,
+        flexWrap: 'wrap'
     },
     labelSmall: {
         color: colors.GREY,
@@ -402,10 +416,10 @@ var styles = {
         fontFamily: 'FiraSans-Regular',
     },
     title: {
-        color : colors.BLACK,
-        fontSize : 26,
-        flex:1,
-        fontWeight : 'bold'
+        color: colors.BLACK,
+        fontSize: 26,
+        flex: 1,
+        fontWeight: 'bold'
     }
 
 };

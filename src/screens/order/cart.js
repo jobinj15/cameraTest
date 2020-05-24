@@ -285,7 +285,7 @@ class Cart extends Component {
 
         if (Array.isArray(item.images) && item.images.length) {
             image = { uri: item.images[0].images };
-            console.log('Products row ' + JSON.stringify(image))
+            // console.log('Products row ' + JSON.stringify(image))
         }
 
         return (

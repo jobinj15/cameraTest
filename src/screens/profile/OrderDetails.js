@@ -7,6 +7,11 @@ import { observer, inject } from "mobx-react";
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
 
+var orderDetailApiData = {
+    user_id : '',
+    order_id : ''
+}
+var store;
 
 @inject("orderDetailsStore")
 @observer
@@ -17,6 +22,28 @@ export default class OrderDetails extends Component {
         this.state = {
 
         }
+
+        store = this.props.orderDetailsStore;
+
+        const { navigation } = this.props
+        this.state.order = navigation.getParam(constants.PARAM_ORDER, null)
+        this.state.userId = navigation.getParam(constants.PARAM_USER, null)
+        
+        this.setApiData()
+    }
+
+    setApiData(){
+        orderDetailApiData.user_id = this.state.userId;
+        orderDetailApiData.order_id = this.state.order.id
+    }
+
+    componentDidMount(){
+        store.getOrderDetails(global.sendAsFormData(orderDetailApiData))
+    }
+
+    componentWillUnmount(){
+        store.isApiLoaded = false;
+        store.order = {}
     }
 
 
@@ -29,8 +56,17 @@ export default class OrderDetails extends Component {
 
     //0 4 8 
     render() {
+        
+        if(store.isApiLoaded && !store.order.id)     
+        return(
+            global.getNoDataView()
+        )
 
-        const store = this.props.orderDetailsStore;
+        if(store.loading){
+            return(
+                global.getLoader()
+            )
+        }
 
         return (
             <View style={[styles.styleFull, { backgroundColor: colors.ListViewBG }]}>
@@ -47,7 +83,7 @@ export default class OrderDetails extends Component {
                                     fontWeight: 'bold', padding: 15
                                 }]}
                             >
-                                {'Placed on ' + store.order.date}
+                                {'Placed on ' + store.order.order_date}
                             </Text>
 
                             <View
@@ -56,7 +92,7 @@ export default class OrderDetails extends Component {
                                 <Text
                                     style={[styles.stripLabel, { color: colors.WHITE, flex: undefined }]}
                                 >
-                                    {constants.TXT_ORDER_SUCCESS}
+                                    {store.order.order_status_name}
                                 </Text>
 
                             </View>
@@ -85,7 +121,7 @@ export default class OrderDetails extends Component {
                             <Text
                                 style={[styles.stripLabel, {}]}
                             >
-                                {store.order.items + ' Items  |  Amount '
+                                {store.order.total_quantity + ' Items  |  Amount '
                                     + constants.SYMBOL_RUPEE + store.order.total}
                             </Text>
 
@@ -109,11 +145,11 @@ export default class OrderDetails extends Component {
                                     <Text
                                         style={[styles.stripLabel, { flex: undefined }]}
                                     >
-                                        {'Starfish Surti'}
+                                        {store.order.name}
                                     </Text>
 
                                     <Text
-                                        style={[styles.labelSmall, { marginTop: 10 }]}
+                                        style={[styles.labelSmallX1, { marginTop: 10 }]}
                                     >
                                         {constants.SYMBOL_RUPEE + '307.80'}
                                     </Text>
@@ -138,9 +174,12 @@ export default class OrderDetails extends Component {
                                 {constants.TXT_PAYMENT_DETAILS}
                             </Text>
 
-                            {this.drawKeyValue(constants.TXT_ORDER_TOTAL, store.order.total, { marginTop: 5 })}
-                            {this.drawKeyValue(constants.TXT_SAVINGS, store.order.savings, { marginTop: 5 },{color:colors.GREEN_4})}
-                            {this.drawKeyValue(constants.TXT_NET_AMT, '1110', { marginTop: 5 })}
+                            {this.drawKeyValue('Price', store.order.price, { marginTop: 10 })}
+                            {/* {this.drawKeyValue(constants.TXT_SAVINGS, store.order.savings, { marginTop: 5 },{color:colors.GREEN_4})} */}
+                            {this.drawKeyValue('Quantity', store.order.quantity, { marginTop: 5 })}
+                            {this.drawKeyValue('SubTotal', store.order.subtotal, { marginTop: 5 })}
+
+                            {this.drawKeyValue('Total', store.order.total, { marginTop: 10 },{color:colors.GREEN_4})}
 
 
                         </Card>
@@ -148,6 +187,9 @@ export default class OrderDetails extends Component {
 
                     </View>
                 </ScrollView>
+
+               
+                
             </View>
         );
     }
@@ -172,7 +214,7 @@ export default class OrderDetails extends Component {
                 </Text>
 
                 <Text
-                    style={[styles.labelSmall,fontColor]}
+                    style={[styles.labelSmallX1,fontColor]}
                 >
                     {value}
 

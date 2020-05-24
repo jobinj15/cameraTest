@@ -58,13 +58,13 @@ var store;
   addStore: stores.addAddressStore,
   listStore: stores.addressListStore,
 }))
-
+@observer
 export default class AddAddress extends Component {
 
   constructor(props) {
     super(props);
 
-    this.state={
+    this.state = {
 
     }
     store = this.props.addStore
@@ -72,42 +72,59 @@ export default class AddAddress extends Component {
     this.state.userId = navigation.getParam(constants.PARAM_USER, null)
     this.state.mode = navigation.getParam(constants.PARAM_MODE, null)
     this.state.item = navigation.getParam(constants.PARAM_ITEM, null)
-    afterAddressAdded = this.afterAddressAdded.bind(this)
+    this.state.onFirstAddressAdded = navigation.getParam('onFirstAddressAdded', null)
+
+    // if(this.state.mode!=constants.MODE_FIRST_ADD)
+    this.afterAddressAdded = this.afterAddressAdded.bind(this)
 
     if (this.state.mode == constants.MODE_EDIT)
-      this.populateFields();
-    else this.state = this.mapKeysToState();
+      this.populateFields(this.state.item);
+    // else this.state = {...this.state,...this.mapKeysToState()};
 
+    console.log('onFirstAddressAdded ' + this.state.onFirstAddressAdded)
 
   }
 
-  populateFields() {
+  populateFields(data) {
 
     console.log('populateFields: ' + this.state.mode)
 
     if (!this.state.mode)
       return;
 
-    var item = this.state.item;
+    for (let item in fields) {
 
-    for (item in fields) {
-      this.state[fields[item]] = item[fields[item]]
+      console.log("Loop Item: " + item + fields[item] + "\n")
+
+      this.state[fields[item]] = data[fields[item]]
     }
 
-    if(this.state.state)
-    store.state = this.state.state;
+    this.state.state = data.state;
+    this.state.city = data.city;
 
-    if(this.state.city)
-    store.city = this.state.city
+    if (this.state.state)
+      store.state = this.state.state;
 
+    if (this.state.city)
+      store.city = this.state.city
+
+    store.isValidPin = true;  
     console.log('populateFields: ' + JSON.stringify(this.state))
 
 
   }
 
   afterAddressAdded() {
+
+    if (this.state.mode == constants.MODE_FIRST_ADD) {
+      if (this.onFirstAddressAdded)
+        this.onFirstAddressAdded();
+      this.props.navigation.pop();
+      return;
+    }
+
     listApiData.user_id = this.state.userId;
-    this.props.listStore(global.sendAsFormData(listApiData), listApiData.page_no)
+    this.props.listStore.getAddressList(global.sendAsFormData(listApiData), listApiData.page_no)
     this.props.navigation.pop()
   }
 
@@ -165,6 +182,11 @@ export default class AddAddress extends Component {
     formdata.append('state', store.state)
     formdata.append('city', store.city)
     formdata.append('user_id', this.state.userId)
+    
+    if (this.state.mode == constants.MODE_EDIT)
+    formdata.append('address_id', this.state.item.id)
+
+
 
 
     console.log("AllData : " + JSON.stringify(formdata))
@@ -184,7 +206,7 @@ export default class AddAddress extends Component {
     if (!data)
       return;
 
-    store.addAddress(data)
+    store.addAddress(data, this.state.mode)
 
   }
 
@@ -327,7 +349,7 @@ export default class AddAddress extends Component {
             </Text>
 
             <Text
-              style={styles.labelBorder}
+              style={[styles.labelBorder, { marginBottom: 150 }]}
             >
 
               {store.city}
@@ -340,26 +362,29 @@ export default class AddAddress extends Component {
         </ScrollView>
 
         <View
-          style={[styles.bottomlayout, { bottom: 10, marginBottom: 10 }]}
+          style={[styles.bottomlayout, { bottom: 0 }]}
         >
+
+          <TouchableWithoutFeedback
+            onPress={() => {
+              this.handleAddAddress();
+            }}
+          >
+            <View
+              style={[styles.largeButton, { width: undefined, marginLeft: 0, paddingHorizontal: 40 }]}
+            >
+              <Text
+                style={styles.buttonText}
+              >
+                {this.state.mode == constants.MODE_EDIT ? global.capitalize(constants.TXT_UPDATE)
+                  : global.capitalize(constants.TXT_ADD)}{" "}
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
+
 
         </View>
 
-        <TouchableWithoutFeedback
-          onPress={() => {
-            this.handleAddAddress();
-          }}
-        >
-          <View
-            style={[styles.largeButton, { width: undefined, marginLeft: 0, paddingHorizontal: 40 }]}
-          >
-            <Text
-              style={styles.buttonText}
-            >
-              {global.capitalize(constants.TXT_ADD)}{" "}
-            </Text>
-          </View>
-        </TouchableWithoutFeedback>
 
 
         {
