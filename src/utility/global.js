@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   Dimensions,
   PixelRatio,
-  Text
+  Text,
+  Alert
 } from 'react-native';
 import Snackbar from 'react-native-snackbar'
 import NetInfo from "@react-native-community/netinfo";
@@ -219,6 +220,31 @@ export default global = {
 
   toNumbers(text) {
     return (text.replace(/[^0-9]/g, ''))
+  },
+
+  showAlert(title,description,onOkay,onCancel,txtYes="Yes",txtNo="No",cancelable=true) {
+
+    Alert.alert(
+      title,
+      description,
+      [
+        {
+          text: txtYes,
+          onPress: () => {
+            if(onOkay) onOkay()
+          }
+        },
+        {
+          text: txtNo,
+          onPress: () => {
+            if(onCancel) onCancel()
+          },
+          style: 'cancel'
+        },
+        // { text:  , onPress: () => console.log('OK Pressed') }
+      ],
+      { cancelable: cancelable }
+    );    
   },
 
   async storeItem(key, item) {

@@ -5,10 +5,15 @@ import { View, TouchableWithoutFeedback, Text, Image, FlatList } from 'react-nat
 import { observer, inject } from "mobx-react";
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 var listApiData = {
     page_no: 0,
     user_id: ''
+}
+
+var deleteApiData = {
+    address_id: undefined
 }
 
 var store;
@@ -20,9 +25,11 @@ export default class AdressList extends Component {
         super(props);
 
         this.state = {
+            deleteIndex: undefined
         }
 
         store = this.props.addressListStore
+        this.onDeleteYes = this.onDeleteYes.bind(this)
     }
 
 
@@ -45,6 +52,13 @@ export default class AdressList extends Component {
         store.getAddressList(global.sendAsFormData(listApiData), listApiData.page_no)
     }
 
+    onDeleteYes() {
+        deleteApiData.address_id = store.addressList[this.state.deleteIndex].id
+        store.deleteAddress(global.sendAsFormData(deleteApiData, this.state.deleteIndex))
+    }
+
+
+
 
     setUserIdToApiData(result) {
         // listApiData.user_id = 1
@@ -52,10 +66,12 @@ export default class AdressList extends Component {
     }
 
 
-    navigateTo(to) {
+    navigateTo(to, mode, item) {
         if (to)
             this.props.navigation.navigate(to, {
                 [constants.PARAM_USER]: listApiData.user_id,
+                [constants.PARAM_MODE]: mode,
+                [constants.PARAM_ITEM]: item
             });
     }
 
@@ -145,7 +161,11 @@ export default class AdressList extends Component {
             >
 
                 <View
-                    style={[styles.styleFull, { paddingVertical: 10, paddingHorizontal: 15, backgroundColor: colors.WHITE }]}
+                    style={[styles.styleFull, {
+                        paddingTop: 20, paddingBottom: 10,
+                        paddingHorizontal: 15,
+                        backgroundColor: colors.WHITE
+                    }]}
                 >
 
                     <Text
@@ -164,9 +184,37 @@ export default class AdressList extends Component {
 
                     </Text>
 
+                    <View
+                        style={[styles.topRight]}
+                    >
+
+                        <TouchableWithoutFeedback
+                            onPress={() => {
+                               this.navigateTo('AddAddress',constants.MODE_EDIT,item)
+                            }}
+                        >
+                            <Icon name="edit" size={20} color={colors.GREY} />
+                        </TouchableWithoutFeedback>
+
+                        <TouchableWithoutFeedback
+                            onPress={() => {
+                                this.state.deleteIndex = index;
+                                global.showAlert(constants.TITLE_DELETE, constants.DES_DEL, this.onDeleteYes)
+                            }}
+                        >
+                            <Icon name="delete" size={20} color={colors.GREY} style={{ marginLeft: 10 }} />
+                        </TouchableWithoutFeedback>
+
+
+
+                    </View>
+
 
 
                 </View>
+
+
+
             </TouchableWithoutFeedback>
 
         )

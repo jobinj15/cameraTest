@@ -25,6 +25,10 @@ export default urls = {
   urlAddresses: baseUrl + 'address/get',
   urlAddAddress: baseUrl + 'address/add',
   urlGetPIN: baseUrl + 'pincode/get',
+  urlDeleteAddress: baseUrl + 'address/remove',
+  urlUpdateAddress: baseUrl + 'address/update',
+  urlConfirmOrder: baseUrl + 'order/place',
+  urlPaymentOptions: baseUrl + 'payment_mode/payment_mode',
 };
 
 

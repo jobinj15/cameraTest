@@ -110,6 +110,12 @@ var styles = {
         borderColor: colors.GREY,
         color: colors.DARKGRAY
     },
+    topRight:{
+      position : 'absolute',
+      top : 8,
+      right : 12,
+      flexDirection:'row'
+    },
     stripContainer: {
         alignSelf: 'stretch',
         flexDirection: 'row',

@@ -228,10 +228,10 @@ class Cart extends Component {
         updateApiData.quantity = item.cart_quantity - 1;
         updateApiData.cart_id = item.id;
 
-        if(item.cart_quantity==1)
-        cartStore.deleteItem(global.sendAsFormData(updateApiData),index)
+        if (item.cart_quantity == 1)
+            cartStore.deleteItem(global.sendAsFormData(updateApiData), index)
         else
-        cartStore.updateCart(global.sendAsFormData(updateApiData), index, null, constants.TYPE_MINUS)
+            cartStore.updateCart(global.sendAsFormData(updateApiData), index, null, constants.TYPE_MINUS)
 
     }
 
@@ -239,27 +239,41 @@ class Cart extends Component {
         cartStore.addToCart(index)
     }
 
+    navigateTo() {
+        this.props.navigation.navigate('SelectAddress', {
+            // [constants.PARAM_INDEX]: index,
+            total : cartStore.total,
+            [constants.PARAM_USER] : listApiData.user_id
+        });    
+    }
+
     bottomView() {
         return (
-            <View
-                style={styles.bottomView}
+            <TouchableWithoutFeedback
+                onPress={() => {
+                  if(cartStore.total)
+                  this.navigateTo()
+                }}
             >
-
-                <Text
-                    style={[styles.stripLabel, { color: colors.WHITE }]}
+                <View
+                    style={styles.bottomView}
                 >
-                    {constants.TXT_TOTAL + constants.SYMBOL_RUPEE + cartStore.total}
-                </Text>
 
-                <Text
-                    style={[styles.stripLabel, { color: colors.WHITE, flex: undefined }]}
-                >
-                    {constants.TXT_CHECKOUT}
-                </Text>
+                    <Text
+                        style={[styles.stripLabel, { color: colors.WHITE }]}
+                    >
+                        {constants.TXT_TOTAL + constants.SYMBOL_RUPEE + cartStore.total}
+                    </Text>
+
+                    <Text
+                        style={[styles.stripLabel, { color: colors.WHITE, flex: undefined }]}
+                    >
+                        {constants.TXT_CHECKOUT}
+                    </Text>
 
 
-
-            </View>
+                </View>
+            </TouchableWithoutFeedback>
         )
     }
 

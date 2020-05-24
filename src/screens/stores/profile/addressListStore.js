@@ -2,6 +2,7 @@ import { observable, action } from "mobx";
 import prod_repository from "../../../repos/prod_repository";
 import global from "../../../utility/global";
 import user_repository from "../../../repos/user_repository";
+import constants from "../../../utility/constants";
 
 export default class BannerStore {
 
@@ -49,6 +50,48 @@ export default class BannerStore {
     this.refreshing = false
   }
 
+
+  @action deleteAddress(data,index) {
+
+    global.isOnline().then(isNetworkAvailable => {
+      if (isNetworkAvailable) {
+        this.loading = true;
+
+        user_repository.deleteAddress(
+          data,
+          this.onAddressDelete.bind(this),
+          index
+        );
+
+      }
+    });
+
+  }
+
+  onAddressDelete(isError, responseData,index) {
+    
+    this.loading = false;
+
+    if(!isError){
+      
+      global.showMessage(constants.MSG_DELETED);
+
+      var allAddress = this.getListCopy()
+      allAddress.splice(index,1);
+      this.updateList(allAddress)
+    }
+    else {
+      global.showMessage(responseData.message) 
+    }
+  }
+
+  getListCopy(){
+    return [...this.addressList]
+  }
+
+  updateList(list){
+    this.addressList = list;
+  }
   
   @observable addressList = [];
   @observable loading = false;

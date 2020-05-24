@@ -94,7 +94,7 @@ export default class Categories extends Component {
           style={{
             padding: 10,
             width: wp('25%'),
-                  }}>
+          }}>
           {/* <View style={[global.getCircleViewStyle(80),{backgroundColor:item.color}]}> */}
           <View
             style={{

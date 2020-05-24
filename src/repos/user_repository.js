@@ -81,6 +81,54 @@ export default userRepo = {
    },
 
 
+   deleteAddress(data, callback,index) {
+
+    console.log('dATA SENT: ' + JSON.stringify(data))
+ 
+     fetch(URL_FILE.urlDeleteAddress, {
+       method: "POST",
+       headers: global.getEncodedHeader(),
+       body : data
+     })
+       .then(response => response.json())
+       .then(responseData => {
+         console.log("Data from deleteAddress Api : " + JSON.stringify(responseData));
+         var hasError = responseData.error;
+         callback(hasError, responseData,index);
+       })
+       .catch(err => {
+         console.log("response error :: " + err);
+         callback(true, global.getExceptionMessage());
+       })
+       .done();
+ 
+   },
+
+
+   updateAddress(data, callback,index) {
+
+    console.log('dATA SENT: ' + JSON.stringify(data))
+ 
+     fetch(URL_FILE.urlUpdateAddress, {
+       method: "POST",
+       headers: global.getEncodedHeader(),
+       body : data
+     })
+       .then(response => response.json())
+       .then(responseData => {
+         console.log("Data from updateAddress Api : " + JSON.stringify(responseData));
+         var hasError = responseData.error;
+         callback(hasError, responseData,index);
+       })
+       .catch(err => {
+         console.log("response error :: " + err);
+         callback(true, global.getExceptionMessage());
+       })
+       .done();
+ 
+   },
+
+
   getOrders(data, callback) {
 
     console.log('dATA SENT: ' + JSON.stringify(data))
@@ -106,6 +154,31 @@ export default userRepo = {
    },
 
 
+   confirmOrder(data, callback) {
+
+    console.log('dATA SENT: ' + JSON.stringify(data))
+ 
+     fetch(URL_FILE.urlConfirmOrder, {
+       method: "POST",
+       headers: global.getEncodedHeader(),
+       body : data
+     })
+       .then(response => response.json())
+       .then(responseData => {
+         console.log("Data from confirmOrder Api : " + JSON.stringify(responseData));
+         var hasError = responseData.error;
+         callback(hasError, responseData);
+ 
+       })
+       .catch(err => {
+         console.log("response error :: " + err);
+         callback(true, global.getExceptionMessage());
+       })
+       .done();
+ 
+   },
+
+
    getAddresses(data, callback) {
 
     console.log('dATA SENT: ' + JSON.stringify(data))
@@ -117,7 +190,32 @@ export default userRepo = {
      })
        .then(response => response.json())
        .then(responseData => {
-         console.log("Data from getOrders Api : " + JSON.stringify(responseData));
+         console.log("Data from getAddresses Api : " + JSON.stringify(responseData));
+         var hasError = responseData.error;
+         callback(hasError, responseData);
+ 
+       })
+       .catch(err => {
+         console.log("response error :: " + err);
+         callback(true, global.getExceptionMessage());
+       })
+       .done();
+ 
+   },
+
+
+
+   getPaymentList(callback) {
+
+    // console.log('dATA SENT: ' + JSON.stringify(data))
+ 
+     fetch(URL_FILE.urlPaymentOptions, {
+       method: "POST",
+       headers: global.getEncodedHeader(),
+     })
+       .then(response => response.json())
+       .then(responseData => {
+         console.log("Data from getPaymentList Api : " + JSON.stringify(responseData));
          var hasError = responseData.error;
          callback(hasError, responseData);
  

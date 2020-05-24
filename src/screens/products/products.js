@@ -273,6 +273,10 @@ export default class Products extends Component {
 
     }
 
+    componentWillUnmount(){
+        prodStore.products = []
+    }
+
     renderRow({ item, index }) {
 
 

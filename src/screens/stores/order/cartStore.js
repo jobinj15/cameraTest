@@ -1,8 +1,8 @@
 import { observable, action } from "mobx";
 import { observer, inject } from "mobx-react";
-import constants from "../../utility/constants";
-import global from "../../utility/global";
-import prod_repository from "../../repos/prod_repository";
+import constants from "../../../utility/constants";
+import global from "../../../utility/global";
+import prod_repository from "../../../repos/prod_repository";
 // import productStore from "./home/productsStore"
 
 // @inject("productStore")
@@ -247,10 +247,10 @@ class CartStore {
 
     if (!isError) {
 
-      if(responseData.total_amount)
+      // if(responseData.total_amount)
       this.total = responseData.total_amount
 
-      if(responseData.total_items)
+      // if(responseData.total_items)
       this.noOfItems = responseData.total_items
 
       

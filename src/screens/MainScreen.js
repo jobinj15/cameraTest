@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Image, StyleSheet, Platform } from 'react-native';
 import HomeContainer from './home/homeContainer';
-import CartContainer from './cart/CartContainer';
+import CartContainer from './order/CartContainer';
 import ProfileContainer from './profile/profileContainer';
 import ColorsTab from './home/colorsTab';
 import BodyChart from './test/bodychart';

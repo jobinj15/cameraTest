@@ -63,13 +63,45 @@ export default class AddAddress extends Component {
 
   constructor(props) {
     super(props);
-    this.state = this.mapKeysToState();
 
+    this.state={
+
+    }
     store = this.props.addStore
- 
     const { navigation } = this.props
     this.state.userId = navigation.getParam(constants.PARAM_USER, null)
+    this.state.mode = navigation.getParam(constants.PARAM_MODE, null)
+    this.state.item = navigation.getParam(constants.PARAM_ITEM, null)
     afterAddressAdded = this.afterAddressAdded.bind(this)
+
+    if (this.state.mode == constants.MODE_EDIT)
+      this.populateFields();
+    else this.state = this.mapKeysToState();
+
+
+  }
+
+  populateFields() {
+
+    console.log('populateFields: ' + this.state.mode)
+
+    if (!this.state.mode)
+      return;
+
+    var item = this.state.item;
+
+    for (item in fields) {
+      this.state[fields[item]] = item[fields[item]]
+    }
+
+    if(this.state.state)
+    store.state = this.state.state;
+
+    if(this.state.city)
+    store.city = this.state.city
+
+    console.log('populateFields: ' + JSON.stringify(this.state))
+
 
   }
 
@@ -140,7 +172,7 @@ export default class AddAddress extends Component {
     return formdata;
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     store.state = constants.TXT_STATE
     store.city = constants.TXT_CITY
   }
