@@ -3,6 +3,7 @@ import { observer, inject } from "mobx-react";
 import constants from "../../../utility/constants";
 import global from "../../../utility/global";
 import prod_repository from "../../../repos/prod_repository";
+import user_repository from "../../../repos/user_repository";
 // import productStore from "./home/productsStore"
 
 // @inject("productStore")
@@ -270,6 +271,51 @@ class CartStore {
       this.refreshing = false
   }
 
+
+  @action getCartCount(data) {
+
+    global.isOnline().then(isNetworkAvailable => {
+      if (isNetworkAvailable) {
+
+        // this.loading = true;
+
+        user_repository.getCartCount(
+          data,
+          this.onCartCount.bind(this)
+        );
+
+      }
+    });
+
+  }
+
+
+  onCartCount(isError, responseData) {
+
+    console.log('onCartCount: ' + JSON.stringify(responseData))
+
+    // this.loading = false;
+
+    if (!isError) {
+      this.noOfItems = responseData.total_items
+    }
+    else global.showMessage(responseData.message)
+
+  }
+
+
+  onPaymentList(isError, responseData) {
+
+    console.log('onPaymentList: ' + JSON.stringify(responseData))
+
+    this.loading = false;
+
+    if (!isError) {
+      this.paymentList = responseData.data
+    }
+    else global.showMessage(responseData.message)
+
+  }
 
 
 

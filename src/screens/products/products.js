@@ -275,6 +275,7 @@ export default class Products extends Component {
 
     componentWillUnmount(){
         prodStore.products = []
+        prodStore.isApiLoaded = false;
     }
 
     renderRow({ item, index }) {

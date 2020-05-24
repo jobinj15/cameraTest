@@ -23,7 +23,10 @@ import ToolBar from '../../components/toolbar';
 
 const TAG = 'HomeTab'
 
-// @inject("homeStore")
+var cartCountApiData={
+  user_id : ''
+}
+
  class HomeTab extends Component {
   
   constructor(props) {
@@ -51,6 +54,25 @@ const TAG = 'HomeTab'
       otherParam: 'anything you want here',
     });
   } 
+
+  componentDidMount(){
+    global.getItem(constants.USER).then(result => {
+      if (!result) return;
+
+      this.setUserIdToApiData(result)
+
+      this.callApi()
+  });
+
+  }
+
+  setUserIdToApiData(result){
+     cartCountApiData.user_id = result.user_id;
+  }
+
+  callApi(){
+   this.props.cartStore.getCartCount(global.sendAsFormData(cartCountApiData))
+  }
 
   render() {
     return (
@@ -118,7 +140,6 @@ const TAG = 'HomeTab'
     );
   }
 }
-
-export default HomeTab
+export default inject('cartStore')(observer(HomeTab));
 
 

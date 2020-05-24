@@ -15,10 +15,7 @@ var confirmApiData = {
 }
 var store;
 
-@inject(stores => ({
-    paymentsStore: stores.paymentsStore,
-    cartStore: stores.cartStore,
-}))
+
 class SelectPayment extends Component {
     constructor(props) {
         super(props);
@@ -51,18 +48,18 @@ class SelectPayment extends Component {
         store.paymentList = []
     }
 
-    static navigationOptions = ({ navigation }) => {
-        //return header with Custom View which will replace the original header 
-        return {
-            header: (
-                <ToolBar
-                    title={'Select Payment'}
-                    showTitle={true}
-                    showBackButton={true}
-                />
-            ),
-        };
-    };
+    // static navigationOptions = ({ navigation }) => {
+    //     //return header with Custom View which will replace the original header 
+    //     return {
+    //         header: (
+    //             <ToolBar
+    //                 title={'Select Payment'}
+    //                 showTitle={true}
+    //                 showBackButton={true}
+    //             />
+    //         ),
+    //     };
+    // };
 
     componentDidMount() {
         // this.props.navigation = this.props.navigation
@@ -197,4 +194,4 @@ class SelectPayment extends Component {
 
 }
 
-export default SelectPayment
+export default inject('paymentsStore','cartStore')(observer(SelectPayment));

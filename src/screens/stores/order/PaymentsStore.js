@@ -33,7 +33,6 @@ class PaymentsStore {
 
   onPaymentList(isError, responseData) {
 
-    console.log('onPaymentList: ' + JSON.stringify(responseData))
 
     this.loading = false;
 
@@ -41,6 +40,9 @@ class PaymentsStore {
       this.paymentList = responseData.data
     }
     else global.showMessage(responseData.message)
+
+    console.log('onPaymentList: ' + JSON.stringify(this.paymentList))
+
 
   }
 
