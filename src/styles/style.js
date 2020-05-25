@@ -162,9 +162,9 @@ var styles = {
     wrap: {
         flex: 1,
         flexDirection: 'row',
-        borderColor : colors.GREY,
-        borderWidth : 1,
-        borderRadius:3,
+        // borderColor : colors.GREY,
+        // borderWidth : 1,
+        // borderRadius:3,
         flexWrap: 'wrap'
     },
     labelSmall: {

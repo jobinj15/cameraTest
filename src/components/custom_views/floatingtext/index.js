@@ -154,7 +154,8 @@ const Styles = StyleSheet.create({
     textInput: {
         fontSize: 16,
         textAlignVertical: 'top',
-        padding: 6,
+        paddingVertical: 6,
+        paddingHorizontal:8,
         color:colors.BLACK,
         paddingBottom: 2,
         marginTop: 23,

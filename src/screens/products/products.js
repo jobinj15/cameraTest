@@ -111,7 +111,7 @@ export default class Products extends Component {
                     renderItem={this.renderRow.bind(this)}
                     onRefresh={this.handleRefresh.bind(this)}
                     onEndReached={this.handleLoadMore.bind(this)}
-                    onEndReachedThreshold={0.1}
+                    onEndReachedThreshold={0.3}
                     refreshing={prodStore.refreshing}
                     ItemSeparatorComponent={this.renderSeparator}
                     keyExtractor={(item, index) => index.toString()}

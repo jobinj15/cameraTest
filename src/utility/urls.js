@@ -30,6 +30,7 @@ export default urls = {
   urlDeleteAddress: baseUrl + 'address/remove',
   urlUpdateAddress: baseUrl + 'address/update',
   urlConfirmOrder: baseUrl + 'order/place',
+  urlProductVariant: baseUrl + 'products/getcatloguedetailsbyoption',
   urlPaymentOptions: baseUrl + 'payment_mode/payment_mode',
 };
 
@@ -41,6 +42,17 @@ export default urls = {
 
 
 
+
+
+
+
+[{
+  "optionmasterid": 1, "optionmastername": "Weight", "data": [{ "value_id": 1, "name": "500g" },
+  { "value_id": 2, "name": "1Kg" }]
+}, {
+  "optionmasterid": 3, "optionmastername": "Size",
+  "data": [{ "value_id": 3, "name": "S" }, { "value_id": 4, "name": "M" }]
+}]
 
 
 

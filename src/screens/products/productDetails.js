@@ -21,6 +21,12 @@ var detailApiData = {
     user_id: ''
 }
 
+var variantApiData = {
+    product_id: '',
+    user_id: '',
+    options : ''
+}
+
 var updateApiData = {
     user_id: '',
     catalogue_id: '',
@@ -63,9 +69,8 @@ export default class ProductDetails extends Component {
         global.getItem(constants.USER).then(result => {
             if (!result) return;
             this.setUserIdToApiData(result)
+            this.callApi();
         });
-
-        this.callApi();
 
     }
 
@@ -79,6 +84,7 @@ export default class ProductDetails extends Component {
         detailApiData.user_id = result.user_id
         removeCartApiData.user_id = result.user_id
         updateApiData.user_id = result.user_id
+        variantApiData.user_id = result.user_id;
     }
 
     callApi() {
@@ -86,59 +92,122 @@ export default class ProductDetails extends Component {
         prodStore.getProductDetails(global.sendAsFormData(detailApiData))
     }
 
+    callVariantApi(variants){
+        variantApiData.product_id = this.state.product.product_id;
+        variantApiData.options = variants
+        prodStore.getProductVariant(global.sendAsFormData(variantApiData))
+
+    }
+
+    modifyVariantSelection(index,subIndex){
+    
+        var variants = [...prodStore.product.variants];
+
+        var toModifiedvariant = variants[index].data
+        
+        var size = toModifiedvariant.length;
+        var item;
+        for(var i =0;i<size;i++){
+           item = toModifiedvariant[i];
+           
+           if(i==subIndex)
+           item.selected = true;
+           else item.selected = false;
+        }
+
+
+        var newSelections = [];
+
+        for(let nItem of variants){
+
+            for(let nSubItem of nItem.data){
+              
+                if(nSubItem.selected)
+                newSelections.push(nSubItem.value_id)
+
+            }
+
+        }
+
+        console.log('modifyVariantSelection after ' + JSON.stringify(newSelections));
+        this.callVariantApi(newSelections.toString())
+    }
+
 
     drawVariants(item) {
 
-        if(!item.variants || !item.variants.length)
-        return(
-            <View/>
-        )
+        if (!item.variants || !item.variants.length)
+            return (
+                <View />
+            )
 
-        return (
-            <View
-                style={{ flexDirection: 'row', marginTop: 10 }}
-            >
-                <View
-                    style={{ flex: 1 }}
-                />
+        console.log('drawVariants ' + JSON.stringify(item.variants))
+
+        var variantsList = [];
+        var variants = item.variants;
+        var mainItem;
+        var outerSize = variants.length;
+
+        for (let i = 0; i < outerSize; i++) {
+
+            mainItem = variants[i];
+
+            variantsList.push(
 
                 <View
-                    style={[styles.wrap]}
+                    style={{
+                        flexDirection: 'row', marginTop: 10, width: global.DEVICE_WIDTH - 40,
+                        height: 50
+                    }} key={i.toString()}
+
                 >
-                    {
-                        item.variants.map((item, index) => {
-                            return (
-                                <Text
-                                    style={[styles.variant]}
-                                >
-                                    {item.name}
-                                </Text>
-                            )
-                        })
-                    }
+                    <Text
+                        style={[styles.labelSmallX1, { marginRight: 20, width: 50 }]}
+                    >
+                        {mainItem.optionmastername}
+                    </Text>
+
+                    <View
+                        style={[styles.wrap]}
+                    >
+                        {
+                            mainItem.data.map((subItem, subIndex) => {
+                                return (
+                                    <TouchableWithoutFeedback
+                                        onPress={()=>{
+                                            this.modifyVariantSelection(i,subIndex)
+                                        }}
+                                        key={(i + subIndex).toString()}
+                                    >
+                                        <View
+                                            style={{
+                                                marginLeft: 3
+                                            }}
+                                        >
+                                            <Text
+                                                style={[styles.variant,
+                                                { backgroundColor: subItem.selected ? colors.PRIMARY : colors.GREY }]}
+                                            >
+                                                {subItem.name}
+                                            </Text>
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                )
+                            })
+                        }
+                    </View>
 
                 </View>
+            )
+        }
 
+        console.log("variantsList : " + variantsList)
+        return variantsList;
 
-            </View>
-        )
-
-        // return (
-        //     item.variants.map((item, index) => {
-        //         return (
-        //             <Text
-        //                 style={[styles.variant]}
-        //             >
-        //                 {item.name}
-        //             </Text>
-        //         )
-        //     })
-        // )
     }
 
 
     render() {
-
 
         if (prodStore.isApiLoaded && !prodStore.product.id)
             return (
@@ -208,7 +277,22 @@ export default class ProductDetails extends Component {
                     </Text>
 
 
-                    {/* {this.drawVariants(item)} */}
+                    <View
+                        style={{
+                            marginVertical: 15
+                        }}
+                    >
+                        {
+                            //     <View
+                            //         style={{
+                            //             backgroundColor: 'red', width:50,
+                            //             height: 50
+                            //         }}
+                            //     ></View>
+                            this.drawVariants(item)
+                        }
+
+                    </View>
 
 
                     <View
