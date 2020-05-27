@@ -14,6 +14,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import constants from '../../utility/constants';
 @inject('catHomeStore')
 @observer
 export default class Categories extends Component {
@@ -46,10 +47,9 @@ export default class Categories extends Component {
     );
   }
 
-  navigateTo() {
+  navigateTo(item) {
     this.props.navigation.navigate('Products', {
-      itemId: 86,
-      otherParam: 'anything you want here',
+      [constants.PARAM_ITEM]: item,
     });
   }
 
@@ -88,7 +88,7 @@ export default class Categories extends Component {
     return (
       <TouchableWithoutFeedback
         onPress={() => {
-          this.navigateTo();
+          this.navigateTo(item);
         }}>
         <View
           style={{

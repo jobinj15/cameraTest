@@ -17,8 +17,9 @@ class ProductsStore {
   @observable cartUpdating = false;
   @observable products = []
   @observable page = 0
+  @observable cat_id;
 
-  constructor(){
+  constructor() {
     this.onApiActionDone = undefined
   }
 
@@ -30,6 +31,7 @@ class ProductsStore {
       else {
 
         this.loading = !this.refreshing && page == 0;
+        // this.loading = !this.refreshing;
         this.page = page;
 
         prod_repository.getProducts(
@@ -68,9 +70,9 @@ class ProductsStore {
       this.refreshing = false
   }
 
-   
-  @action deleteItem(data,index) {
-    
+
+  @action deleteItem(data, index) {
+
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
         global.showToast(constants.NO_INTERNET)
@@ -90,72 +92,68 @@ class ProductsStore {
   }
 
 
-    // afterCartDelete(isError,responseData,index){
+  // afterCartDelete(isError,responseData,index){
 
-    //   console.log('afterCartDelete : ' + index)
-  
-    //   var allCart = [...this.cart];
-    //   var item = allCart[index];
-  
-  
-    //   if(isError){
-    //     item.loading = false;
-    //     this.cart = allCart;
-    //     return;
-    //   }
-  
-    //   console.log('afterCartDelete index ' + index + ' ' + JSON.stringify(allCart[index]))
-  
-    //   this.calculateTotal(allCart[index],constants.TYPE_DELETE)
-    //   allCart.splice(index,1);
-    //   this.cart = allCart
-    // }
-  
+  //   console.log('afterCartDelete : ' + index)
+
+  //   var allCart = [...this.cart];
+  //   var item = allCart[index];
 
 
-  @action addToCart(data, index, id) {
+  //   if(isError){
+  //     item.loading = false;
+  //     this.cart = allCart;
+  //     return;
+  //   }
 
-//     user_id:1
-// catalogue_id:2
-// quantity:1
+  //   console.log('afterCartDelete index ' + index + ' ' + JSON.stringify(allCart[index]))
 
-    global.isOnline().then(isNetworkAvailable => {
-      if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
-      else {
-
-        this.cartUpdating = true;
-        this.setItemLoading(index);
-
-        prod_repository.addToCart(
-          data,
-          this.onAddToCart.bind(this),
-          index, id
-        );
-
-      }
-    });
-
-  }
+  //   this.calculateTotal(allCart[index],constants.TYPE_DELETE)
+  //   allCart.splice(index,1);
+  //   this.cart = allCart
+  // }
 
 
 
+    @action addToCart(data, index, id) {
 
+      global.isOnline().then(isNetworkAvailable => {
+        if (!isNetworkAvailable)
+          global.showToast(constants.NO_INTERNET)
+        else {
 
+          this.cartUpdating = true;
+          this.setItemLoading(index);
 
-  onAddToCart(isError, responseData, index, id) {
+          prod_repository.addToCart(
+            data,
+            this.onAddToCart.bind(this),
+            index, id
+          );
 
-    // console.log('onAddToCart ' + JSON.stringify(responseData))
+        }
+      });
 
-    this.cartUpdating = false;
-
-    if (!isError) {
     }
-    else global.showMessage(responseData.message)
 
-    this.afterCartAdd(index, id,isError,responseData.cart_id)
 
-  }
+
+
+
+
+    @action onAddToCart(isError, responseData, index, id) {
+
+      // console.log('onAddToCart ' + JSON.stringify(responseData))
+
+      this.cartUpdating = false;
+
+      if (!isError) {
+      }
+      else global.showMessage(responseData.message)
+
+      this.afterCartAdd(index, id, isError, responseData.cart_id)
+
+    }
 
 
   setItemLoading(index) {
@@ -169,7 +167,7 @@ class ProductsStore {
 
   }
 
-  afterCartAdd(index, id , isError,cart_id) {
+  @action afterCartAdd(index, id, isError, cart_id) {
 
     console.log('onAddToCart called!')
 
@@ -185,7 +183,7 @@ class ProductsStore {
     var allProducts = [...this.products];
     var item = allProducts[index];
 
-    if(isError){
+    if (isError) {
       item.loading = false;
       this.products = allProducts
       return;
@@ -199,7 +197,7 @@ class ProductsStore {
 
       console.log('Modified prod: ' + JSON.stringify(this.products[index]))
 
-      this.onApiActionDone( item , constants.TYPE_ADDCART);
+      this.onApiActionDone(item, constants.TYPE_ADDCART);
 
     }
 
@@ -208,9 +206,11 @@ class ProductsStore {
 
 
 
-  afterMinusCart(index, id,isError) {
+  @action afterMinusCart(index, id, isError,skip) {
 
     console.log('minusCart called!')
+
+    this.cartUpdating = false;
 
     if (isNaN(index) && isNaN(id))
       return
@@ -224,46 +224,69 @@ class ProductsStore {
     var allProducts = [...this.products];
     var item = allProducts[index];
 
-    if(isError){
+    if (isError) {
+      item.loading = false;
+      this.products = allProducts
+      return;
+    }
+
+
+    item.cart_quantity = item.cart_quantity - 1;
+
+    item.loading = false;
+    this.products = allProducts;
+
+    console.log('Modified prod: ' + JSON.stringify(this.products[index]))
+    if (this.onApiActionDone && !skip)
+      this.onApiActionDone(item, constants.TYPE_MINUS);
+
+  }
+
+
+  @action afterDeleteCart(index, id, isError,skip) {
+
+    console.log('afterDeleteCart called!')
+
+    if (isNaN(index) && isNaN(id))
+      return
+
+    if (index == null)
+      index = this.getIndex(id);
+
+    if (index == null)
+      return;
+
+    var allProducts = [...this.products];
+    var item = allProducts[index];
+
+    if (isError) {
       item.loading = false;
       this.products = allProducts
       return;
     }
 
     if (item.cart_quantity) {
-      
-      if (item.cart_quantity == 1)
-        item.cart_quantity = 0
 
-      else
-        item.cart_quantity = item.cart_quantity - 1;
-    
-        item.loading = false;
-        this.products = allProducts;
+      item.cart_quantity = 0;
+
+      item.loading = false;
+      this.products = allProducts;
 
       console.log('Modified prod: ' + JSON.stringify(this.products[index]))
-      this.onApiActionDone( item , constants.TYPE_MINUS);
+
+      if (this.onApiActionDone && !skip)
+        this.onApiActionDone(item, constants.TYPE_DELETE);
 
     }
 
   }
 
-  @action onApiActionDone(method){
-    this.onApiActionDone =method
+  @action onApiActionDone(method) {
+    this.onApiActionDone = method
   }
 
 
-  
-
-
-  @action updateCart(data,index, id, type) {
-
-    // console.log('plusCart called!')
-
-  //     user_id:1
-  // catalogue_id:2
-  // quantity:1
-  // cart_id:3
+  @action updateCart(data, index, id, type) {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
@@ -286,24 +309,24 @@ class ProductsStore {
 
 
 
-  onUpdateCart(isError, responseData, index, id, type) {
+  @action onUpdateCart(isError, responseData, index, id, type) {
 
     // console.log('onAddToCart ' + JSON.stringify(responseData))
 
     this.cartUpdating = false;
 
     if (!isError) {
-      
+
     }
     else global.showMessage(responseData.message)
 
     if (type == constants.TYPE_PLUS)
-        this.afterPlusCart(index, id,isError)
-      else this.afterMinusCart(index, id,isError)
+      this.afterPlusCart(index, id, isError)
+    else this.afterMinusCart(index, id, isError)
   }
 
 
-  afterPlusCart(index, id,isError) {
+  @action afterPlusCart(index, id, isError,skip) {
 
     if (isNaN(index) && isNaN(id))
       return
@@ -319,7 +342,7 @@ class ProductsStore {
 
     console.log('Plus cart productStore: ' + JSON.stringify(item))
 
-    if(isError){
+    if (isError) {
       item.loading = false;
       this.products = allProducts
       return;
@@ -331,23 +354,29 @@ class ProductsStore {
       this.products = allProducts;
 
       console.log('Modified prod: ' + JSON.stringify(this.products[index]))
-      this.onApiActionDone( item , constants.TYPE_PLUS);
+      if (this.onApiActionDone && !skip)
+        this.onApiActionDone(item, constants.TYPE_PLUS);
     }
 
   }
 
   getIndex(id) {
 
-    for (item of this.products) {
-      if (item.id == id)
-        return index;
+    const length = this.products.length;
+
+    for (var i = 0; i < length; i++) {
+
+      console.log('getIndex cart' + JSON.stringify(this.products[i]))
+
+      if (this.products[i].id == id)
+        return i;
     }
 
     return null
 
   }
 
-  
+
   // @observable products = [
   //   {
   //     image: require("../../../assets/images/pic1.jpg"),

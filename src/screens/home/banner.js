@@ -24,6 +24,7 @@ import constants from '../../utility/constants';
 
 
 @inject("bannerStore")
+@observer
 export default class HomeTab extends Component {
     constructor(props) {
         super(props);

@@ -23,9 +23,6 @@ export default class BannerStore {
   }
 
   onBanners(isError, responseData) {
-
-
-
     this.loading = false;
 
     if (!isError) {

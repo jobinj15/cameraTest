@@ -32,7 +32,9 @@ export default urls = {
   urlConfirmOrder: baseUrl + 'order/place',
   urlProductVariant: baseUrl + 'products/getcatloguedetailsbyoption',
   urlPaymentOptions: baseUrl + 'payment_mode/payment_mode',
+  urlImpMessage: baseUrl + 'checkImportantMessage/checkImportantMessage',
 };
+
 
 
 

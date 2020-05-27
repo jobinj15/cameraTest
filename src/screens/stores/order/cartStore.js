@@ -13,30 +13,43 @@ class CartStore {
 
   @action addToCart(index, item) {
 
-    console.log('onAddToCart called!' + JSON.stringify(item))
+    console.log('onAddToCart called!' + JSON.stringify(item.cart_id))
 
     var allCart = [...this.cart];
-    item.catalogue_id = item.id
-    allCart.push(item);
 
-    this.calculateTotal(item, constants.TYPE_PLUS)
+    let newItem = {...item}
+    newItem.catalogue_id = item.id;
+    newItem.id = item.cart_id;
+
+    console.log('onAddToCart afterModify: ' + JSON.stringify(newItem.id))
+
+    allCart.push(newItem);
+
+    this.calculateTotal(newItem, constants.TYPE_PLUS)
     this.cart = allCart
 
-    // console.log('Modified cart: ' + JSON.stringify(this.products[index]))
+    console.log('onAddToCart afterModify All: ' + JSON.stringify(this.cart))
 
-
+    
   }
 
 
 
   @action afterAddCart(index, item) {
-    console.log('afterAddCart called!' + JSON.stringify(item))
+
+    console.log('onAddToCart called!' + JSON.stringify(item.cart_id))
 
     var allCart = [...this.cart];
-    item.catalogue_id = item.id
-    allCart.push(item);
 
-    this.calculateTotal(item, constants.TYPE_PLUS)
+    let newItem = {...item}
+    newItem.catalogue_id = item.id;
+    newItem.id = item.cart_id;
+
+    console.log('onAddToCart afterModify: ' + JSON.stringify(newItem.id))
+
+    allCart.push(newItem);
+
+    this.calculateTotal(newItem, constants.TYPE_PLUS)
     this.cart = allCart
 
   }
@@ -119,7 +132,7 @@ class CartStore {
 
   }
 
-  @action afterCartDelete(index, responseData, isError) {
+  @action afterCartDelete(index, responseData, isError,skip) {
 
     console.log('afterCartDelete : ' + index)
 
@@ -139,6 +152,10 @@ class CartStore {
     this.calculateTotal(allCart[index], constants.TYPE_DELETE)
     allCart.splice(index, 1);
     this.cart = allCart
+
+    if (this.onApiActionDone && !skip)
+    this.onApiActionDone(item,constants.TYPE_DELETE)
+
   }
 
 
@@ -176,7 +193,7 @@ class CartStore {
 
 
 
-  @action afterMinusCart(index, id, isError) {
+  @action afterMinusCart(index, id, isError,skip) {
 
     console.log('afterMinusCart called! ' + id)
 
@@ -213,6 +230,10 @@ class CartStore {
       allCart.splice(index, 1)
       this.cart = allCart;
     }
+
+    if (this.onApiActionDone && !skip)
+    this.onApiActionDone(item,constants.TYPE_MINUS)
+
   }
 
 
@@ -350,7 +371,7 @@ class CartStore {
 
   }
 
-  @action afterPlusCart(index, id, isError) {
+  @action afterPlusCart(index, id, isError,skip) {
 
     console.log('afterPlusCart called! ' + id)
 
@@ -379,6 +400,9 @@ class CartStore {
     this.cart = allCart;
 
     console.log('Plus cart cartStore: ' + JSON.stringify(this.cart))
+
+    if (this.onApiActionDone && !skip)
+    this.onApiActionDone(item,constants.TYPE_PLUS)
 
     // if (item.cart_quantity) {
 
@@ -411,7 +435,6 @@ class CartStore {
 
   getIndex(id) {
 
-    // console.log('getIndex cart' + JSON.stringify(this.cart))
 
     // for(let item of this.cart){
     //   if(item.id==id)
@@ -420,6 +443,9 @@ class CartStore {
     const length = this.cart.length;
 
     for (var i = 0; i < length; i++) {
+
+          console.log('getIndex cart' + JSON.stringify(this.cart[i]))
+
       if (this.cart[i].id == id)
         return i;
     }
@@ -433,6 +459,7 @@ class CartStore {
   @observable refreshing = false;
   @observable apiLoaded = false;
   @observable cartUpdating = false;
+  @observable onApiActionDone = undefined;
   @observable total = 0
   @observable noOfItems = 0
   @observable cart = []

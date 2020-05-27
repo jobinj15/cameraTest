@@ -33,9 +33,14 @@ var removeCartApiData = {
 }
 
 
-var cartStore;
+var cartStore, prodStore;
 
-@inject("cartStore")
+// @inject("cartStore")
+
+@inject(stores => ({
+    productsStore: stores.productsStore,
+    cartStore: stores.cartStore,
+}))
 @observer
 class Cart extends Component {
     constructor(props) {
@@ -43,7 +48,13 @@ class Cart extends Component {
 
         this.onPlusClicked = this.onPlusClicked.bind(this);
         this.onMinusClicked = this.onMinusClicked.bind(this);
+        this.onApiActionDone = this.onApiActionDone.bind(this);
+
+
         cartStore = this.props.cartStore
+        prodStore = this.props.productsStore
+
+
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -63,6 +74,8 @@ class Cart extends Component {
     componentDidMount() {
 
         // store.onApiActionDone = this.onApiActionDone;
+
+        cartStore.onApiActionDone = this.onApiActionDone;
 
         global.getItem(constants.USER).then(result => {
             if (!result) return;
@@ -235,24 +248,54 @@ class Cart extends Component {
 
     }
 
+    onApiActionDone(item, type) {
+
+        console.log('onApiActionDone: ' + type + ' ' + JSON.stringify(item))
+
+        // if (type == constants.TYPE_MINUS)
+        //     prodStore.afterMinusCart(null, item.catalogue_id,false)
+        // else if (type == constants.TYPE_PLUS)
+        //     prodStore.afterPlusCart(null, item.catalogue_id,false)
+        // else prodStore.afterDeleteCart(null, item.catalogue_id,false)
+
+        if(!prodStore.products || !prodStore.products.length)
+        return
+
+        let refreshApiData = {
+            page_no: 0,
+            per_page: 10,
+            cat_id: '',
+            user_id: ''
+        }
+
+        console.log('listApiData.cat_id ' + prodStore.cat_id);
+        refreshApiData.cat_id = prodStore.cat_id
+        refreshApiData.user_id = listApiData.user_id;
+
+        prodStore.getProducts(global.sendAsFormData(refreshApiData),0)
+
+    }
+
+
     onAddToCart(index) {
         cartStore.addToCart(index)
     }
 
+
     navigateTo() {
         this.props.navigation.navigate('SelectAddress', {
             // [constants.PARAM_INDEX]: index,
-            total : cartStore.total,
-            [constants.PARAM_USER] : listApiData.user_id
-        });    
+            total: cartStore.total,
+            [constants.PARAM_USER]: listApiData.user_id
+        });
     }
 
     bottomView() {
         return (
             <TouchableWithoutFeedback
                 onPress={() => {
-                  if(cartStore.total)
-                  this.navigateTo()
+                    if (cartStore.total)
+                        this.navigateTo()
                 }}
             >
                 <View

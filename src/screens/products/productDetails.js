@@ -8,7 +8,7 @@ import constants from '../../utility/constants';
 import colors from '../../styles/colors';
 import PlusView from '../../components/custom_views/plusView';
 
-var prodStore, cartStore;
+var prodDetStore, prodListStore, cartStore;
 
 var addApiData = {
     user_id: '',
@@ -24,7 +24,7 @@ var detailApiData = {
 var variantApiData = {
     product_id: '',
     user_id: '',
-    options : ''
+    options: ''
 }
 
 var updateApiData = {
@@ -42,6 +42,7 @@ var removeCartApiData = {
 
 @inject(stores => ({
     productDetailsStore: stores.productDetailsStore,
+    productsListStore: stores.productsStore,
     cartStore: stores.cartStore,
 }))
 @observer
@@ -55,9 +56,15 @@ export default class ProductDetails extends Component {
         }
         this.onPlusClicked = this.onPlusClicked.bind(this);
         this.onMinusClicked = this.onMinusClicked.bind(this);
+        this.onApiActionDone = this.onApiActionDone.bind(this);
 
-        prodStore = this.props.productDetailsStore
+        prodDetStore = this.props.productDetailsStore
+        prodListStore = this.props.productsListStore
         cartStore = this.props.cartStore
+
+        // prodDetStore.onApiActionDone = this.onApiActionDone;
+
+        this.reset()
 
         const { navigation } = this.props
         this.state.product = navigation.getParam(constants.PARAM_PRODUCT, null)
@@ -65,6 +72,8 @@ export default class ProductDetails extends Component {
     }
 
     componentDidMount() {
+
+        prodDetStore.setOnApiActionDone(this.onApiActionDone)
 
         global.getItem(constants.USER).then(result => {
             if (!result) return;
@@ -74,9 +83,39 @@ export default class ProductDetails extends Component {
 
     }
 
-    componentWillUnmount() {
-        prodStore.isApiLoaded = false;
-        prodStore.product = {}
+    onApiActionDone(item, type) {
+        console.log('onApiActionDone prodDetais')
+
+        let cartListApiData = {
+            page_no: 0,
+            user_id: addApiData.user_id
+        }
+
+        cartStore.getCart(global.sendAsFormData(cartListApiData), 0)
+
+        if(!prodListStore.products || !prodListStore.products.length)
+        return
+
+        let refreshApiData = {
+            page_no: 0,
+            per_page: 10,
+            cat_id: '',
+            user_id: ''
+        }
+
+        console.log('listApiData.cat_id ' + prodListStore.cat_id);
+        refreshApiData.cat_id = prodListStore.cat_id
+        refreshApiData.user_id = addApiData.user_id;
+
+        prodListStore.getProducts(global.sendAsFormData(refreshApiData),0)
+
+
+    }
+
+    reset() {
+        prodDetStore.isApiLoaded = false;
+        prodDetStore.loading = true;
+        prodDetStore.product = {}
     }
 
     setUserIdToApiData(result) {
@@ -89,41 +128,41 @@ export default class ProductDetails extends Component {
 
     callApi() {
         detailApiData.catlogue_id = this.state.product.id
-        prodStore.getProductDetails(global.sendAsFormData(detailApiData))
+        prodDetStore.getProductDetails(global.sendAsFormData(detailApiData))
     }
 
-    callVariantApi(variants){
+    callVariantApi(variants) {
         variantApiData.product_id = this.state.product.product_id;
         variantApiData.options = variants
-        prodStore.getProductVariant(global.sendAsFormData(variantApiData))
+        prodDetStore.getProductVariant(global.sendAsFormData(variantApiData))
 
     }
 
-    modifyVariantSelection(index,subIndex){
-    
-        var variants = [...prodStore.product.variants];
+    modifyVariantSelection(index, subIndex) {
+
+        var variants = [...prodDetStore.product.variants];
 
         var toModifiedvariant = variants[index].data
-        
+
         var size = toModifiedvariant.length;
         var item;
-        for(var i =0;i<size;i++){
-           item = toModifiedvariant[i];
-           
-           if(i==subIndex)
-           item.selected = true;
-           else item.selected = false;
+        for (var i = 0; i < size; i++) {
+            item = toModifiedvariant[i];
+
+            if (i == subIndex)
+                item.selected = true;
+            else item.selected = false;
         }
 
 
         var newSelections = [];
 
-        for(let nItem of variants){
+        for (let nItem of variants) {
 
-            for(let nSubItem of nItem.data){
-              
-                if(nSubItem.selected)
-                newSelections.push(nSubItem.value_id)
+            for (let nSubItem of nItem.data) {
+
+                if (nSubItem.selected)
+                    newSelections.push(nSubItem.value_id)
 
             }
 
@@ -174,8 +213,8 @@ export default class ProductDetails extends Component {
                             mainItem.data.map((subItem, subIndex) => {
                                 return (
                                     <TouchableWithoutFeedback
-                                        onPress={()=>{
-                                            this.modifyVariantSelection(i,subIndex)
+                                        onPress={() => {
+                                            this.modifyVariantSelection(i, subIndex)
                                         }}
                                         key={(i + subIndex).toString()}
                                     >
@@ -209,21 +248,22 @@ export default class ProductDetails extends Component {
 
     render() {
 
-        if (prodStore.isApiLoaded && !prodStore.product.id)
+        if (prodDetStore.isApiLoaded && !prodDetStore.product.id)
             return (
                 global.getNoDataView()
             )
 
-        if (prodStore.loading) {
+        if (prodDetStore.loading) {
             return (
                 global.getLoader()
             )
         }
 
-        const item = prodStore.product;
+        const item = prodDetStore.product;
         console.log('ProductDetails ' + JSON.stringify(item))
 
         var image = require('../../assets/images/pic2.jpg');
+        // var image;
 
         if (Array.isArray(item.images) && item.images.length) {
             image = { uri: item.images[0].images };
@@ -407,56 +447,50 @@ export default class ProductDetails extends Component {
 
 
     onPlusClicked() {
-        // const item = prodStore.plusCart(this.state.index)
-        // console.log("Item onPlusClicked: " + JSON.stringify(item))
-        // cartStore.plusCart(null, item.id)
 
-        if (prodStore.cartUpdating)
+        if (prodDetStore.cartUpdating)
             return;
 
-        var item = prodStore.products[this.state.index];
+        var item = prodDetStore.product;
         updateApiData.catalogue_id = item.id;
         updateApiData.quantity = item.cart_quantity + 1;
         updateApiData.cart_id = item.cart_id;
 
         console.log('ProdDetails: ' + JSON.stringify(updateApiData))
 
-        prodStore.updateCart(global.sendAsFormData(updateApiData), this.state.index, null, constants.TYPE_PLUS)
+        prodDetStore.updateCart(global.sendAsFormData(updateApiData), constants.TYPE_PLUS)
 
 
     }
 
     onMinusClicked() {
-        // const item = prodStore.minusCart(this.state.index)
+        // const item = prodDetStore.minusCart(this.state.index)
         // cartStore.minusCart(null, item.id)
 
-        if (prodStore.cartUpdating)
+        if (prodDetStore.cartUpdating)
             return;
 
-        var item = prodStore.products[this.state.index];
+        var item = prodDetStore.product;
         updateApiData.catalogue_id = item.id;
         updateApiData.quantity = item.cart_quantity - 1;
         updateApiData.cart_id = item.cart_id;
 
         if (item.cart_quantity == 1)
-            prodStore.deleteItem(global.sendAsFormData(updateApiData), this.state.index)
+            prodDetStore.deleteItem(global.sendAsFormData(updateApiData))
         else
-            prodStore.updateCart(global.sendAsFormData(updateApiData), this.state.index, null, constants.TYPE_MINUS)
+            prodDetStore.updateCart(global.sendAsFormData(updateApiData), constants.TYPE_MINUS)
     }
 
     onAddToCart() {
-        // const item = prodStore.addToCart(this.state.index)
-        // console.log("Item added: " + JSON.stringify(item))
-        // cartStore.addToCart(null, item)
 
-        if (prodStore.cartUpdating)
+        if (prodDetStore.cartUpdating)
             return;
 
-        var item = prodStore.products[this.state.index];
+        var item = prodDetStore.product;
         addApiData.catalogue_id = item.id;
         addApiData.quantity = 1;
 
-        prodStore.addToCart(global.sendAsFormData(addApiData), this.state.index)
+        prodDetStore.addToCart(global.sendAsFormData(addApiData))
     }
 
 }

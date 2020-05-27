@@ -12,6 +12,7 @@ import { observer, inject } from "mobx-react";
 
 import styles from '../../styles/style';
 import Banner from './banner'
+import ImpMessage from './ImpMessage'
 import LabelStrip from './labelStrip'
 import Categories from './categories'
 import constants from '../../utility/constants';
@@ -74,12 +75,16 @@ var cartCountApiData={
    this.props.cartStore.getCartCount(global.sendAsFormData(cartCountApiData))
   }
 
+
   render() {
     return (
       <View style={[styles.styleFull, { padding: 0, backgroundColor: colors.WHITE }]}>
 
         <ScrollView>
           <View>
+
+            <ImpMessage/>            
+
             <Banner
               navigation={this.props.navigation}
             />

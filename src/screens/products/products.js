@@ -50,6 +50,12 @@ export default class Products extends Component {
         prodStore = this.props.productsStore
         cartStore = this.props.cartStore
 
+        this.reset()
+
+        const {navigation} = this.props;
+        const item = navigation.getParam([constants.PARAM_ITEM],null);
+        listApiData.cat_id = item.id
+        prodStore.cat_id = item.id
     }
 
     componentDidMount() {
@@ -111,7 +117,7 @@ export default class Products extends Component {
                     renderItem={this.renderRow.bind(this)}
                     onRefresh={this.handleRefresh.bind(this)}
                     onEndReached={this.handleLoadMore.bind(this)}
-                    onEndReachedThreshold={0.3}
+                    onEndReachedThreshold={2}
                     refreshing={prodStore.refreshing}
                     ItemSeparatorComponent={this.renderSeparator}
                     keyExtractor={(item, index) => index.toString()}
@@ -200,11 +206,18 @@ export default class Products extends Component {
 
         console.log('onApiActionDone: ' + type + ' ' + JSON.stringify(item))
 
-        if (type == constants.TYPE_ADDCART)
-            cartStore.afterAddCart(null, item)
-        else if (type == constants.TYPE_PLUS)
-            cartStore.afterPlusCart(null, item.cart_id)
-        else cartStore.afterMinusCart(null, item.cart_id)
+        // if (type == constants.TYPE_ADDCART)
+        //     cartStore.afterAddCart(null, item,false,true)
+        // else if (type == constants.TYPE_PLUS)
+        //     cartStore.afterPlusCart(null, item.cart_id,false,true)
+        // else cartStore.afterMinusCart(null, item.cart_id,false,true)
+
+        var cartListApiData = {
+            page_no: 0,
+            user_id: listApiData.user_id
+        }       
+
+        cartStore.getCart(global.sendAsFormData(cartListApiData),0)
 
     }
 
@@ -275,10 +288,17 @@ export default class Products extends Component {
 
     }
 
-    componentWillUnmount(){
+    reset(){
         prodStore.products = []
         prodStore.apiLoaded = false;
+        prodStore.loading = true;
     }
+
+    // componentWillUnmount(){
+    //     prodStore.products = []
+    //     prodStore.apiLoaded = false;
+    //     prodStore.loading = false;
+    // }
 
     renderRow({ item, index }) {
 
