@@ -12,6 +12,7 @@ import { createMaterialTopTabNavigator, createBottomTabNavigator } from 'react-n
 import { Avatar, AvatarHelper, Typography } from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
 import colors from '../styles/colors';
+import styles from '../styles/style';
 import ToolBar from '../components/toolbar';
 import global from '../utility/global';
 import CartBubble from './CartBubble';
@@ -36,13 +37,6 @@ class MainScreenC extends Component {
 }
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 
 // static navigationOptions = {
@@ -112,16 +106,7 @@ const BottomTabNavigator = createBottomTabNavigator(
         getTabBarIcon(navigation, focused, tintColor),
     }),
     lazy:false,
-    tabBarOptions: {
-      activeTintColor: colors.PRIMARY,
-      inactiveTintColor: 'gray',
-      showIcon: true,
-      showLabel: false,
-      style: {
-        backgroundColor: colors.WHITE,
-        height: 48
-      }
-    },
+    tabBarOptions: styles.tabBarOptions,
   },
 );
 

@@ -116,15 +116,27 @@ export default class AddAddress extends Component {
 
   afterAddressAdded() {
 
-    if (this.state.mode == constants.MODE_FIRST_ADD) {
-      if (this.onFirstAddressAdded)
-        this.onFirstAddressAdded();
-      this.props.navigation.pop();
-      return;
-    }
+    //Set first address as selected address so that it can be displayed in cart page
 
+    console.log('afterAddressAdded !!' + this.state.mode)
+    const listStore = this.props.listStore;
+
+    // if(listStore.addressList.length==1)
+    // listStore.selectedAddress = listStore.addressList[0]
+
+    //Notify the cart select address page about first address added
+    // if (this.state.mode == constants.MODE_FIRST_ADD) {
+    //   if (this.onFirstAddressAdded)
+    //     this.onFirstAddressAdded();  
+
+    //   this.props.navigation.pop();
+    //   return;
+    // }
+
+    //Refresh the addressListing page if coming from addressList page
     listApiData.user_id = this.state.userId;
-    this.props.listStore.getAddressList(global.sendAsFormData(listApiData), listApiData.page_no)
+    listStore.apiLoaded = false;
+    listStore.getAddressList(global.sendAsFormData(listApiData), listApiData.page_no)
     this.props.navigation.pop()
   }
 
@@ -147,7 +159,7 @@ export default class AddAddress extends Component {
 
   componentDidMount() {
     // this.doRegister();
-    store.afterAddressAdded = this.afterAddressAdded
+    store.setAfterAddressAdded(this.afterAddressAdded);
   }
 
   validateAndAddAddress() {

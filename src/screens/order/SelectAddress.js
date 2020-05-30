@@ -37,6 +37,7 @@ export default class SelectAddress extends Component {
     }
 
     onFirstAddressAdded(){
+        console.log('onFirstAddressAdded called!')
         store.getAddressList(global.sendAsFormData(addressApiData))
     }
 
@@ -67,7 +68,9 @@ export default class SelectAddress extends Component {
         addressApiData.user_id = this.state.userId;
         store.setAfterAddressListLoaded(this.afterAddressListLoaded);
         store.getAddressList(global.sendAsFormData(addressApiData),0)
-    }
+
+        // console.log('currTheme :' + window.theme)
+    } 
 
     componentWillUnmount(){
         // store.addressList = [];
@@ -92,7 +95,7 @@ export default class SelectAddress extends Component {
 
     bottomView() {
 
-        if(!store.selectedAddress.id)
+        if(!store.selectedAddress || !store.selectedAddress.id)
         return(
             <View/>
         )
@@ -184,7 +187,7 @@ export default class SelectAddress extends Component {
 
         var address = store.selectedAddress;
         
-        if (!address.id)
+        if (!address || !address.id)
             return (<View />)
 
         return (

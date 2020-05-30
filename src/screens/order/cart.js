@@ -325,6 +325,10 @@ class Cart extends Component {
         // console.log('Products row ' + JSON.stringify(item))
 
         var image = require('../../assets/images/pic2.jpg');
+        var marginBottom = 0;
+        
+        if((cartStore.cart.length-1)==index)
+        marginBottom = 60;
 
         if (Array.isArray(item.images) && item.images.length) {
             image = { uri: item.images[0].images };
@@ -333,7 +337,7 @@ class Cart extends Component {
 
         return (
 
-            <Card style={{ flex: 1, borderRadius: 0 }} key={index}>
+            <Card style={{ flex: 1, borderRadius: 0,marginBottom:marginBottom }} key={index}>
 
                 <View
                     style={{ padding: 10, flex: 1 }}

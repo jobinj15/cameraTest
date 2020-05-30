@@ -70,6 +70,7 @@ export default class Products extends Component {
             this.callApi()
         });
 
+        console.log('setTheme Prod' + window.theme)
 
     }
 

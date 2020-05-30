@@ -68,6 +68,12 @@ export default class OrderDetails extends Component {
             )
         }
 
+        var image = require('../../assets/images/pic1.jpg');
+
+        if (store.order.image) {
+            image = { uri: store.order.image };
+        }
+
         return (
             <View style={[styles.styleFull, { backgroundColor: colors.ListViewBG }]}>
 
@@ -132,7 +138,7 @@ export default class OrderDetails extends Component {
                                 }}
                             >
 
-                                <Card.Image imageSource={require('../../assets/images/pic1.jpg')}
+                                <Card.Image imageSource={image}
                                     style={{ height: 100, width: 100, marginRight: 20 }}
                                     cover={true}
                                 />

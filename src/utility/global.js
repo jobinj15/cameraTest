@@ -180,6 +180,8 @@ export default global = {
     DEVICE_HEIGHT: Dimensions.get('window').height,
   },
 
+  
+
   getItem(key) {
     return new Promise((resolve, reject) => {
       AsyncStorage.getItem(key).then(

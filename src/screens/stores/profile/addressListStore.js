@@ -79,6 +79,8 @@ export default class AddressListStore {
 
      this.addressList = allAddress;
      this.selectedAddress = this.addressList[index];
+
+     if(navigator)
      navigator.pop()
    }
 
@@ -106,15 +108,23 @@ export default class AddressListStore {
 
     if(!isError){
       
-      global.showMessage(constants.MSG_DELETED);
+      // global.showMessage(constants.MSG_DELETED);
 
       var allAddress = this.getListCopy()
       allAddress.splice(index,1);
-      this.updateList(allAddress)
+      // this.updateList(allAddress)
+
+      if(this.addressList.length){
+        this.selectedAddress = allAddress[0];
+        this.addressList = allAddress;
+        this.toggleSelection(0);
+      }
     }
-    else {
-      global.showMessage(responseData.message) 
-    }
+    // else {
+    //   global.showMessage(responseData.message) 
+    // }
+    global.showMessage(responseData.message) 
+
   }
 
   @action setAfterAddressListLoaded(method){

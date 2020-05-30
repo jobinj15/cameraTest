@@ -71,7 +71,15 @@ export default class ProductDetails extends Component {
 
     }
 
+    static navigationOptions = {
+        title: 'Details',
+      };
+
     componentDidMount() {
+
+        // this.props.navigation.setParams({ routeName: 'Updated!' })
+        
+        console.log('ProdDetails: ' + JSON.stringify(this.props.navigation))
 
         prodDetStore.setOnApiActionDone(this.onApiActionDone)
 

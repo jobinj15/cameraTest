@@ -14,6 +14,7 @@ var listApiData = {
 
 var store;
 
+
 @inject("myOrdersStore")
 @observer
 export default class MyOrders extends Component {
@@ -25,6 +26,12 @@ export default class MyOrders extends Component {
         }
 
         store = this.props.myOrdersStore
+        this.resetStore();
+    }
+
+    resetStore(){
+        store.apiLoaded = false;
+        store.orders = []
     }
 
     componentDidMount() {
@@ -36,7 +43,7 @@ export default class MyOrders extends Component {
 
             this.setUserIdToApiData(result)
 
-            this.callApi()
+            this.callApi();
         });
 
 

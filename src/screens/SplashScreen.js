@@ -10,10 +10,11 @@ import {
   Colors,
   Typography,
 } from 'react-native-ui-lib'; //eslint-disable-line
+import constants from '../utility/constants';
+
+
 
 export default class Splashscreen extends Component {
-
-   
     
   constructor(props) {
     super(props);

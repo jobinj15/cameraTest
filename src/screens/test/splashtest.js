@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, Animated, ImageBackground } from 'react-native';
 import { StackActions,NavigationActions} from 'react-navigation';
 import styles from '../../styles/style'
+import themeStore from '../../screens/stores/ThemeStore'
 import global from '../../utility/global';
 import SplashScreen from 'react-native-splash-screen';
 import constants from '../../utility/constants';
@@ -35,6 +36,28 @@ export default class SplashTest extends Component {
         console.log('Dev_Width: ' + Math.ceil(global.DEVICE_WIDTH))
         SplashScreen.hide()
         this.animateText()
+        this.setTheme();
+
+    }
+
+    setTheme(){
+
+        global.getItem(constants.PREFS).then((prefs) => {
+
+        //    const themes = getAllThemes(); 
+
+           if(prefs && prefs.theme)
+           themeStore.theme = prefs.theme;
+           else {
+            themeStore.theme = 0
+            global.storeItem(constants.PREFS,{theme:0})
+           }
+
+           console.log('setTheme ' + themeStore.theme)
+
+        })
+
+
     }
 
 

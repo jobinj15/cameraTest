@@ -420,15 +420,16 @@ class CartStore {
 
     if (type == constants.TYPE_PLUS) {
       this.total = (price + this.total)
-      this.noOfItems++
+      // this.noOfItems++
     }
     else if (type == constants.TYPE_DELETE) {
       this.total = (this.total - (price * item.cart_quantity))
-      this.noOfItems = this.noOfItems - item.cart_quantity
+      // this.noOfItems = this.noOfItems - item.cart_quantity
+      this.noOfItems--
     }
     else {
       this.total = (this.total - price)
-      this.noOfItems--
+      // this.noOfItems--
     }
 
   }

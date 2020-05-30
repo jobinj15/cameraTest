@@ -15,6 +15,7 @@ import productDetailsStore from "./products/ProductDetailsStore";
 import addressListStore from "./profile/addressListStore";
 import selectAddressStore from "./order/SelectAddressStore";
 import paymentsStore from "./order/PaymentsStore";
+import themeStore from "./ThemeStore";
 
 
 export default {

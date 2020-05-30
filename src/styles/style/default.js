@@ -12,8 +12,7 @@ import {
 } from 'react-native';
 
 import { Typography, Colors } from 'react-native-ui-lib';
-import COLORS from './colors'
-import colors from './colors';
+import colors from '../colors';
 
 const CARD_PREVIEW_WIDTH = 20
 const CARD_MARGIN = 5;
@@ -82,6 +81,16 @@ var styles = {
         alignItems: 'center',
         justifyContent: 'center',
 
+    },
+    tabBarOptions: {
+        activeTintColor: colors.PRIMARY,
+        inactiveTintColor: 'gray',
+        showIcon: true,
+        showLabel: false,
+        style: {
+            backgroundColor: colors.WHITE,
+            height: 48
+        }
     },
     viewAll: {
         fontWeight: 'bold',
@@ -153,11 +162,11 @@ var styles = {
         color: colors.GREY,
         fontSize: 16
     },
-    variant:{
-        padding : 8,
-        fontSize : 16,
+    variant: {
+        padding: 8,
+        fontSize: 16,
         backgroundColor: colors.GREY,
-        color : colors.WHITE
+        color: colors.WHITE
     },
     wrap: {
         flex: 1,
@@ -170,6 +179,13 @@ var styles = {
     labelSmall: {
         color: colors.GREY,
         fontSize: 12
+    },
+    addressListCard: {
+        flex: 1,
+        flexDirection: 'row',
+        paddingTop: 20, paddingBottom: 10,
+        paddingHorizontal: 15,
+        backgroundColor: colors.WHITE
     },
     labelProfile: {
         color: colors.GREY,
@@ -420,6 +436,11 @@ var styles = {
         fontSize: 26,
         flex: 1,
         fontWeight: 'bold'
+    },
+    themeDialog: {
+        backgroundColor: colors.WHITE,
+        padding: 15,
+        flex: 1
     }
 
 };

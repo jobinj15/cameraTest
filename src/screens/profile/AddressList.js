@@ -30,6 +30,7 @@ export default class AdressList extends Component {
         }
 
         store = this.props.addressListStore
+        store.apiLoaded = false;
         this.onDeleteYes = this.onDeleteYes.bind(this)
 
         const { navigation } = this.props
@@ -162,6 +163,11 @@ export default class AdressList extends Component {
 
         console.log('renderRow addressList: ' + JSON.stringify(item))
 
+        var marginBottom = 0;
+
+        if ((store.addressList.length - 1) == index)
+            marginBottom = 60;
+
         return (
 
             <TouchableWithoutFeedback
@@ -170,13 +176,9 @@ export default class AdressList extends Component {
                 }}
             >
                 <View
-                    style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        paddingTop: 20, paddingBottom: 10,
-                        paddingHorizontal: 15,
-                        backgroundColor: colors.WHITE
-                    }}
+                    style={[styles.addressListCard, {
+                        marginBottom: marginBottom,
+                    }]}
                 >
                     {
                         (this.state.mode == constants.MODE_SELECT) &&
@@ -230,7 +232,7 @@ export default class AdressList extends Component {
                         </TouchableWithoutFeedback>
 
                         {
-                            !item.selected &&
+                            // !item.selected &&
                             <TouchableWithoutFeedback
                                 onPress={() => {
                                     this.state.deleteIndex = index;

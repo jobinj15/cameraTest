@@ -55,7 +55,7 @@ export default class AddAddressStore {
   }
 
 
-  @action addAddress(data,mode) {
+  @action addAddress(data, mode) {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
@@ -63,22 +63,22 @@ export default class AddAddressStore {
       else {
 
         this.loading = true;
-         
-        if(mode==constants.MODE_EDIT){
+
+        if (mode == constants.MODE_EDIT) {
           user_repository.updateAddress(
             data,
             this.onAddressAdded.bind(this)
-          );  
+          );
         }
-        else{
+        else {
           user_repository.addAddress(
             data,
             this.onAddressAdded.bind(this)
           );
-  
+
         }
 
-        
+
       }
     });
   }
@@ -89,14 +89,18 @@ export default class AddAddressStore {
     this.loading = false;
 
     if (!isError) {
+
+      console.log('onAddressAdded ' + this.onAddressAdded)
+
       if (this.afterAddressAdded)
         this.afterAddressAdded()
     }
-    else global.showMessage(responseData.message)
+
+    global.showMessage(responseData.message)
 
   }
 
-  @action afterAddressAdded(method) {
+  @action setAfterAddressAdded(method) {
     this.afterAddressAdded = method;
   }
 
