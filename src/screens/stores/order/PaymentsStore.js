@@ -8,6 +8,8 @@ import user_repository from "../../../repos/user_repository";
 class PaymentsStore {
 
   @observable loading = false;
+  @observable apiLoaded = false;
+  @observable selectedPayMode = undefined;
   @observable paymentList = [];
 
 
@@ -31,10 +33,32 @@ class PaymentsStore {
 
   }
 
+
+  @action toggleSelection(index, navigator) {
+    var allPayModes = [...this.paymentList]
+
+    var size = allPayModes.length;
+    var item;
+
+    for (var i = 0; i < size; i++) {
+
+      item = allPayModes[i]
+      if (i === index){
+        item.selected = true;
+        this.selectedPayMode = item;
+      }
+      else item.selected = false;
+    }
+
+    this.paymentList = allPayModes;
+  }
+
+
   onPaymentList(isError, responseData) {
 
 
     this.loading = false;
+    this.apiLoaded = true
 
     if (!isError) {
       this.paymentList = responseData.data

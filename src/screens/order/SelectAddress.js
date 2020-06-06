@@ -174,7 +174,7 @@ export default class SelectAddress extends Component {
                 {this.bottomView()}
 
                 {
-                    (store.loadingAddress || store.loadingCharges) &&
+                    (store.loading || store.loadingCharges) &&
                     global.getLoader()
                 }
 

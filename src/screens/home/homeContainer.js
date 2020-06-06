@@ -5,6 +5,7 @@ import HomeMain from './homeMain';
 import Products from '../products/products';
 import ProductDetail from '../products/productDetails';
 import ToolBar from '../../components/toolbar';
+import constants from '../../utility/constants';
 
 const onBoardStack = createStackNavigator(
   {
@@ -23,7 +24,7 @@ const onBoardStack = createStackNavigator(
       return {
         HeaderTitle: () =>
           <ToolBar
-            title='Grocerie'
+            title={constants.APP_NAME}
           />
       }
     }

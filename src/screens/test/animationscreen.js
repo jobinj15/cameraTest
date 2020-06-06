@@ -25,7 +25,7 @@ class AnimationScreen extends Component {
       <View style={styles.container}>
         <Button
           label="Animate"
-          labelStyle={{fontWeight: '600'}}
+          labelStyle={{fontWeight: 'PopinsMed'}}
           style={{margin: 10, borderRadius: 8}}
           outline
           outlineColor="#30B650"

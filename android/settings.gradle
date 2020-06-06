@@ -1,4 +1,6 @@
 rootProject.name = 'GroceryApp'
+include ':react-native-payumoney'
+project(':react-native-payumoney').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-payumoney/android')
 include ':lottie-react-native'
 project(':lottie-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/lottie-react-native/src/android')
 include ':lottie-react-native'
@@ -7,6 +9,8 @@ project(':lottie-react-native').projectDir = new File(rootProject.projectDir, '.
 //project(':@react-native-community_blur').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/blur/android')
 include ':react-native-snackbar'
 project(':react-native-snackbar').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-snackbar/android')
+//include ':react-native-payumoney'
+//project(':react-native-payumoney').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-payumoney/android')
 include ':react-native-splash-screen'
 project(':react-native-splash-screen').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-splash-screen/android')
 include ':react-native-reanimated'

@@ -134,6 +134,11 @@ export default class Products extends Component {
                     && global.getNoDataView()
                 }
 
+                {
+                   prodStore.message?
+                   global.getNoDataView(constants.NO_INTERNET_REF,constants.NO_INTERNET_REF):<View/>
+                }
+
             </View>
         );
     }
@@ -250,7 +255,7 @@ export default class Products extends Component {
                     onPress={() => {
                         this.onAddToCart(index);
                     }}
-                    labelStyle={{ fontWeight: 'bold', fontSize: 14 }}
+                    labelStyle={{ fontFamily: 'PopinsBold', fontSize: 14,marginTop:3 }}
                     style={[styles.addContainer, { marginTop: 10 }]}
                     borderRadius={3}
                     enableShadow
@@ -292,7 +297,10 @@ export default class Products extends Component {
     reset(){
         prodStore.products = []
         prodStore.apiLoaded = false;
-        prodStore.loading = true;
+        prodStore.loading = false;
+        prodStore.refreshing = false;
+        prodStore.page = 0;
+        prodStore.message = '';
     }
 
     // componentWillUnmount(){

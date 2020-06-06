@@ -28,6 +28,7 @@ class SelectAddressStore {
         );
 
       }
+      else global.showMessage(constants.NO_INTERNET)
     });
 
   }

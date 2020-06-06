@@ -27,8 +27,8 @@ var instance = undefined;
 
         switch (setTheme) {
 
-            case constants.THEME_DARK:
-                return darkTheme;
+            // case constants.THEME_DARK:
+            //     return darkTheme;
 
             default:
                 return defaultTheme;

@@ -6,10 +6,11 @@ import { Card, Button } from 'react-native-ui-lib';
 import { observer, inject } from "mobx-react";
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
+import PTRView from 'react-native-pull-to-refresh';
 
 var orderDetailApiData = {
-    user_id : '',
-    order_id : ''
+    user_id: '',
+    order_id: ''
 }
 var store;
 
@@ -28,20 +29,32 @@ export default class OrderDetails extends Component {
         const { navigation } = this.props
         this.state.order = navigation.getParam(constants.PARAM_ORDER, null)
         this.state.userId = navigation.getParam(constants.PARAM_USER, null)
-        
+
         this.setApiData()
     }
 
-    setApiData(){
+    resetStore(){
+        store.isApiLoaded = false;
+        store.loading = false;
+        // store.refreshing = false;
+        store.message = '';
+        store.order = {}
+    }
+
+    setApiData() {
         orderDetailApiData.user_id = this.state.userId;
         orderDetailApiData.order_id = this.state.order.id
     }
 
-    componentDidMount(){
+    componentDidMount() {
+        this.callApi()
+    }
+
+    callApi() {
         store.getOrderDetails(global.sendAsFormData(orderDetailApiData))
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         store.isApiLoaded = false;
         store.order = {}
     }
@@ -56,14 +69,25 @@ export default class OrderDetails extends Component {
 
     //0 4 8 
     render() {
-        
-        if(store.isApiLoaded && !store.order.id)     
-        return(
-            global.getNoDataView()
-        )
 
-        if(store.loading){
-            return(
+        if (store.message) {
+            return (
+                global.getNoDataView(constants.NO_INTERNET_REF, constants.NO_INTERNET_REF)
+            )
+        }
+
+        if (store.isApiLoaded && !store.order.id)
+            return (
+                global.getNoDataView()
+            )
+
+        // if (!store.isApiLoaded && !store.loading)
+        //     return (
+        //         <View/>
+        //     )
+
+        if (store.loading) {
+            return (
                 global.getLoader()
             )
         }
@@ -75,133 +99,130 @@ export default class OrderDetails extends Component {
         }
 
         return (
-            <View style={[styles.styleFull, { backgroundColor: colors.ListViewBG }]}>
+            // <PTRView
+            //     onRefresh={this.callApi()}
+            // >
+                <View style={[styles.styleFull, { backgroundColor: colors.ListViewBG }]}>
 
-                <ScrollView>
+                    <ScrollView>
 
-                    <View>
+                        <View>
 
-                        <Card style={{ borderRadius: 0 }} >
+                            <Card style={{ borderRadius: 0 }} >
 
-                            <Text
-                                style={[styles.labelSmall, {
-                                    color: colors.DARKGRAY,
-                                    fontWeight: 'bold', padding: 15
-                                }]}
-                            >
-                                {'Placed on ' + store.order.order_date}
-                            </Text>
-
-                            <View
-                                style={styles.largeButton}
-                            >
                                 <Text
-                                    style={[styles.stripLabel, { color: colors.WHITE, flex: undefined }]}
+                                    style={[styles.labelSmall, {
+                                        color: colors.DARKGRAY,
+                                        fontWeight: 'PopinsBold', padding: 15
+                                    }]}
                                 >
-                                    {store.order.order_status_name}
+                                    {'Placed on ' + store.order.order_date}
                                 </Text>
 
-                            </View>
+                                <View
+                                    style={[styles.largeButton,{width:'90%'}]}
+                                >
+                                    <Text
+                                        style={[styles.stripLabel, { color: colors.WHITE, flex: undefined }]}
+                                    >
+                                        {store.order.order_status_name}
+                                    </Text>
 
-                            <Text
-                                style={[styles.labelSmall, { margin: 15 }]}
-                            >
-                                {constants.TXT_DELIVERED_ON}
-                            </Text>
+                                </View>
 
-                            <Text
-                                style={[styles.stripLabel, { paddingBottom: 15, paddingHorizontal: 15 }]}
-                            >
-                                {store.order.date}
-                            </Text>
+                                <Text
+                                    style={[styles.labelSmall, { margin: 15 }]}
+                                >
+                                    {constants.TXT_DELIVERED_ON}
+                                </Text>
 
-                        </Card>
+                                <Text
+                                    style={[styles.stripLabel, { paddingBottom: 15, paddingHorizontal: 15 }]}
+                                >
+                                    {store.order.date}
+                                </Text>
 
-                        <Card
-                            style={{
-                                marginTop: 10, padding: 15
-                            }}
-                            borderRadius={0}
-                        >
+                            </Card>
 
-                            <Text
-                                style={[styles.stripLabel, {}]}
-                            >
-                                {store.order.total_quantity + ' Items  |  Amount '
-                                    + constants.SYMBOL_RUPEE + store.order.total}
-                            </Text>
-
-                            <View
+                            <Card
                                 style={{
-                                    flexDirection: 'row',
-                                    paddingVertical: 15
+                                    marginTop: 10, padding: 15
                                 }}
+                                borderRadius={0}
                             >
 
-                                <Card.Image imageSource={image}
-                                    style={{ height: 100, width: 100, marginRight: 20 }}
-                                    cover={true}
-                                />
+                                <Text
+                                    style={[styles.stripLabel, {}]}
+                                >
+                                    {store.order.total_quantity + ' Items  |  Amount '
+                                        + constants.SYMBOL_RUPEE + store.order.total}
+                                </Text>
 
                                 <View
                                     style={{
-                                        justifyContent: 'center',
+                                        flexDirection: 'row',
+                                        paddingVertical: 15
                                     }}
                                 >
-                                    <Text
-                                        style={[styles.stripLabel, { flex: undefined }]}
+
+                                    <Card.Image imageSource={image}
+                                        style={{ height: 100, width: 100, marginRight: 20 }}
+                                        cover={true}
+                                    />
+
+                                    <View
+                                        style={{
+                                            justifyContent: 'center',
+                                        }}
                                     >
-                                        {store.order.name}
-                                    </Text>
+                                        <Text
+                                            style={[styles.stripLabel, { flex: undefined }]}
+                                        >
+                                            {store.order.name}
+                                        </Text>
 
-                                    <Text
-                                        style={[styles.labelSmallX1, { marginTop: 10 }]}
-                                    >
-                                        {constants.SYMBOL_RUPEE + '307.80'}
-                                    </Text>
+                                        <Text
+                                            style={[styles.labelSmallX1, { marginTop: 10 }]}
+                                        >
+                                            {constants.SYMBOL_RUPEE + '307.80'}
+                                        </Text>
 
 
+                                    </View>
                                 </View>
-                            </View>
 
-                        </Card>
+                            </Card>
 
 
-                        <Card
-                            style={{
-                                marginTop: 10,
-                                padding: 15
-                            }}
-                            borderRadius={0}
-                        >
-                            <Text
-                                style={[styles.stripLabel, { flex: undefined, color: colors.DARKGRAY2 }]}
+                            <Card
+                                style={{
+                                    marginTop: 10,
+                                    padding: 15
+                                }}
+                                borderRadius={0}
                             >
-                                {constants.TXT_PAYMENT_DETAILS}
-                            </Text>
+                                <Text
+                                    style={[styles.stripLabel, { flex: undefined, color: colors.DARKGRAY2 }]}
+                                >
+                                    {constants.TXT_PAYMENT_DETAILS}
+                                </Text>
 
-                            {this.drawKeyValue('Price', store.order.price, { marginTop: 10 })}
-                            {/* {this.drawKeyValue(constants.TXT_SAVINGS, store.order.savings, { marginTop: 5 },{color:colors.GREEN_4})} */}
-                            {this.drawKeyValue('Quantity', store.order.quantity, { marginTop: 5 })}
-                            {this.drawKeyValue('SubTotal', store.order.subtotal, { marginTop: 5 })}
+                                {this.drawKeyValue('Price', store.order.price, { marginTop: 10 })}
+                                {/* {this.drawKeyValue(constants.TXT_SAVINGS, store.order.savings, { marginTop: 5 },{color:colors.GREEN_4})} */}
+                                {this.drawKeyValue('Quantity', store.order.quantity, { marginTop: 5 })}
+                                {this.drawKeyValue('SubTotal', store.order.subtotal, { marginTop: 5 })}
 
-                            {this.drawKeyValue('Total', store.order.total, { marginTop: 10 },{color:colors.GREEN_4})}
-
-
-                        </Card>
-
-
-                    </View>
-                </ScrollView>
-
-               
-                
-            </View>
+                                {this.drawKeyValue('Total', store.order.total, { marginTop: 10 }, { color: colors.GREEN_4 })}
+                            </Card>
+                        </View>
+                    </ScrollView>
+                </View>
+            // </PTRView>
         );
     }
 
 
-    drawKeyValue(key, value, moreStyles = {},fontColor={}) {
+    drawKeyValue(key, value, moreStyles = {}, fontColor = {}) {
 
         return (
             <View
@@ -213,14 +234,14 @@ export default class OrderDetails extends Component {
             >
 
                 <Text
-                    style={[styles.stripLabel, { flex: 1, fontWeight: '500' },fontColor]}
+                    style={[styles.stripLabel, { flex: 1, fontWeight: 'PopinsMed' }, fontColor]}
                 >
                     {key}
 
                 </Text>
 
                 <Text
-                    style={[styles.labelSmallX1,fontColor]}
+                    style={[styles.labelSmallX1, fontColor]}
                 >
                     {value}
 

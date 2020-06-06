@@ -18,6 +18,7 @@ class ProductsStore {
   @observable products = []
   @observable page = 0
   @observable cat_id;
+  @observable message = '';
 
   constructor() {
     this.onApiActionDone = undefined
@@ -26,12 +27,16 @@ class ProductsStore {
   @action getProducts(data, page) {
 
     global.isOnline().then(isNetworkAvailable => {
-      if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+      if (!isNetworkAvailable) {
+        global.showMessage(constants.NO_INTERNET);
+        if (page == 0)
+          this.message = constants.NO_INTERNET
+        if (this.refreshing)
+          this.refreshing = false;
+      }
       else {
-
         this.loading = !this.refreshing && page == 0;
-        // this.loading = !this.refreshing;
+        this.message = ''
         this.page = page;
 
         prod_repository.getProducts(
@@ -75,7 +80,7 @@ class ProductsStore {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+        global.showMessage(constants.NO_INTERNET)
       else {
 
         this.cartUpdating = true;
@@ -115,45 +120,45 @@ class ProductsStore {
 
 
 
-    @action addToCart(data, index, id) {
+  @action addToCart(data, index, id) {
 
-      global.isOnline().then(isNetworkAvailable => {
-        if (!isNetworkAvailable)
-          global.showToast(constants.NO_INTERNET)
-        else {
+    global.isOnline().then(isNetworkAvailable => {
+      if (!isNetworkAvailable)
+        global.showMessage(constants.NO_INTERNET)
+      else {
 
-          this.cartUpdating = true;
-          this.setItemLoading(index);
+        this.cartUpdating = true;
+        this.setItemLoading(index);
 
-          prod_repository.addToCart(
-            data,
-            this.onAddToCart.bind(this),
-            index, id
-          );
+        prod_repository.addToCart(
+          data,
+          this.onAddToCart.bind(this),
+          index, id
+        );
 
-        }
-      });
-
-    }
-
-
-
-
-
-
-    @action onAddToCart(isError, responseData, index, id) {
-
-      // console.log('onAddToCart ' + JSON.stringify(responseData))
-
-      this.cartUpdating = false;
-
-      if (!isError) {
       }
-      else global.showMessage(responseData.message)
+    });
 
-      this.afterCartAdd(index, id, isError, responseData.cart_id)
+  }
 
+
+
+
+
+
+  @action onAddToCart(isError, responseData, index, id) {
+
+    // console.log('onAddToCart ' + JSON.stringify(responseData))
+
+    this.cartUpdating = false;
+
+    if (!isError) {
     }
+    else global.showMessage(responseData.message)
+
+    this.afterCartAdd(index, id, isError, responseData.cart_id)
+
+  }
 
 
   setItemLoading(index) {
@@ -206,7 +211,7 @@ class ProductsStore {
 
 
 
-  @action afterMinusCart(index, id, isError,skip) {
+  @action afterMinusCart(index, id, isError, skip) {
 
     console.log('minusCart called!')
 
@@ -243,7 +248,7 @@ class ProductsStore {
   }
 
 
-  @action afterDeleteCart(index, id, isError,skip) {
+  @action afterDeleteCart(index, id, isError, skip) {
 
     console.log('afterDeleteCart called!')
 
@@ -290,7 +295,7 @@ class ProductsStore {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+        global.showMessage(constants.NO_INTERNET)
       else {
 
         this.cartUpdating = true;
@@ -326,7 +331,7 @@ class ProductsStore {
   }
 
 
-  @action afterPlusCart(index, id, isError,skip) {
+  @action afterPlusCart(index, id, isError, skip) {
 
     if (isNaN(index) && isNaN(id))
       return

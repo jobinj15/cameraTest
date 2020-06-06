@@ -68,6 +68,12 @@ var styles = {
         elevation: 5,
         backgroundColor: colors.LIGHT_GRAY
     },
+    toolbarIos: {
+        flexDirection: 'row',
+        height: 56,
+        width: DEVICE_WIDTH,
+        backgroundColor: 'transparent'
+    },
     statusBar: {
         height: STATUSBAR_HEIGHT,
     },
@@ -441,7 +447,10 @@ var styles = {
         backgroundColor: colors.WHITE,
         padding: 15,
         flex: 1
-    }
+    },
+    couponCard:{ padding: 15, flex: 1,
+        backgroundColor:colors.WHITE }
+
 
 };
 

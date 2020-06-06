@@ -18,7 +18,7 @@ export default class AddAddressStore {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+        global.showMessage(constants.NO_INTERNET)
       else {
 
         this.loading = true;
@@ -59,7 +59,7 @@ export default class AddAddressStore {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+        global.showMessage(constants.NO_INTERNET)
       else {
 
         this.loading = true;

@@ -10,11 +10,12 @@ import productsStore from "./products/productsStore";
 import cartStore from "./order/cartStore";
 import myOrdersStore from "./profile/myOrdersStore";
 import addAddressStore from "./profile/AddAddressStore";
-import orderDetailsStore from "./order/OrderDetailsStore";
+import orderDetailsStore from "./profile/OrderDetailsStore";
 import productDetailsStore from "./products/ProductDetailsStore";
 import addressListStore from "./profile/addressListStore";
 import selectAddressStore from "./order/SelectAddressStore";
 import paymentsStore from "./order/PaymentsStore";
+import couponStore from "./order/CouponStore";
 import themeStore from "./ThemeStore";
 
 
@@ -35,4 +36,5 @@ export default {
   selectAddressStore: new selectAddressStore(),
   paymentsStore: new paymentsStore(),
   productDetailsStore: new productDetailsStore(),
+  couponStore: new couponStore(),
 };

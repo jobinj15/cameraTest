@@ -17,7 +17,7 @@ class CartStore {
 
     var allCart = [...this.cart];
 
-    let newItem = {...item}
+    let newItem = { ...item }
     newItem.catalogue_id = item.id;
     newItem.id = item.cart_id;
 
@@ -30,7 +30,7 @@ class CartStore {
 
     console.log('onAddToCart afterModify All: ' + JSON.stringify(this.cart))
 
-    
+
   }
 
 
@@ -41,7 +41,7 @@ class CartStore {
 
     var allCart = [...this.cart];
 
-    let newItem = {...item}
+    let newItem = { ...item }
     newItem.catalogue_id = item.id;
     newItem.id = item.cart_id;
 
@@ -59,7 +59,7 @@ class CartStore {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+        global.showMessage(constants.NO_INTERNET)
       else {
 
         this.cartUpdating = true;
@@ -82,7 +82,7 @@ class CartStore {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+        global.showMessage(constants.NO_INTERNET)
       else {
 
         this.cartUpdating = true;
@@ -132,7 +132,7 @@ class CartStore {
 
   }
 
-  @action afterCartDelete(index, responseData, isError,skip) {
+  @action afterCartDelete(index, responseData, isError, skip) {
 
     console.log('afterCartDelete : ' + index)
 
@@ -154,7 +154,7 @@ class CartStore {
     this.cart = allCart
 
     if (this.onApiActionDone && !skip)
-    this.onApiActionDone(item,constants.TYPE_DELETE)
+      this.onApiActionDone(item, constants.TYPE_DELETE)
 
   }
 
@@ -193,7 +193,7 @@ class CartStore {
 
 
 
-  @action afterMinusCart(index, id, isError,skip) {
+  @action afterMinusCart(index, id, isError, skip) {
 
     console.log('afterMinusCart called! ' + id)
 
@@ -232,7 +232,7 @@ class CartStore {
     }
 
     if (this.onApiActionDone && !skip)
-    this.onApiActionDone(item,constants.TYPE_MINUS)
+      this.onApiActionDone(item, constants.TYPE_MINUS)
 
   }
 
@@ -243,12 +243,18 @@ class CartStore {
   @action getCart(data, page) {
 
     global.isOnline().then(isNetworkAvailable => {
-      if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+      if (!isNetworkAvailable) {
+        global.showMessage(constants.NO_INTERNET)
+        if (page == 0)
+          this.message = constants.NO_INTERNET
+        if (this.refreshing)
+          this.refreshing = false;
+      }
       else {
 
         this.loading = !this.refreshing && page == 0;
         this.page = page;
+        this.message = ''
 
         prod_repository.getCart(
           data,
@@ -371,7 +377,7 @@ class CartStore {
 
   }
 
-  @action afterPlusCart(index, id, isError,skip) {
+  @action afterPlusCart(index, id, isError, skip) {
 
     console.log('afterPlusCart called! ' + id)
 
@@ -402,7 +408,7 @@ class CartStore {
     console.log('Plus cart cartStore: ' + JSON.stringify(this.cart))
 
     if (this.onApiActionDone && !skip)
-    this.onApiActionDone(item,constants.TYPE_PLUS)
+      this.onApiActionDone(item, constants.TYPE_PLUS)
 
     // if (item.cart_quantity) {
 
@@ -445,7 +451,7 @@ class CartStore {
 
     for (var i = 0; i < length; i++) {
 
-          console.log('getIndex cart' + JSON.stringify(this.cart[i]))
+      console.log('getIndex cart' + JSON.stringify(this.cart[i]))
 
       if (this.cart[i].id == id)
         return i;
@@ -458,6 +464,9 @@ class CartStore {
 
   @observable loading = false;
   @observable refreshing = false;
+  @observable couponApplied = false;
+  @observable couponCode = '';
+  @observable message = '';
   @observable apiLoaded = false;
   @observable cartUpdating = false;
   @observable onApiActionDone = undefined;

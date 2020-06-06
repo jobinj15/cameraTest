@@ -18,12 +18,19 @@ class OrderDetailsStore {
       if (isNetworkAvailable) {
 
         this.loading = true;
+        this.message = ''
 
         user_repository.getOrderDetails(
           data,
           this.onOrderDetails.bind(this)
         );
 
+      }
+      else {
+        this.isApiLoaded = true;
+        this.message = constants.NO_INTERNET
+        if (this.refreshing)
+          this.refreshing = false;
       }
     });
 
@@ -37,8 +44,8 @@ class OrderDetailsStore {
 
     if (!isError) {
       const orderData = responseData.data;
-      if(orderData.length)
-      this.order = orderData[0]
+      if (orderData.length)
+        this.order = orderData[0]
 
       console.log('onOrderDetails: ' + JSON.stringify(this.order))
     }

@@ -8,8 +8,10 @@ import user_repository from "../../../repos/user_repository";
 class ProductDetailsStore {
 
   @observable loading = false;
+  @observable refreshing = false;
   @observable isApiLoaded = false;
   @observable product = {};
+  @observable message = '';
 
   constructor() {
     this.onApiActionDone = undefined
@@ -25,6 +27,7 @@ class ProductDetailsStore {
       if (isNetworkAvailable) {
 
         this.loading = true;
+        this.message = ''
 
         prod_repository.getProductDetails(
           data,
@@ -32,8 +35,19 @@ class ProductDetailsStore {
         );
 
       }
+      else {
+        global.showMessage(constants.NO_INTERNET);
+        this.setNoInternet();
+      }
     });
 
+  }
+
+  setNoInternet() {
+    this.isApiLoaded = true;
+    this.message = constants.NO_INTERNET
+    if (this.refreshing)
+      this.refreshing = false;
   }
 
 
@@ -45,13 +59,17 @@ class ProductDetailsStore {
         this.product = {}
         this.loading = true;
         this.isApiLoaded = false;
-
+        this.message = ''
 
         prod_repository.getProductVariant(
           data,
           this.onProductDetails.bind(this)
         );
 
+      }
+      else {
+        this.setNoInternet();
+        global.showMessage(constants.NO_INTERNET)
       }
     });
 
@@ -62,7 +80,7 @@ class ProductDetailsStore {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+        global.showMessage(constants.NO_INTERNET)
       else {
 
         this.cartUpdating = true;
@@ -118,7 +136,7 @@ class ProductDetailsStore {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+        global.showMessage(constants.NO_INTERNET)
       else {
 
         this.cartUpdating = true;
@@ -141,7 +159,7 @@ class ProductDetailsStore {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+        global.showMessage(constants.NO_INTERNET)
       else {
 
         this.cartUpdating = true;

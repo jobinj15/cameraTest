@@ -7,7 +7,10 @@ import constants from '../../utility/constants'
 import user_repository from '../../repos/user_repository'
 import { StackActions, NavigationActions } from 'react-navigation';
 import colors from '../../styles/colors';
-
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 
 const fields = {
   USER_NAME: 'username',
@@ -100,7 +103,7 @@ export default class Login extends Component {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+        global.showMessage(constants.NO_INTERNET)
       else {
 
         this.setState({ loading: true }, () => {
@@ -146,31 +149,44 @@ export default class Login extends Component {
 
   }
 
-  navigateTo() {
-    this.props.navigation.navigate('Signup', {
-        [constants.PARAM_NAV]: this.props.navigation,
+  navigateTo(screen) {
+    this.props.navigation.navigate(screen, {
+      [constants.PARAM_NAV]: this.props.navigation,
     });
-}
+  }
 
   render() {
 
     return (
       <View
         style={[
-          styles.styleFull
+          styles.styleFull, {
+            padding: 15
+          }
         ]}
       >
+
+        {global.getIosToolbar(this.props.navigation)}
 
         <ScrollView
           keyboardShouldPersistTaps='handled'
           style={{
-            padding: 15
+            paddingHorizontal: 15,flex:1
           }}
-
+          showsVerticalScrollIndicator={false}
         >
           <View
-
+          style={{flex:1}} 
           >
+
+            <Text
+              style={[styles.bigBoldOnBoard, { marginHorizontal: 15, marginBottom: 15 }]}
+            >
+
+              {constants.TXT_LOGIN_TO}
+
+            </Text>
+
             <FloatingTitleTextInputField
               attrName={fields.USER_NAME}
               title={constants.TXT_USERNAME}
@@ -180,12 +196,9 @@ export default class Login extends Component {
               }}
               disabled={this.state.loading}
               updateMasterState={this._updateMasterState}
-              textInputStyles={{ // here you can add additional TextInput styles
-                color: 'green',
-                fontSize: 15,
-              }}
+
               otherTextInputProps={{   // here you can add other TextInput props of your choice
-                maxLength: 30,
+                maxLength: 45,
               }}
             />
 
@@ -200,40 +213,36 @@ export default class Login extends Component {
               disabled={this.state.loading}
               updateMasterState={this._updateMasterState}
               otherTextInputProps={{   // here you can add other TextInput props of your choice
-                maxLength: 12,
+                maxLength: 40,
                 secureTextEntry: true
               }}
             />
 
           </View>
 
+
           <TouchableWithoutFeedback
-          onPress = {
-            ()=>{
-              this.navigateTo()  
+            onPress={
+              () => {
+                this.navigateTo('Forgot')
+              }
             }
-          }
           >
             <View
               style={{
-                marginTop: 15,
-                alignItems: 'center'
+                marginTop: 10,
+                flex: 1,
+                alignItems: 'flex-end'
               }}
             >
               <Text
-                style={[styles.stripLabel, { color: colors.PRIMARY }]}
+                style={[styles.stripLabel, { color: colors.PRIMARY, fontFamily: 'PopinsReg' }]}
               >
-                {constants.TXT_SIGNUP}
+                {constants.TXT_FORGOT_PASS}
               </Text>
 
             </View>
           </TouchableWithoutFeedback>
-
-        </ScrollView>
-
-        <View
-          style={styles.bottomlayout}
-        >
 
           <TouchableWithoutFeedback
             onPress={() => {
@@ -241,7 +250,7 @@ export default class Login extends Component {
             }}
           >
             <View
-              style={[styles.largeButton, { width: undefined, marginLeft: 0, paddingHorizontal: 40 }]}
+              style={[styles.largeButton, { paddingHorizontal: 40, marginTop: 20 }]}
             >
               <Text
                 style={styles.buttonText}
@@ -250,7 +259,45 @@ export default class Login extends Component {
               </Text>
             </View>
           </TouchableWithoutFeedback>
-        </View>
+
+
+          <View
+            style={{marginTop:hp('33%'),flexDirection:'row',justifyContent:'center'}}
+          >
+
+            <Text
+              style={[styles.stripLabel, { fontFamily: 'PopinsReg', flex: undefined }]}
+            >
+              {constants.TXT_DONT_ACCOUNT}
+            </Text>
+
+            <TouchableWithoutFeedback
+              onPress={
+                () => {
+                  this.navigateTo('Signup')
+                }
+              }
+            >
+              <Text
+                style={[styles.stripLabel, { color: colors.PRIMARY, flex: undefined, fontFamily: 'PopinsReg' }]}
+              >
+                {constants.TXT_SIGNUP}
+              </Text>
+
+            </TouchableWithoutFeedback>
+
+
+          </View>
+
+
+
+        </ScrollView>
+
+
+        {
+          this.state.loading &&
+          global.getLoader()
+        }
 
 
       </View>
@@ -260,3 +307,16 @@ export default class Login extends Component {
 
 
 }
+
+
+// textInput: {
+//   fontSize: 16,
+//   textAlignVertical: 'top',
+//   paddingVertical: 18,
+//   paddingHorizontal:8,
+//   borderRadius:18,
+//   color:colors.BLACK,
+//   backgroundColor:colors.WHITE,
+//   paddingBottom: 2,
+//   marginTop: 10,
+// }

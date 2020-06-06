@@ -151,6 +151,54 @@ export default userRepo = {
    },
 
 
+   forgotPassword(data,callback) {
+ 
+    console.log("Data sent forgotPassword Api : " + JSON.stringify(data));
+
+    fetch(URL_FILE.urlForgotPass, {
+      method: "POST",
+      headers: global.getEncodedHeader(),
+      body:data
+    })
+      .then(response => response.json())
+      .then(responseData => {
+        console.log("Data from forgotPassword Api : " + JSON.stringify(responseData));
+        var hasError = responseData.error;
+        callback(hasError, responseData);
+      })
+      .catch(err => {
+        console.log("response error :: " + err);
+        callback(true, global.getExceptionMessage());
+      })
+      .done();
+
+  },
+
+
+
+  getPayUHash(data,callback,payData) {
+ 
+    console.log("Data sent getPayUHash Api : " + JSON.stringify(data));
+
+    fetch(URL_FILE.urlPayUHash, {
+      method: "POST",
+      headers: global.getEncodedHeader(),
+      body:data
+    })
+      .then(response => response.json())
+      .then(responseData => {
+        console.log("Data from urlPayUHash Api : " + JSON.stringify(responseData));
+        var hasError = responseData.error;
+        callback(hasError, responseData,payData);
+      })
+      .catch(err => {
+        console.log("response error :: " + err);
+        callback(true, global.getExceptionMessage());
+      })
+      .done();
+
+  },
+
 
   getOrders(data, callback) {
 

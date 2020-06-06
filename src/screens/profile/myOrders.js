@@ -29,7 +29,7 @@ export default class MyOrders extends Component {
         this.resetStore();
     }
 
-    resetStore(){
+    resetStore() {
         store.apiLoaded = false;
         store.orders = []
     }
@@ -101,6 +101,12 @@ export default class MyOrders extends Component {
                     (store.apiLoaded && !store.orders.length)
                     && global.getNoDataView()
                 }
+
+                {
+                    store.message ?
+                        global.getNoDataView(constants.NO_INTERNET_REF, constants.NO_INTERNET_REF) : <View />
+                }
+
 
             </View>
         );

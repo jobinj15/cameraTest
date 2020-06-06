@@ -12,7 +12,7 @@ export default class CatHomeStore {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+        global.showMessage(constants.NO_INTERNET)
       else {
         this.loading = true ;
         prod_repository.getCategories(

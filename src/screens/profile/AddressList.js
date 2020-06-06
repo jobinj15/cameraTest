@@ -38,6 +38,15 @@ export default class AdressList extends Component {
 
     }
 
+    reset() {
+        store.apiLoaded = false;
+        store.loading = false;
+        store.refreshing = false;
+        store.page = 0;
+        store.message = '';
+    }
+
+
 
     componentDidMount() {
 
@@ -113,6 +122,11 @@ export default class AdressList extends Component {
                 {
                     (store.apiLoaded && !store.addressList.length)
                     && global.getNoDataView()
+                }
+
+                {
+                    store.message ?
+                        global.getNoDataView(constants.NO_INTERNET_REF, constants.NO_INTERNET_REF) : <View />
                 }
 
 

@@ -2,12 +2,16 @@ import React, { Component } from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
 import { Card, Button } from 'react-native-ui-lib';
-import { View, TouchableWithoutFeedback, Text, ActivityIndicator, FlatList } from 'react-native';
+import {
+    View, TouchableWithoutFeedback, TouchableOpacity, Text,
+    ActivityIndicator, FlatList, ScrollView
+} from 'react-native';
 import { observer, inject } from "mobx-react";
 import constants from '../../utility/constants';
 import colors from '../../styles/colors';
 import PlusView from '../../components/custom_views/plusView';
 import Icon from 'react-native-vector-icons/Ionicons';
+import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import ToolBar from '../../components/toolbar'
 
 var listApiData = {
@@ -50,11 +54,24 @@ class Cart extends Component {
         this.onMinusClicked = this.onMinusClicked.bind(this);
         this.onApiActionDone = this.onApiActionDone.bind(this);
 
-
         cartStore = this.props.cartStore
         prodStore = this.props.productsStore
 
+        this.resetStore()
 
+    }
+
+    resetStore() {
+        cartStore.cart = [];
+        cartStore.total = 0;
+        cartStore.page = 0;
+        cartStore.noOfItems = 0
+        cartStore.cartUpdating = false;
+        cartStore.apiLoaded = false;
+        cartStore.couponCode = '';
+        cartStore.couponApplied = false;
+        cartStore.refreshing = false;
+        cartStore.loading = false;
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -110,18 +127,6 @@ class Cart extends Component {
         return (
             <View style={[styles.styleFull]}>
 
-                <FlatList
-                    navigation={this.props.navigation}
-                    extraData={this.state}
-                    showsVerticalScrollIndicator={false}
-                    data={cartStore.cart}
-                    renderItem={this.renderRow.bind(this)}
-                    ItemSeparatorComponent={this.renderSeparator}
-                    keyExtractor={(item, index) => index.toString()}
-                />
-
-                {this.bottomView()}
-
                 {
                     cartStore.loading &&
                     global.getLoader()
@@ -132,8 +137,45 @@ class Cart extends Component {
                     && global.getNoDataView()
                 }
 
+                {
+                    cartStore.message ?
+                        global.getNoDataView(constants.NO_INTERNET_REF, constants.NO_INTERNET_REF) : <View />
+                }
+
+
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{ flex: 1 }}
+                >
+                    <View style={[styles.styleFull]}>
+
+                        <FlatList
+                            navigation={this.props.navigation}
+                            extraData={this.state}
+                            showsVerticalScrollIndicator={false}
+                            data={cartStore.cart}
+                            refreshing={cartStore.refreshing}
+                            onRefresh={this.handleRefresh.bind(this)}
+                            renderItem={this.renderRow.bind(this)}
+                            ItemSeparatorComponent={this.renderSeparator}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
+
+                        {this.drawCouponView()}
+
+                    </View>
+                </ScrollView>
+                {this.bottomView()}
+
+
             </View>
         );
+    }
+
+    handleRefresh() {
+        listApiData.page_no = 0
+        cartStore.refreshing = true
+        this.callApi()
     }
 
     drawButtonView(item, index) {
@@ -164,7 +206,7 @@ class Cart extends Component {
                     onPress={() => {
                         this.onAddToCart(index);
                     }}
-                    labelStyle={{ fontWeight: 'bold', fontSize: 14 }}
+                    labelStyle={{ fontWeight: 'PopinsBold', fontSize: 14 }}
                     style={[styles.addContainer, { marginTop: 10 }]}
                     borderRadius={3}
                     enableShadow
@@ -258,8 +300,8 @@ class Cart extends Component {
         //     prodStore.afterPlusCart(null, item.catalogue_id,false)
         // else prodStore.afterDeleteCart(null, item.catalogue_id,false)
 
-        if(!prodStore.products || !prodStore.products.length)
-        return
+        if (!prodStore.products || !prodStore.products.length)
+            return
 
         let refreshApiData = {
             page_no: 0,
@@ -272,7 +314,7 @@ class Cart extends Component {
         refreshApiData.cat_id = prodStore.cat_id
         refreshApiData.user_id = listApiData.user_id;
 
-        prodStore.getProducts(global.sendAsFormData(refreshApiData),0)
+        prodStore.getProducts(global.sendAsFormData(refreshApiData), 0)
 
     }
 
@@ -282,12 +324,112 @@ class Cart extends Component {
     }
 
 
-    navigateTo() {
-        this.props.navigation.navigate('SelectAddress', {
-            // [constants.PARAM_INDEX]: index,
+    navigateTo(screen) {
+        this.props.navigation.navigate(screen, {
             total: cartStore.total,
             [constants.PARAM_USER]: listApiData.user_id
         });
+    }
+
+    drawCouponView() {
+
+        if (!cartStore.cart || !cartStore.cart.length) {
+            return (<View />)
+        }
+
+        return (
+            <TouchableWithoutFeedback
+                onPress={
+                    () => {
+                        if (!cartStore.couponApplied)
+                            this.navigateTo('ApplyCoupon')
+                    }
+                }
+            >
+
+                <View
+                    style={{
+                        paddingHorizontal: 20,
+                        paddingVertical: 10,
+                        marginTop: 8,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        backgroundColor: colors.WHITE
+                    }}
+                >
+
+
+                    <IconM name={'brightness-percent'} size={30} color={colors.DARKGRAY} />
+
+                    <View
+                        style={{
+                            marginLeft: 15,
+                            flex: 1
+                        }}
+                    >
+
+                        <Text
+                            style={{
+                                fontSize: 14,
+                                fontWeight: cartStore.couponApplied ? 'PopinsBold' : 'PopinsReg',
+                                color: colors.BLACK
+                            }}
+                        >
+                            {cartStore.couponApplied && cartStore.couponCode ?
+                                global.capitalize(cartStore.couponCode) : global.capitalize(constants.TXT_APPLY_COUPON)}{' '}
+                        </Text>
+
+                        {
+                            cartStore.couponApplied &&
+                            <Text
+                                style={{
+                                    fontSize: 12,
+                                    color: colors.DARKGRAY
+                                }}
+                            >
+                                {'Offer Applied on the bill'}{' '}
+                            </Text>
+                        }
+
+                    </View>
+
+                    <View
+
+                    >
+
+                    </View>
+
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.showAlertDialog(DIALOG_REMOVE_COUPON)
+                        }}
+                        underlayColor='transparent'
+                    >
+
+                        <View
+                            style={cartStore.couponApplied ? global.getCircleViewStyle(20, { backgroundColor: colors.LIGHT_GRAY_TEXT }) :
+                                global.getCircleViewStyle(20, { backgroundColor: colors.WHITE })}
+                        >
+                            {
+                                cartStore.couponApplied &&
+                                <Icon name={'md-close'} size={25} color={colors.DARKGRAY} />
+                            }
+
+
+                            {
+                                !cartStore.couponApplied &&
+                                <Icon name={'ios-arrow-forward'} size={25} color={colors.DARKGRAY} />
+                            }
+
+
+                        </View>
+                    </TouchableOpacity>
+
+                </View>
+
+            </TouchableWithoutFeedback>
+
+        )
     }
 
     bottomView() {
@@ -295,7 +437,7 @@ class Cart extends Component {
             <TouchableWithoutFeedback
                 onPress={() => {
                     if (cartStore.total)
-                        this.navigateTo()
+                        this.navigateTo('SelectAddress')
                 }}
             >
                 <View
@@ -320,15 +462,16 @@ class Cart extends Component {
         )
     }
 
+
     renderRow({ item, index }) {
 
         // console.log('Products row ' + JSON.stringify(item))
 
         var image = require('../../assets/images/pic2.jpg');
         var marginBottom = 0;
-        
-        if((cartStore.cart.length-1)==index)
-        marginBottom = 60;
+
+        // if ((cartStore.cart.length - 1) == index)
+        //     marginBottom = 60;
 
         if (Array.isArray(item.images) && item.images.length) {
             image = { uri: item.images[0].images };
@@ -337,7 +480,7 @@ class Cart extends Component {
 
         return (
 
-            <Card style={{ flex: 1, borderRadius: 0,marginBottom:marginBottom }} key={index}>
+            <Card style={{ flex: 1, borderRadius: 0, marginBottom: marginBottom }} key={index}>
 
                 <View
                     style={{ padding: 10, flex: 1 }}

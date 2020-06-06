@@ -73,12 +73,12 @@ export default class ProductDetails extends Component {
 
     static navigationOptions = {
         title: 'Details',
-      };
+    };
 
     componentDidMount() {
 
         // this.props.navigation.setParams({ routeName: 'Updated!' })
-        
+
         console.log('ProdDetails: ' + JSON.stringify(this.props.navigation))
 
         prodDetStore.setOnApiActionDone(this.onApiActionDone)
@@ -101,8 +101,8 @@ export default class ProductDetails extends Component {
 
         cartStore.getCart(global.sendAsFormData(cartListApiData), 0)
 
-        if(!prodListStore.products || !prodListStore.products.length)
-        return
+        if (!prodListStore.products || !prodListStore.products.length)
+            return
 
         let refreshApiData = {
             page_no: 0,
@@ -115,14 +115,16 @@ export default class ProductDetails extends Component {
         refreshApiData.cat_id = prodListStore.cat_id
         refreshApiData.user_id = addApiData.user_id;
 
-        prodListStore.getProducts(global.sendAsFormData(refreshApiData),0)
+        prodListStore.getProducts(global.sendAsFormData(refreshApiData), 0)
 
 
     }
 
     reset() {
         prodDetStore.isApiLoaded = false;
-        prodDetStore.loading = true;
+        prodDetStore.loading = false;
+        prodDetStore.refreshing = false;
+        prodDetStore.message = '';
         prodDetStore.product = {}
     }
 
@@ -209,7 +211,7 @@ export default class ProductDetails extends Component {
 
                 >
                     <Text
-                        style={[styles.labelSmallX1, { marginRight: 20, width: 50 }]}
+                        style={[styles.labelSmallX1, { marginRight: 20 }]}
                     >
                         {mainItem.optionmastername}
                     </Text>
@@ -256,9 +258,20 @@ export default class ProductDetails extends Component {
 
     render() {
 
+        if (prodDetStore.message) {
+            return (
+                global.getNoDataView(constants.NO_INTERNET_REF,constants.NO_INTERNET_REF)
+            )
+        }
+
         if (prodDetStore.isApiLoaded && !prodDetStore.product.id)
             return (
                 global.getNoDataView()
+            )
+
+        if (!prodDetStore.isApiLoaded && !prodDetStore.loading)
+            return (
+                <View/>
             )
 
         if (prodDetStore.loading) {
@@ -360,7 +373,7 @@ export default class ProductDetails extends Component {
 
                 {this.bottomView()}
                 {
-                    item.cart_quantity ? this.bottomBlockView() : <View />
+                    item.cart_quantity ? global.bottomBlockView() : <View />
                 }
 
             </View>
@@ -424,13 +437,7 @@ export default class ProductDetails extends Component {
     }
 
 
-    bottomBlockView() {
-        return (
-            <View
-                style={[styles.bottomView, { height: 45, backgroundColor: "rgba(255,255,255,0.6)" }]}
-            />
-        )
-    }
+    
 
     bottomView() {
         return (

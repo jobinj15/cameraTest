@@ -12,12 +12,18 @@ export default class MyOrdersStore {
   @action getOrders(data, page) {
 
     global.isOnline().then(isNetworkAvailable => {
-      if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+      if (!isNetworkAvailable) {
+        global.showMessage(constants.NO_INTERNET);
+        if (page == 0)
+          this.message = constants.NO_INTERNET
+        if (this.refreshing)
+          this.refreshing = false;
+      }
       else {
 
         this.loading = !this.refreshing && page == 0;
         this.page = page;
+        this.message = ''
 
         user_repository.getOrders(
           data,
@@ -90,6 +96,7 @@ export default class MyOrdersStore {
 
   @observable orders = [];
   @observable loading = false;
+  @observable message = '';
   @observable refreshing = false;
   @observable apiLoaded = false;
   @observable page = 0

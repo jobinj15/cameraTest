@@ -108,7 +108,7 @@ export default class AddAddress extends Component {
     if (this.state.city)
       store.city = this.state.city
 
-    store.isValidPin = true;  
+    store.isValidPin = true;
     console.log('populateFields: ' + JSON.stringify(this.state))
 
 
@@ -194,9 +194,9 @@ export default class AddAddress extends Component {
     formdata.append('state', store.state)
     formdata.append('city', store.city)
     formdata.append('user_id', this.state.userId)
-    
+
     if (this.state.mode == constants.MODE_EDIT)
-    formdata.append('address_id', this.state.item.id)
+      formdata.append('address_id', this.state.item.id)
 
 
 
@@ -238,7 +238,7 @@ export default class AddAddress extends Component {
           style={{
             padding: 15, backgrounColor: colors.WHITE,
           }}
-
+          showsVerticalScrollIndicator={false}
         >
           <View
           >
@@ -251,13 +251,6 @@ export default class AddAddress extends Component {
               }}
               disabled={store.loading}
               updateMasterState={this._updateMasterState}
-              textInputStyles={{ // here you can add additional TextInput styles
-                color: 'green',
-                fontSize: 15,
-              }}
-              otherTextInputProps={{   // here you can add other TextInput props of your choice
-                maxLength: 12,
-              }}
             />
 
 
@@ -271,12 +264,11 @@ export default class AddAddress extends Component {
               }}
               updateMasterState={this._updateMasterState}
               textInputStyles={{ // here you can add additional TextInput styles
-                color: 'green',
-                fontSize: 15,
-                height: 40
+                height: 80
               }}
               otherTextInputProps={{   // here you can add other TextInput props of your choice
-                numberOfLines: 5
+                numberOfLines: 5,
+                multiline: true
               }}
             />
 
@@ -352,22 +344,55 @@ export default class AddAddress extends Component {
               }}
             />
 
-            <Text
+
+
+            <FloatingTitleTextInputField
+              attrName={constants.TXT_STATE}
+              title={constants.TXT_STATE}              
+              style={{
+                marginBottom: 15
+              }}
+              disabled={store.loading}
+              value={store.state==constants.TXT_STATE?'':store.state}
+              updateMasterState={this._updateMasterState}
+              otherTextInputProps={{
+                editable: false
+              }}
+            />
+
+            {/* <Text
               style={[styles.labelBorder, { marginBottom: 10 }]}
             >
 
               {store.state}
 
-            </Text>
+            </Text> */}
 
-            <Text
+
+
+            <FloatingTitleTextInputField
+              attrName={constants.TXT_CITY}
+              title={constants.TXT_CITY}
+              style={{
+                marginBottom: 100
+              }}
+              disabled={store.loading}
+              value={store.city==constants.TXT_CITY?'':store.city}
+              updateMasterState={this._updateMasterState}
+              otherTextInputProps={{
+                editable: false
+              }}
+            />
+
+
+            {/* <Text
               style={[styles.labelBorder, { marginBottom: 150 }]}
             >
 
               {store.city}
 
             </Text>
-
+ */}
 
           </View>
 

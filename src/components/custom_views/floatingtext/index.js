@@ -45,7 +45,7 @@ export class FloatingTitleTextInputField extends Component {
             Animated.timing(this.position, {
                 toValue: 1,
                 duration: 150,
-                useNativeDriver : false
+                useNativeDriver: false
             }).start();
         }
     }
@@ -56,7 +56,7 @@ export class FloatingTitleTextInputField extends Component {
             Animated.timing(this.position, {
                 toValue: 0,
                 duration: 150,
-                useNativeDriver : false
+                useNativeDriver: false
             }).start();
         }
     }
@@ -84,29 +84,32 @@ export class FloatingTitleTextInputField extends Component {
     }
 
     render() {
+
+        
         return (
             <View style={[Styles.container, this.props.style]}
-            pointerEvents = {this.props.disabled?'none':'auto'}
+                pointerEvents={this.props.disabled ? 'none' : 'auto'}
             >
-                <Animated.Text
+                {/* <Animated.Text
                     style={[Styles.titleStyles, this._returnAnimatedTitleStyles()]}
                 >
                     {this.props.title}
-                </Animated.Text>
+                </Animated.Text> */}
 
                 <View>
                     <TextInput
                         value={this.props.value}
-                        style={[Styles.textInput, this.props.textInputStyles, {
-                            borderBottomWidth: this.state.isFieldActive?1.5:0.5,
-                            borderBottomColor: this.state.isFieldActive?colors.GREEN_4:colors.GREY,
+                        style={[Styles.textInput, this.props.textInputStyles,{
+                            underlineColorAndroid : 'transparent'
                         }]}
-                        // editable={this.props.disabled} 
+                        // editable={this.props.disabled}   
+                        placeholder ={this.props.title}
+                        // placeholderTextColor={colors.BLACK}
                         // selectTextOnFocus={this.props.disabled}
                         underlineColorAndroid='transparent'
                         autoCorrect={false}
-                        onFocus={this._handleFocus}
-                        onBlur={this._handleBlur}
+                        // onFocus={this._handleFocus}
+                        // onBlur={this._handleBlur}
                         secureTextEntry={this.props.securedText && this.state.secureTextEntry}
                         onChangeText={this.props.onChange || this._onChangeText}
                         keyboardType={this.props.keyboardType}
@@ -152,13 +155,13 @@ const Styles = StyleSheet.create({
         width: '100%',
     },
     textInput: {
-        fontSize: 16,
-        textAlignVertical: 'top',
-        paddingVertical: 6,
-        paddingHorizontal:8,
-        color:colors.BLACK,
-        paddingBottom: 2,
-        marginTop: 23,
+        fontSize: 18,
+        paddingVertical: 12,
+        paddingHorizontal: 12,
+        borderRadius: 18,
+        color: colors.BLACK,
+        backgroundColor: colors.WHITE,
+        marginTop: 10,
     },
     titleStyles: {
         position: 'absolute',

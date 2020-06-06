@@ -1,0 +1,11 @@
+
+
+Steps to customize the App for a new client.
+
+1. Change splashscreen and logo.
+2. Change APP_NAME in the constants file.
+3. Package name and App name in native Android/iOS
+3. Chane API Url domain in the utility/urls file.
+4. Change the colors file to match the client's requirements.
+5. Merchant ID and Key for PayUMoney (accompanied with chaniging the Merchant Salt on the server)
+6. Any custom changes for the client.

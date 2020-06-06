@@ -33,7 +33,12 @@ export default urls = {
   urlProductVariant: baseUrl + 'products/getcatloguedetailsbyoption',
   urlPaymentOptions: baseUrl + 'payment_mode/payment_mode',
   urlImpMessage: baseUrl + 'checkImportantMessage/checkImportantMessage',
+  urlForgotPass: baseUrl + 'login/forgot_password',
+  urlPayUHash: baseUrl + '/payu_hash/gethash'
 };
+
+// findsrinivas.guni@gmail.com
+// $PayUsalt1!
 
 
 

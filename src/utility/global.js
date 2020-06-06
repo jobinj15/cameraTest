@@ -3,6 +3,8 @@ import {
   Dimensions,
   PixelRatio,
   Text,
+  Image,
+  TouchableOpacity,
   Alert
 } from 'react-native';
 import Snackbar from 'react-native-snackbar'
@@ -15,6 +17,8 @@ import { View } from 'react-native-ui-lib';
 import Loader from '../utility/loader';
 import styles from '../styles/style'
 import colors from '../styles/colors';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { TouchableNativeFeedback } from 'react-native-gesture-handler';
 
 const x = Dimensions.get('window').width;
 const y = Dimensions.get('window').height;
@@ -180,7 +184,7 @@ export default global = {
     DEVICE_HEIGHT: Dimensions.get('window').height,
   },
 
-  
+
 
   getItem(key) {
     return new Promise((resolve, reject) => {
@@ -198,8 +202,8 @@ export default global = {
     });
   },
 
-  isValidPin(text){
-    if(!text){
+  isValidPin(text) {
+    if (!text) {
       Snackbar.show({
         text: constants.ERROR_PIN,
         duration: Snackbar.LENGTH_SHORT,
@@ -208,7 +212,7 @@ export default global = {
     }
 
 
-    if(text.trim().length!=6){
+    if (text.trim().length != 6) {
       Snackbar.show({
         text: constants.ERROR_PIN,
         duration: Snackbar.LENGTH_SHORT,
@@ -224,7 +228,7 @@ export default global = {
     return (text.replace(/[^0-9]/g, ''))
   },
 
-  showAlert(title,description,onOkay,onCancel,txtYes="Yes",txtNo="No",cancelable=true) {
+  showAlert(title, description, onOkay, onCancel, txtYes = "Yes", txtNo = "No", cancelable = true) {
 
     Alert.alert(
       title,
@@ -233,20 +237,20 @@ export default global = {
         {
           text: txtYes,
           onPress: () => {
-            if(onOkay) onOkay()
+            if (onOkay) onOkay()
           }
         },
         {
           text: txtNo,
           onPress: () => {
-            if(onCancel) onCancel()
+            if (onCancel) onCancel()
           },
           style: 'cancel'
         },
         // { text:  , onPress: () => console.log('OK Pressed') }
       ],
       { cancelable: cancelable }
-    );    
+    );
   },
 
   async storeItem(key, item) {
@@ -258,27 +262,86 @@ export default global = {
     }
   },
 
-  sendAsFormData(data){
+  sendAsFormData(data) {
     let formdata = new FormData();
     for (let key in data) {
-        formdata.append(key, data[key]);
+      formdata.append(key, data[key]);
     }
 
     return formdata;
-},
+  },
 
-  getNoDataView(message) {
+  getSeperator(morestyles = {}) {
+    return (
+      <View
+        style={[{ height: 0.5, backgroundColor: colors.LIGHT_GRAY_TEXT, flex: 1 }, morestyles]}
+      />
+    )
+  },
+
+  getNoDataView(message, from) {
     return (
       <View
         style={[styles.loaderCenter]}
       >
-        <Text
-        style={[styles.stripLabel,{color:colors.DARKGRAY,fontWeight:'500',flex:undefined}]}
+
+        <View
+          style={{
+            flex: 1,
+            paddingHorizontal: 15,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
         >
-          {message?message:constants.TXT_NO_DATA}
+          <Image
+            style={{ height: 30, width: 30, tintcolor: colors.PRIMARY, marginRight: 10, marginBottom: 10 }}
+            source={getIcon(from)}
+          />
 
-        </Text>
+          <Text
+            style={[styles.stripLabel, {
+              color: colors.DARKGRAY, fontWeight: '500', textAlign: 'center',
+              flex: undefined
+            }]}
+          >
+            {message ? message : constants.TXT_NO_DATA}
 
+          </Text>
+
+        </View>
+
+
+      </View>
+    )
+  },
+
+  bottomBlockView(morestyles={}) {
+    return (
+      <View
+        style={[styles.bottomView, { height: 45, backgroundColor: "rgba(255,255,255,0.6)" },morestyles]}
+      />
+    )
+  },
+
+  getIosToolbar(navigator, color = colors.BLACK, size = 25, addStyles = {}) {
+    return (
+      <View
+        style={styles.toolbarIos}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            if (navigator)
+              navigator.pop();
+          }}
+        >
+          <View
+            style={[{ padding: 8 }, addStyles]}
+          >
+            <Icon name="arrow-back" size={size} color={color} />
+
+
+          </View>
+        </TouchableOpacity>
       </View>
     )
   },
@@ -512,3 +575,16 @@ export default global = {
   },
 
 };
+
+function getIcon(from) {
+
+  switch (from) {
+
+    case constants.NO_INTERNET_REF:
+      return require('../assets/images/no_data.jpg')
+
+    default:
+      return require('../assets/images/no_data.jpg')
+
+  }
+}

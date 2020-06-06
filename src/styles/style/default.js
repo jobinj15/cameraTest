@@ -68,6 +68,12 @@ var styles = {
         elevation: 5,
         backgroundColor: colors.LIGHT_GRAY
     },
+    toolbarIos: {
+        flexDirection: 'row',
+        height: 56,
+        marginLeft:-8,
+        width: DEVICE_WIDTH
+    },
     statusBar: {
         height: STATUSBAR_HEIGHT,
     },
@@ -93,24 +99,25 @@ var styles = {
         }
     },
     viewAll: {
-        fontWeight: 'bold',
         fontSize: 14,
+        fontFamily : 'PopinsBold',
         color: colors.PRIMARY
     },
     labelMini: {
         color: colors.WHITE,
-        fontWeight: 'bold',
+        fontFamily : 'PopinsBold',
+        marginTop:3,
         fontSize: 9
     },
     stripLabel: {
-        fontWeight: 'bold',
         fontSize: 18,
         flex: 1,
+        fontFamily : 'PopinsBold',
         color: colors.BLACK
     },
     labelBorder: {
         fontSize: 16,
-        fontWeight: '500',
+        fontFamily : 'PopinsMed',
         flex: 1,
         paddingBottom: 10,
         paddingHorizontal: 6,
@@ -132,12 +139,17 @@ var styles = {
         marginHorizontal: 15
     },
     bigBold: {
-        fontWeight: 'bold',
+        fontFamily : 'PopinsBold',
         fontSize: 22,
         color: 'black'
     },
+    bigBoldOnBoard: {
+        fontFamily : 'PopinsBold',
+        fontSize: 26,
+        color: colors.PRIMARY
+    },
     VBigText: {
-        fontWeight: 'bold',
+        fontFamily : 'PopinsBold',
         fontSize: 40,
         color: 'white'
     },
@@ -160,11 +172,13 @@ var styles = {
     },
     labelSmallX1: {
         color: colors.GREY,
+        fontFamily : 'PopinsReg',
         fontSize: 16
     },
     variant: {
         padding: 8,
         fontSize: 16,
+        fontFamily : 'PopinsReg',
         backgroundColor: colors.GREY,
         color: colors.WHITE
     },
@@ -178,6 +192,7 @@ var styles = {
     },
     labelSmall: {
         color: colors.GREY,
+        fontFamily : 'PopinsReg',
         fontSize: 12
     },
     addressListCard: {
@@ -190,7 +205,7 @@ var styles = {
     labelProfile: {
         color: colors.GREY,
         fontSize: 20,
-        fontWeight: '500'
+        fontFamily : 'PopinsMed',
     },
     plusContainer: {
         width: 138, height: 40,
@@ -207,22 +222,16 @@ var styles = {
         paddingVertical: 10,
         paddingHorizontal: 10,
     },
-    largeButton: {
-        backgroundColor: colors.GREEN_4,
-        width: DEVICE_WIDTH,
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-    },
     plusBox: {
         alignItems: 'center',
         justifyContent: 'center',
-        width: 40, height: 40, fontSize: 30, fontWeight: 'bold',
+        width: 40, height: 40, fontSize: 30, fontFamily : 'PopinsBold',
         color: colors.DARKGRAY,
         backgroundColor: colors.ListViewBG
     },
     plusText: {
-        fontWeight: 'bold',
-        marginTop: -5,
+        fontFamily : 'PopinsBold',
+        marginTop: 3,
         color: colors.DARKGRAY,
     },
     addContainer: {
@@ -254,7 +263,7 @@ var styles = {
         fontSize: fonts.APPBAR_HEIGHT,
         color: 'white',
         alignSelf: 'center',
-        fontFamily: 'FiraSans-Regular',
+        fontFamily : 'PopinsReg',
     },
     button: {
         height: 44,
@@ -278,17 +287,18 @@ var styles = {
         fontSize: 16,
         textAlign: "center",
         justifyContent: "center",
-        fontWeight: "500",
+        fontFamily : 'PopinsMed',
         color: "white"
     },
     largeButton: {
         width: '100%',
-        paddingVertical: 13,
+        paddingVertical: 10,
         justifyContent: "center",
         alignSelf: "center",
         alignItems: "center",
         paddingHorizontal: 30,
         borderRadius: 5,
+        borderRadius: 20,
         backgroundColor: colors.GREEN,
     },
     saveButton: {
@@ -324,13 +334,12 @@ var styles = {
     },
     row_title: {
         color: colors.PRIMARY_TEXTCOLOR,
-        fontFamily: 'FiraSans-Regular',
-        fontWeight: 'bold',
+        fontFamily : 'PopinsBold',
         fontSize: fonts._14,
     },
     row_subtitle: {
         color: colors.SECONDARY_TEXTCOLOR,
-        fontFamily: 'FiraSans-Regular',
+        fontFamily : 'PopinsReg',
         marginTop: 3,
         fontSize: fonts._13,
     },
@@ -342,7 +351,7 @@ var styles = {
     },
     txt: {
         fontSize: fonts._18,
-        fontFamily: 'FiraSans-Regular',
+        fontFamily : 'PopinsReg',
         marginLeft: 5,
         marginTop: 2,
         color: '#222222',
@@ -397,15 +406,15 @@ var styles = {
     },
     headertext: {
         fontSize: fonts._18,
-        fontFamily: 'FiraSans-Regular',
+        fontFamily : 'PopinsReg',
     },
     subheadertext: {
         fontSize: fonts._14,
-        fontFamily: 'FiraSans-Regular',
+        fontFamily : 'PopinsReg',
     },
     auto_grow_text: {
         fontSize: fonts._14,
-        fontFamily: 'FiraSans-Regular',
+        fontFamily : 'PopinsReg',
     },
     taginput: {
         backgroundColor: colors.TRANSPARENT,
@@ -417,30 +426,39 @@ var styles = {
         alignSelf: 'center',
         marginRight: 10,
         fontSize: fonts._14,
-        fontFamily: 'FiraSans-Regular',
+        fontFamily : 'PopinsReg',
     },
     row_settings_title:
     {
         color: colors.BLACK,
         fontSize: fonts._14,
-        fontFamily: 'FiraSans-Regular',
+        fontFamily : 'PopinsReg',
     },
     row_settings_subtitle:
     {
         color: colors.SECONDARY_TEXTCOLOR,
         fontSize: fonts._13,
-        fontFamily: 'FiraSans-Regular',
+        fontFamily : 'PopinsReg',
     },
     title: {
         color: colors.BLACK,
         fontSize: 26,
         flex: 1,
-        fontWeight: 'bold'
+        fontFamily : 'PopinsBold'
     },
     themeDialog: {
         backgroundColor: colors.WHITE,
         padding: 15,
         flex: 1
+    },
+    couponCard: {
+        padding: 15, flex: 1,
+        backgroundColor: colors.WHITE
+    },
+    apply: {
+        fontSize: 14,
+        color: colors.PRIMARY,
+        fontFamily : 'PopinsMed',
     }
 
 };

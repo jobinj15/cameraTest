@@ -117,7 +117,7 @@ export default class Signup extends Component {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
-        global.showToast(constants.NO_INTERNET)
+        global.showMessage(constants.NO_INTERNET)
       else {
 
         this.setState({ loading: true }, () => {
@@ -163,20 +163,34 @@ export default class Signup extends Component {
     return (
       <View
         style={[
-          styles.styleFull
-        ]}
+          styles.styleFull, {
+            padding: 15
+          }]}
       >
+
+        {global.getIosToolbar(this.props.navigation)}
+
 
         <ScrollView
           keyboardShouldPersistTaps='handled'
           style={{
-            padding: 15
+            paddingHorizontal: 15,
           }}
-
+          showsVerticalScrollIndicator={false}
         >
           <View
 
           >
+
+            <Text
+              style={[styles.bigBoldOnBoard, { marginHorizontal: 15, marginBottom: 15 }]}
+            >
+
+              {constants.TXT_CREATE_ACCOUNT}
+
+            </Text>
+
+
             <FloatingTitleTextInputField
               attrName={fields.FIRST_NAME}
               title={constants.TXT_FIRST_NAME}
@@ -186,10 +200,7 @@ export default class Signup extends Component {
               }}
               disabled={this.state.loading}
               updateMasterState={this._updateMasterState}
-              textInputStyles={{ // here you can add additional TextInput styles
-                color: 'green',
-                fontSize: 15,
-              }}
+
               otherTextInputProps={{   // here you can add other TextInput props of your choice
                 maxLength: 12,
               }}
@@ -205,10 +216,7 @@ export default class Signup extends Component {
                 marginBottom: 15
               }}
               updateMasterState={this._updateMasterState}
-              textInputStyles={{ // here you can add additional TextInput styles
-                color: 'green',
-                fontSize: 15,
-              }}
+
               otherTextInputProps={{   // here you can add other TextInput props of your choice
                 maxLength: 12,
               }}
@@ -266,19 +274,16 @@ export default class Signup extends Component {
 
           </View>
 
-        </ScrollView>
-
-        <View
-          style={styles.bottomlayout}
-        >
-
           <TouchableWithoutFeedback
             onPress={() => {
               this.handleRegister();
             }}
           >
             <View
-              style={[styles.largeButton, { width: undefined, marginLeft: 0, paddingHorizontal: 40 }]}
+              style={[styles.largeButton, {
+                marginLeft: 0, paddingHorizontal: 40, marginBottom: 60,
+                marginTop: 20
+              }]}
             >
               <Text
                 style={styles.buttonText}
@@ -287,7 +292,20 @@ export default class Signup extends Component {
               </Text>
             </View>
           </TouchableWithoutFeedback>
-        </View>
+
+        </ScrollView>
+
+        {/* <View
+          style={styles.bottomlayout}
+        >
+
+          
+        </View> */}
+
+        {
+          this.state.loading &&
+          global.getLoader()
+        }
 
 
       </View>
