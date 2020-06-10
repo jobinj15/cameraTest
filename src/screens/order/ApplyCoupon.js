@@ -11,6 +11,7 @@ import colors from '../../styles/colors';
 import PlusView from '../../components/custom_views/plusView';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ToolBar from '../../components/toolbar'
+import fonts from '../../utility/fonts';
 
 var listApiData = {
     page_no: 0,
@@ -137,7 +138,7 @@ class ApplyCoupon extends Component {
                             autoCapitalize={true}
                             tintColor={colors.PRIMARY}
                             containerStyle={{ flex: 1 }}
-                            titleFontSize={14}
+                            titleFontSize={fonts._12}
                             numberOfLines={1}
                             onChangeText={code => {
                                 this.state.couponCode = code;
@@ -256,7 +257,7 @@ class ApplyCoupon extends Component {
                     </View>
 
                     <Text
-                        style={[styles.bigBold, { color: colors.PRIMARY, fontSize: 18 }]}
+                        style={[styles.bigBold, { color: colors.PRIMARY, fontSize: fonts._16 }]}
                     >
                         {global.capitalize(constants.TXT_APPLY)}
                     </Text>

@@ -10,6 +10,7 @@ const NavigationStack = createStackNavigator({
     Main: { 
         screen: MainScreen,
     },
+    
     About: { 
         screen: MainScreen,
     },

@@ -11,7 +11,11 @@ import {
   StatusBar,
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconM from 'react-native-vector-icons/MaterialIcons';
+import IconF from 'react-native-vector-icons/FontAwesome';
+import IconFIS from 'react-native-vector-icons/Fontisto';
+import IconO from 'react-native-vector-icons/Octicons';
+import IconI from 'react-native-vector-icons/Ionicons';
 import styles from '../styles/style';
 import global from '../utility/global';
 import colors from '../styles/colors';
@@ -23,6 +27,9 @@ const MyStatusBar = ({ backgroundColor, ...props }) => (
   </View>
 );
 import PropTypes from 'prop-types';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Dropdown } from '../components/custom_views/dropdown'
+import constants from '../utility/constants';
 
 export default class ToolBar extends Component {
 
@@ -32,22 +39,26 @@ export default class ToolBar extends Component {
     showBackButton: PropTypes.bool,
     showTitle: PropTypes.bool,
     showTitleSubtitle: PropTypes.bool,
-    showSearchButton: PropTypes.bool,
+    showEndButton: PropTypes.bool,
     title: PropTypes.string,
     subtitle: PropTypes.string,
     showEdit: PropTypes.bool,
+    endIcon: PropTypes.string,
+    endIcon2: PropTypes.string,
     showDoneButton: PropTypes.bool,
     enableDoneButton: PropTypes.bool,
   };
   static defaultProps = {
     showBackButton: true,
-    showSearchButton: false,
+    showEndButton: false,
     showDoneButton: false,
-    showSearchButton: false,
     showTitleSubtitle: false,
     showTitle: false,
     showTitleH: false,
     title: '',
+    iconType: '',
+    iconType2: '',
+    endIcon: 'ios-search',
     enableDoneButton: false,
   };
 
@@ -62,28 +73,36 @@ export default class ToolBar extends Component {
   }
 
   close() {
-    this.props.navigator.pop();
+    this.props.navigation.pop();
   }
 
 
 
   render() {
 
-    // console.log('renderToolbar : ' + JSON.stringify(this.props))
+    console.log('renderToolbar : ' + JSON.stringify(this.props.showEndButton))
 
     return (
       <View style={styles.toolbar}>
-        <View style={[styles.styleFull, { flexDirection: 'row', marginHorizontal: 8 }]}>
+        <View style={[styles.styleFull, { flexDirection: 'row', marginHorizontal: 8, alignItems: 'center' }]}>
 
           {this.props.showBackButton &&
             <TouchableHighlight
               style={[styles.touchable, { padding: 0 }]}
               onPress={() => this.close()}
               underlayColor='#dddddd'>
-              <Icon name={'arrow-back'} size={25} color={colors.BLACK} />
+              <IconM name={'arrow-back'} size={25} color={colors.BLACK} />
             </TouchableHighlight>
           }
 
+          {
+            this.props.showDropdown &&
+            <View style={{ alignItems: 'flex-start', flex: 1, paddingHorizontal: 15 }}>
+              <Text numberOfLines={1} style={[styles.title, {
+                marginTop: 8, fontFamily: 'PopinsBold'
+              }]}>{this.props.title}</Text>
+            </View>
+          }
           {
             this.props.showTitleH &&
             <View style={{ width: '100%', alignItems: 'center' }}>
@@ -93,43 +112,51 @@ export default class ToolBar extends Component {
 
           {
             this.props.showTitle &&
-            <Text numberOfLines={1} style={[styles.title, { marginTop: 8 }]}>{this.props.title}</Text>
+            <Text numberOfLines={1} style={[styles.titleSmall, {
+            }]}>{this.props.title}</Text>
           }
 
-          <View style={{ justifyContent: 'flex-end', flexDirection: 'row', flex: 1 }}>
-            {this.props.showEditButton &&
+          {this.props.showEditButton &&
+            <TouchableHighlight
+              onPress={() => this.route('edit_task')}
+              style={[styles.touchable, { padding: 10 }]}
+
+              underlayColor='#dddddd'>
+              <IconM name={'ios-edit'} size={25} color={colors.BLACK} />
+
+            </TouchableHighlight>
+          }
+
+          {this.props.showEndButton &&
+            <TouchableOpacity
+              style={{ padding: 10 }}
+              onPress={() => this.props.onEndIconClicked()}
+              underlayColor='#dddddd'>
+              {this.getEndIcon(this.props.iconType, this.props.endIcon)}
+            </TouchableOpacity>
+          }
+
+          {this.props.showEndButton2 &&
+            <TouchableOpacity
+              style={{ padding: 10 }}
+              // onPress={() => this.route('search')}
+              underlayColor='#dddddd'>
+              {this.getEndIcon(this.props.iconType2, this.props.endIcon2)}
+            </TouchableOpacity>
+          }
+
+
+
+          {this.props.showDoneButton &&
+            <View style={{ alignSelf: 'center', flex: 1, alignItems: 'flex-end' }}>
               <TouchableHighlight
-                onPress={() => this.route('edit_task')}
-                style={[styles.touchable, { padding: 10 }]}
-
-                underlayColor='#dddddd'>
-                <Icon name={'ios-edit'} size={25} color={colors.BLACK} />
-
+                style={{ padding: 10, marginRight: 10 }}
+                onPress={() => this.props.onDoneClick()}
+                underlayColor={this.props.enableDoneButton ? colors.WHITE : ''}>
+                <Text style={[styles.subheadertext, { color: this.props.enableDoneButton ? colors.WHITE : colors.SECONDARY_TEXTCOLOR }]}>Done</Text>
               </TouchableHighlight>
-            }
-
-            {this.props.showSearchButton &&
-              <TouchableHighlight
-                style={[styles.touchable, { padding: 10 }]}
-                onPress={() => this.route('search')}
-                underlayColor='#dddddd'>
-                <Icon name={'ios-search'} size={25} color={colors.BLACK} />
-
-              </TouchableHighlight>
-            }
-
-            {this.props.showDoneButton &&
-              <View style={{ alignSelf: 'center', flex: 1, alignItems: 'flex-end' }}>
-                <TouchableHighlight
-                  style={{ padding: 10, marginRight: 10 }}
-                  onPress={() => this.props.onDoneClick()}
-                  underlayColor={this.props.enableDoneButton ? colors.WHITE : ''}>
-                  <Text style={[styles.subheadertext, { color: this.props.enableDoneButton ? colors.WHITE : colors.SECONDARY_TEXTCOLOR }]}>Done</Text>
-                </TouchableHighlight>
-              </View>
-            }
-
-          </View>
+            </View>
+          }
 
 
         </View>
@@ -138,6 +165,32 @@ export default class ToolBar extends Component {
       </View>
 
     );
+  }
+
+
+  getEndIcon(iconType, icon) {
+    switch (iconType) {
+      default:
+        return (
+          <IconF name={icon} size={25} color={colors.BLACK} />
+        )
+
+      case constants.IC_IONIC:
+        return (
+          <IconI name={icon} size={25} color={colors.BLACK} />
+        )
+
+      case constants.IC_OCT:
+        return (
+          <IconO name={icon} size={25} color={colors.BLACK} />
+        )
+
+      case constants.IC_FONTISCO:
+        return (
+          <IconFIS name={icon} size={25} color={colors.BLACK} />
+        )
+
+    }
   }
 
 }

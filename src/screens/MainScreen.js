@@ -58,25 +58,26 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   let IconComponent = Icon;
   let iconName;
 
+  const urlPrefix = '../assets/images/';
+
   if (routeName === 'Home') {
-    iconName = 'ios-home';
-  } else if (routeName === 'Profile') {
-    iconName = 'ios-contact';
+    iconName = require(urlPrefix + 'home.png');
+  } 
+  else if (routeName === 'Categories' ) {
+    iconName = require(urlPrefix + 'list.png');
+  }
+  else if (routeName === 'Profile') {
+    iconName = require(urlPrefix + 'user.png');
   }
   else if (routeName === 'Cart') {
-    iconName = 'ios-cart';
+    iconName = require(urlPrefix + 'cart.png');
   }
-  else if (routeName === 'Search') {
-    iconName = 'ios-search';
+  else if (routeName === 'Like') {
+    iconName = require(urlPrefix + 'like.png');
   }
-
+ 
 
   if (routeName === 'Cart') {
-    // return (
-    //   <Avatar
-    //     {...cartStyle}
-    //   />
-    // )
     return (
       <CartBubble
        tintColor = {tintColor}
@@ -85,16 +86,25 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
     )
   }
 
-  return <IconComponent name={iconName} size={25} color={tintColor} />;
+  return <Image style={{width:30,height:30}} source={iconName} tintColor={tintColor} />;
+};
+
+
+
+const Dummy = function(){
+return(
+  <View/>
+)
 };
 
 const screens = {
   Home: {
     screen: HomeContainer,
   },
+  Categories : ColorsTab,
   Cart: CartContainer,
+  Like : Dummy,
   Profile: ProfileContainer,
-  Search: ColorsTab,
 }
 
 const BottomTabNavigator = createBottomTabNavigator(

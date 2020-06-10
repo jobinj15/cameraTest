@@ -9,17 +9,23 @@ class FilterStore {
 
   @observable loading = false;
   @observable isApiLoaded = false;
-  @observable filters = [{
-    optionmasterid: 1, name: 'Weight',
-    data: [{ value_id: 1, name: "500g" }, { value_id: 2, name: "1Kg", selected: true }]
-  },
-  {
-    optionmasterid: 3, name: "Size", data: [{ value_id: 3, name: "S" },
-    { value_id: 4, name: "M", selected: true }]
-  }];
+  @observable message = '';
+  @observable onFiltersLoaded = undefined;
+  @observable filters = []
+  // @observable filters = [{
+  //   optionmasterid: 1, name: 'Weight',type:constants.TYPE_SELECT,
+  //   items: [{ value_id: 1, name: "500g" }, { value_id: 2, name: "1Kg", selected: true }]
+  // },
+  // {
+  //   optionmasterid: 3, name: "Add brands",type:constants.TYPE_ADD, items: [{ value_id: 3, name: "Amul" },
+  //   { value_id: 4, name: "Nescafe", selected: true }]
+  // }];
+
+  
 
 
-  @action getOrderDetails(data) {
+
+  @action getFilters() {
 
     global.isOnline().then(isNetworkAvailable => {
       if (isNetworkAvailable) {
@@ -27,34 +33,28 @@ class FilterStore {
         this.loading = true;
         this.message = ''
 
-        user_repository.getOrderDetails(
-          data,
-          this.onOrderDetails.bind(this)
+        prod_repository.getFilter(
+          this.onFilter.bind(this)
         );
 
       }
       else {
         this.isApiLoaded = true;
         this.message = constants.NO_INTERNET
-        if (this.refreshing)
-          this.refreshing = false;
       }
     });
 
   }
 
-  onOrderDetails(isError, responseData) {
-
+  onFilter(isError, responseData) {
+    console.log('onFilter: ' + JSON.stringify(responseData))
 
     this.loading = false;
     this.isApiLoaded = true;
 
     if (!isError) {
-      const orderData = responseData.data;
-      if (orderData.length)
-        this.order = orderData[0]
-
-      console.log('onOrderDetails: ' + JSON.stringify(this.order))
+      this.filters = responseData.data;
+      this.onFiltersLoaded();
     }
     else global.showMessage(responseData.message)
 
@@ -64,4 +64,4 @@ class FilterStore {
 
 }
 
-export default OrderDetailsStore 
+export default FilterStore 

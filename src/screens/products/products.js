@@ -2,16 +2,19 @@ import React, { Component } from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
 import { Card, Button } from 'react-native-ui-lib';
-import { View, TouchableWithoutFeedback, Text, FlatList, ActivityIndicator } from 'react-native';
+import { View, TouchableWithoutFeedback, Text, FlatList, Image, ActivityIndicator } from 'react-native';
 import { observer, inject } from "mobx-react";
 import constants from '../../utility/constants';
 import colors from '../../styles/colors';
+import ToolBar from '../../components/toolbar';
 import PlusView from '../../components/custom_views/plusView';
+import fonts from '../../utility/fonts';
 
 var listApiData = {
     page_no: 0,
     per_page: 10,
     cat_id: '',
+    value_id: '',
     user_id: ''
 }
 
@@ -32,7 +35,9 @@ var removeCartApiData = {
     cart_id: ''
 }
 
-var prodStore,cartStore;
+var prodStore, cartStore, currObj;
+
+const TAG = 'Products ';
 
 @inject(stores => ({
     productsStore: stores.productsStore,
@@ -43,24 +48,33 @@ export default class Products extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            selectedFilters: []
+        }
+
         this.onPlusClicked = this.onPlusClicked.bind(this);
         this.onMinusClicked = this.onMinusClicked.bind(this);
         this.onApiActionDone = this.onApiActionDone.bind(this);
+        this.onApplyFilter = this.onApplyFilter.bind(this);
 
         prodStore = this.props.productsStore
         cartStore = this.props.cartStore
 
-        this.reset()
+        this.resetStore()
+        currObj = this;
 
-        const {navigation} = this.props;
-        const item = navigation.getParam([constants.PARAM_ITEM],null);
+        const { navigation } = this.props;
+        const item = navigation.getParam([constants.PARAM_ITEM], null);
         listApiData.cat_id = item.id
         prodStore.cat_id = item.id
+
+
+        console.log(TAG, 'Item: ' + JSON.stringify(item));
     }
 
     componentDidMount() {
-
         prodStore.onApiActionDone = this.onApiActionDone;
+        this.updateToolbarTitle('Fruits')
 
         global.getItem(constants.USER).then(result => {
             if (!result) return;
@@ -73,6 +87,44 @@ export default class Products extends Component {
         console.log('setTheme Prod' + window.theme)
 
     }
+
+    static navigationOptions = ({ navigation }) => {
+        console.log('Navigation ProdList: ' + navigation)
+        return {
+            header: (
+                <ToolBar
+                    title={constants.TXT_PRODUCTS}
+                    showTitle={true}
+                    showEndButton={true}
+                    endIcon={'settings'}
+                    iconType={constants.IC_OCT}
+                    showEndButton2={true}
+                    endIcon2={'ios-search'}
+                    onEndIconClicked={onEndIcon2Clicked}
+                    iconType2={constants.IC_IONIC}
+                    navigation={navigation}
+                    showBackButton={true}
+                />
+            ),
+        };
+    };
+
+
+    drawOfferView(item) {
+        return (
+            <View
+                style={styles.offer}
+            >
+                <Text
+                    style={styles.offerText}
+                >
+                    {'20% OFF'}
+                </Text>
+
+            </View>
+        )
+    }
+
 
     setUserIdToApiData(result) {
         listApiData.user_id = result.user_id
@@ -108,7 +160,7 @@ export default class Products extends Component {
     render() {
 
         return (
-            <View style={[styles.styleFull]}>
+            <View style={[styles.styleFull, { backgroundColor: colors.WHITE }]}>
 
                 <FlatList
                     navigation={this.props.navigation}
@@ -135,8 +187,8 @@ export default class Products extends Component {
                 }
 
                 {
-                   prodStore.message?
-                   global.getNoDataView(constants.NO_INTERNET_REF,constants.NO_INTERNET_REF):<View/>
+                    prodStore.message ?
+                        global.getNoDataView(constants.NO_INTERNET_REF, constants.NO_INTERNET_REF) : <View />
                 }
 
             </View>
@@ -147,17 +199,25 @@ export default class Products extends Component {
     renderSeparator = () => {
         return (
             <View
-                style={styles.productSeperator}
+                style={styles.productSeperator2}
             />
         );
     };
 
-    navigateTo(index) {
+    navigateTo(screen, index) {
 
-        const item = prodStore.products[index]
+        var item;
 
-        this.props.navigation.navigate('ProductDetail', {
+        if (!isNaN(index))
+            item = prodStore.products[index]
+
+        console.log('SelectedFilters sent: ' + currObj.state.selectedFilters)
+
+        this.props.navigation.navigate(screen, {
             [constants.PARAM_PRODUCT]: item,
+            filters: currObj.state.selectedFilters,
+            po: 'PoTest',
+            'onApplyFilter': this.onApplyFilter
         });
     }
 
@@ -188,10 +248,10 @@ export default class Products extends Component {
         updateApiData.quantity = item.cart_quantity - 1;
         updateApiData.cart_id = item.cart_id;
 
-        if(item.cart_quantity==1)
-        prodStore.deleteItem(global.sendAsFormData(updateApiData),index)
+        if (item.cart_quantity == 1)
+            prodStore.deleteItem(global.sendAsFormData(updateApiData), index)
         else
-        prodStore.updateCart(global.sendAsFormData(updateApiData), index, null, constants.TYPE_MINUS)
+            prodStore.updateCart(global.sendAsFormData(updateApiData), index, null, constants.TYPE_MINUS)
     }
 
     onAddToCart(index) {
@@ -205,6 +265,14 @@ export default class Products extends Component {
 
         prodStore.addToCart(global.sendAsFormData(addApiData), index)
         // this.props.cartStore.addToCart(null, item)
+    }
+
+    onApplyFilter(filters) {
+        console.log(TAG + 'onApplyFilter ' + filters)
+        this.state.selectedFilters = filters
+        this.resetStore()
+        listApiData.value_id = filters.toString();
+        this.handleRefresh()
     }
 
 
@@ -221,25 +289,19 @@ export default class Products extends Component {
         var cartListApiData = {
             page_no: 0,
             user_id: listApiData.user_id
-        }       
+        }
 
-        cartStore.getCart(global.sendAsFormData(cartListApiData),0)
+        cartStore.getCart(global.sendAsFormData(cartListApiData), 0)
 
     }
 
     drawButtonView(item, index) {
 
-        // if (index == 0)
-        //     console.log('drawButtonView: ' + JSON.stringify(item))
 
         if (item.loading)
             return (
                 <View
-                    style={[styles.plusContainer, {
-                        marginTop: 10,
-                        justifyContent: 'center',
-                        borderColor: colors.WHITE
-                    }]}
+                    style={[styles.plusContainer, { justifyContent: 'center' }]}
                 >
                     <ActivityIndicator size="small" color={colors.DARKGRAY} />
 
@@ -255,8 +317,8 @@ export default class Products extends Component {
                     onPress={() => {
                         this.onAddToCart(index);
                     }}
-                    labelStyle={{ fontFamily: 'PopinsBold', fontSize: 14,marginTop:3 }}
-                    style={[styles.addContainer, { marginTop: 10 }]}
+                    labelStyle={{ fontFamily: 'PopinsBold', fontSize: fonts._10 }}
+                    style={[styles.addContainer]}
                     borderRadius={3}
                     enableShadow
                 />
@@ -266,8 +328,6 @@ export default class Products extends Component {
         return (
             <View
                 style={[styles.plusContainer, {
-                    marginTop: 10,
-                    borderColor: colors.ListViewBG
                 }]}
             >
 
@@ -279,8 +339,8 @@ export default class Products extends Component {
                 />
                 <Text
                     style={[styles.stripLabel, {
-                        textAlign: 'center', marginTop: 4
-                        , color: colors.GREY
+                        textAlign: 'center', fontFamily: 'PopinsBold', flex: undefined
+                        , color: colors.BLACK, fontSize: fonts._18, paddingHorizontal: 15
                     }]}
                 >{item.cart_quantity}</Text>
 
@@ -294,7 +354,10 @@ export default class Products extends Component {
 
     }
 
-    reset(){
+    resetStore() {
+
+        console.log(TAG + 'resetStore called!')
+
         prodStore.products = []
         prodStore.apiLoaded = false;
         prodStore.loading = false;
@@ -303,20 +366,24 @@ export default class Products extends Component {
         prodStore.message = '';
     }
 
-    // componentWillUnmount(){
-    //     prodStore.products = []
-    //     prodStore.apiLoaded = false;
-    //     prodStore.loading = false;
-    // }
+    updateToolbarTitle = (titleText) => {
+        const { setParams } = this.props.navigation;
+        console.log('updateToolbarTitle: ' + titleText)
+        setParams({ title: titleText })
+    }
+
 
     renderRow({ item, index }) {
 
 
-        var image = require('../../assets/images/pic2.jpg');
+        let image = require('../../assets/images/pic2.jpg');
+        let variant = '';
+
+        if (Array.isArray(item.variants) && item.variants.length)
+            variant = item.variants[0].value;
 
         if (Array.isArray(item.images) && item.images.length) {
             image = { uri: item.images[0].images };
-            // console.log('Products row ' + JSON.stringify(image))
         }
 
         return (
@@ -324,23 +391,32 @@ export default class Products extends Component {
             <TouchableWithoutFeedback
                 onPress={
                     () => {
-                        this.navigateTo(index)
+                        this.navigateTo('ProductDetail', index)
                     }
                 }
             >
                 <Card style={{ flex: 1, borderRadius: 0 }} key={index}>
 
                     <View
-                        style={{ padding: 10 }}
+                        style={{ paddingHorizontal: 15, paddingVertical: 15 }}
                     >
                         <View
                             style={{ flexDirection: 'row', flex: 1 }}
                         >
 
-                            <Card.Image imageSource={image}
-                                style={{ height: 100, width: 100, marginRight: 20 }}
-                                cover={true}
-                            />
+                            <View
+                                style={styles.productImage}
+                            >
+                                <Image source={image}
+                                    style={{ width: 70, height: 70 }}
+                                />
+
+                                {
+                                    index == 0 && this.drawOfferView(item)
+                                }
+
+
+                            </View>
 
                             <View
                                 style={{
@@ -350,42 +426,59 @@ export default class Products extends Component {
                             >
 
                                 <Text
-                                    style={[styles.stripLabel]}
+                                    style={[styles.stripLabel, {
+                                        flex: undefined
+                                    }]}
                                     numberOfLines={2}
                                 >
                                     {item.name}
                                 </Text>
 
-                                <Text
+                                {/* <Text
                                     style={[styles.labelSmall]}
                                     numberOfLines={2}
                                 >
                                     {item.description}
-                                </Text>
+                                </Text> */}
 
                                 <Text
-                                    style={[styles.labelSmall, { marginTop: 8 }]}
+                                    style={[styles.weight]}
                                 >
 
-                                    {item.quantity}
+                                    {variant}
 
                                 </Text>
 
-                                <Text
-                                    style={[styles.labelSmall, { marginTop: 8, color: colors.GREEN_4 }]}
+                                <View
+                                    style={{
+                                        flexDirection: 'row', marginTop: 8, flex: 1, alignItems: 'center'
+                                    }}
                                 >
+                                    <Text
+                                        style={[styles.amount]}
+                                    >
+                                        {constants.SYMBOL_RUPEE + item.price}
+                                    </Text>
 
-                                    {constants.SYMBOL_RUPEE + item.price}
+                                    <Text
+                                        style={[styles.amount, {
+                                            marginLeft: 10, fontSize: fonts._15, flex: 1,
+                                            textDecorationLine: 'line-through', color: colors.DISCOUNT
+                                        }]}
+                                    >
+                                        {constants.SYMBOL_RUPEE + '22'}
+                                    </Text>
 
-                                </Text>
+                                    {this.drawButtonView(item, index)}
 
+                                </View>
 
 
                             </View>
 
                         </View>
 
-                        <View
+                        {/* <View
                             style={{ flexDirection: 'row', flex: 1 }}
                         >
                             <View
@@ -393,10 +486,11 @@ export default class Products extends Component {
                                     flex: 1
                                 }}
                             />
-
                             {this.drawButtonView(item, index)}
 
-                        </View>
+
+                        </View> */}
+
 
                     </View>
                 </Card >
@@ -407,5 +501,11 @@ export default class Products extends Component {
 
 
 }
+
+function onEndIcon2Clicked() {
+    console.log('onEndIcon2Clicked!')
+    currObj.navigateTo('Filter');
+}
+
 
 

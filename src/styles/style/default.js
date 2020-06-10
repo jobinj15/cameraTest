@@ -1,9 +1,5 @@
 'use strict';
 
-import React, {
-    Component
-} from 'react';
-
 import {
     StyleSheet,
     Dimensions,
@@ -13,6 +9,7 @@ import {
 
 import { Typography, Colors } from 'react-native-ui-lib';
 import colors from '../colors';
+import fonts from '../../utility/fonts';
 
 const CARD_PREVIEW_WIDTH = 20
 const CARD_MARGIN = 5;
@@ -30,31 +27,12 @@ const unit = base_unit * ratioX;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 
-const fonts = {
-    _10: normalize(10),
-    _11: normalize(11),
-    _12: normalize(12),
-    _13: normalize(13),
-    _14: normalize(14),
-    _15: normalize(15),
-    _16: normalize(16),
-    _17: normalize(17),
-    _18: normalize(18),
-    _19: normalize(19),
-    _20: normalize(20),
-    FONT_SIZE: em(1),
-    APPBAR_HEIGHT: 56,
-    FONT_SIZE_SMALLER: em(0.75),
-    FONT_SIZE_SMALL: em(0.875),
-    FONT_SIZE_TITLE: em(1.25)
-}
 
 var styles = {
 
     navigator: {
         flex: 1,
     },
-
     parent: {
         flex: 1,
         alignItems: 'center',
@@ -65,13 +43,12 @@ var styles = {
         flexDirection: 'row',
         height: 56,
         width: DEVICE_WIDTH,
-        elevation: 5,
-        backgroundColor: colors.LIGHT_GRAY
+        backgroundColor: colors.WHITE
     },
     toolbarIos: {
         flexDirection: 'row',
         height: 56,
-        marginLeft:-8,
+        marginLeft: -8,
         width: DEVICE_WIDTH
     },
     statusBar: {
@@ -81,16 +58,16 @@ var styles = {
         alignSelf: 'center',
         height: 45,
         width: 45,
-        padding: 8,
-        marginLeft: 5,
-        marginRight: 5,
+        padding: 5,
+        marginLeft: -6,
+        borderRadius: 22.5,
         alignItems: 'center',
         justifyContent: 'center',
 
     },
     tabBarOptions: {
         activeTintColor: colors.PRIMARY,
-        inactiveTintColor: 'gray',
+        inactiveTintColor: colors.TAB_INACTIVE,
         showIcon: true,
         showLabel: false,
         style: {
@@ -99,25 +76,31 @@ var styles = {
         }
     },
     viewAll: {
-        fontSize: 14,
-        fontFamily : 'PopinsBold',
+        fontSize: fonts._10,
+        fontFamily: 'PopinsBold',
         color: colors.PRIMARY
     },
     labelMini: {
         color: colors.WHITE,
-        fontFamily : 'PopinsBold',
-        marginTop:3,
-        fontSize: 9
+        fontFamily: 'PopinsBold',
+        marginTop: 3,
+        fontSize: fonts.FONT_SIZE_SMALL
     },
     stripLabel: {
-        fontSize: 18,
+        fontSize: fonts._16,
         flex: 1,
-        fontFamily : 'PopinsBold',
+        fontFamily: 'PopinsMed',
+        color: colors.BLACK
+    },
+    labelKey: {
+        fontSize: fonts._16,
+        flex: 1,
+        fontFamily: 'PopinsMed',    
         color: colors.BLACK
     },
     labelBorder: {
-        fontSize: 16,
-        fontFamily : 'PopinsMed',
+        fontSize: fonts._14,
+        fontFamily: 'PopinsMed',
         flex: 1,
         paddingBottom: 10,
         paddingHorizontal: 6,
@@ -139,18 +122,18 @@ var styles = {
         marginHorizontal: 15
     },
     bigBold: {
-        fontFamily : 'PopinsBold',
-        fontSize: 22,
+        fontFamily: 'PopinsBold',
+        fontSize: fonts._20,
         color: 'black'
     },
     bigBoldOnBoard: {
-        fontFamily : 'PopinsBold',
-        fontSize: 26,
+        fontFamily: 'PopinsBold',
+        fontSize: fonts._24,
         color: colors.PRIMARY
     },
     VBigText: {
-        fontFamily : 'PopinsBold',
-        fontSize: 40,
+        fontFamily: 'PopinsBold',
+        fontSize: fonts._28,
         color: 'white'
     },
     styleFull: {
@@ -171,15 +154,41 @@ var styles = {
         justifyContent: 'center',
     },
     labelSmallX1: {
-        color: colors.GREY,
-        fontFamily : 'PopinsReg',
-        fontSize: 16
+        color: colors.GREY2,
+        fontFamily: 'PopinsReg',
+        fontSize: fonts._14
+    },
+    amount: {
+        fontFamily: 'PopinsBold',
+        color: colors.PRIMARY,
+        fontSize: fonts._18
     },
     variant: {
         padding: 8,
-        fontSize: 16,
-        fontFamily : 'PopinsReg',
+        fontSize: fonts._14,
+        fontFamily: 'PopinsReg',
+        borderRadius: 5,
         backgroundColor: colors.GREY,
+        color: colors.WHITE
+    },
+    filterItem: {
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        fontSize: fonts._14,
+        fontFamily: 'PopinsMed',
+        borderRadius: 5,
+        borderWidth: 1,
+        backgroundColor: colors.WHITE,
+        color: colors.WHITE
+    },
+    filterItem2: {
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        fontSize: fonts._14,
+        fontFamily: 'PopinsMed',
+        borderRadius: 20,
+        borderWidth: 1,
+        backgroundColor: colors.WHITE,
         color: colors.WHITE
     },
     wrap: {
@@ -192,8 +201,8 @@ var styles = {
     },
     labelSmall: {
         color: colors.GREY,
-        fontFamily : 'PopinsReg',
-        fontSize: 12
+        fontFamily: 'PopinsReg',
+        fontSize: fonts._10
     },
     addressListCard: {
         flex: 1,
@@ -204,14 +213,37 @@ var styles = {
     },
     labelProfile: {
         color: colors.GREY,
-        fontSize: 20,
-        fontFamily : 'PopinsMed',
+        fontSize: fonts._18,
+        fontFamily: 'PopinsMed',
     },
+    // plusContainer: {
+    //     width: 138, height: 40,
+    //     borderColor: colors.ListViewBG,
+    //     borderWidth: 1, borderRadius: 3,
+    //     flexDirection: 'row'
+    // },
     plusContainer: {
-        width: 138, height: 40,
-        borderColor: colors.ListViewBG,
-        borderWidth: 1, borderRadius: 3,
-        flexDirection: 'row'
+        height: 40,
+        width:120,
+        flexDirection: 'row',
+        alignItems:'center'
+    },
+    offer:{
+     height:18,
+     paddingHorizontal:8,
+     paddingVertical:5,
+     borderRadius:5,
+     alignItems:'center',
+     justifyContent:'center',
+     position:'absolute',
+     top:5,
+     left:5,
+     backgroundColor:colors.GRAD_RED2
+    },
+    offerText:{
+     color : colors.WHITE,
+     fontSize : fonts._8,
+     fontFamily:'PopinsBold'
     },
     bottomView: {
         backgroundColor: colors.GREEN_4,
@@ -222,20 +254,27 @@ var styles = {
         paddingVertical: 10,
         paddingHorizontal: 10,
     },
+    // plusBox: {
+    //     alignItems: 'center',
+    //     justifyContent: 'center',
+    //     width: 40, height: 40, fontSize: fonts._26, fontFamily: 'PopinsBold',
+    //     color: colors.DARKGRAY,
+    //     backgroundColor: colors.ListViewBG
+    // },
     plusBox: {
         alignItems: 'center',
         justifyContent: 'center',
-        width: 40, height: 40, fontSize: 30, fontFamily : 'PopinsBold',
+        width: 40, height: 40, fontSize: fonts._26, fontFamily: 'PopinsReg',
         color: colors.DARKGRAY,
-        backgroundColor: colors.ListViewBG
     },
     plusText: {
-        fontFamily : 'PopinsBold',
+        fontFamily: 'PopinsBold',
         marginTop: 3,
         color: colors.DARKGRAY,
     },
     addContainer: {
-        width: 140, height: 40,
+        height: 40,
+        marginBottom:5,
         borderColor: colors.GREEN,
     },
     bannerSeperator: {
@@ -244,6 +283,10 @@ var styles = {
     productSeperator: {
         height: 3,
         backgroundColor: colors.LIGHT_GRAY
+    },
+    productSeperator2: {
+        height: 1,
+        backgroundColor: colors.WHITE
     },
     banner: {
         width: '100%',
@@ -258,12 +301,6 @@ var styles = {
         alignItems: 'flex-start',
         padding: 10,
         backgroundColor: '#ffffff',
-    },
-    buttonText: {
-        fontSize: fonts.APPBAR_HEIGHT,
-        color: 'white',
-        alignSelf: 'center',
-        fontFamily : 'PopinsReg',
     },
     button: {
         height: 44,
@@ -284,11 +321,18 @@ var styles = {
         justifyContent: 'center'
     },
     buttonText: {
-        fontSize: 16,
+        fontSize: fonts._14,
         textAlign: "center",
         justifyContent: "center",
-        fontFamily : 'PopinsMed',
+        fontFamily: 'PopinsMed',
         color: "white"
+    },
+    buttonText2: {
+        fontSize: fonts._14,
+        textAlign: "center",
+        justifyContent: "center",
+        fontFamily: 'PopinsMed',
+        color: colors.WHITE
     },
     largeButton: {
         width: '100%',
@@ -298,8 +342,17 @@ var styles = {
         alignItems: "center",
         paddingHorizontal: 30,
         borderRadius: 5,
-        borderRadius: 20,
         backgroundColor: colors.GREEN,
+    },
+    largeButton2: {
+        width: '100%',
+        paddingVertical: 10,
+        justifyContent: "center",
+        alignSelf: "center",
+        alignItems: "center",
+        borderRadius: 5,        
+        paddingHorizontal: 15,
+        backgroundColor: colors.TAB_INACTIVE,
     },
     saveButton: {
         borderColor: '#48BBEC',
@@ -309,11 +362,10 @@ var styles = {
     searchByBrandsContainer: {
         alignItems: 'center',
         width: 120,
-        height: 80,
+        height: 70,
         borderWidth: 1,
-        borderColor: colors.GREY,
-        marginHorizontal: 15,
-        marginVertical: 10,
+        borderRadius: 10,
+        borderColor: colors.BORDER,
         justifyContent: 'center'
     },
     recommContainer: {
@@ -334,12 +386,12 @@ var styles = {
     },
     row_title: {
         color: colors.PRIMARY_TEXTCOLOR,
-        fontFamily : 'PopinsBold',
+        fontFamily: 'PopinsBold',
         fontSize: fonts._14,
     },
     row_subtitle: {
         color: colors.SECONDARY_TEXTCOLOR,
-        fontFamily : 'PopinsReg',
+        fontFamily: 'PopinsReg',
         marginTop: 3,
         fontSize: fonts._13,
     },
@@ -349,15 +401,20 @@ var styles = {
         padding: 10,
         backgroundColor: '#ffffff',
     },
-    txt: {
-        fontSize: fonts._18,
-        fontFamily : 'PopinsReg',
-        marginLeft: 5,
-        marginTop: 2,
-        color: '#222222',
+    weight: {
+        fontSize: fonts._12,
+        fontFamily: 'PopinsReg',
+        color: colors.GREY2,
     },
-    completed: {
-        color: '#cccccc'
+    address: {
+        fontSize: fonts._16,
+        fontFamily: 'PopinsReg',
+        color: colors.GREY2,
+    },
+    productImage: {
+        height: 110, width: 110, marginRight: 25, padding: 20,
+        alignItems: 'center', justifyContent: 'center',
+        borderRadius: 15, backgroundColor: colors.PRODUCT_BG
     },
     hr: {
         backgroundColor: 'lightgrey',
@@ -406,15 +463,15 @@ var styles = {
     },
     headertext: {
         fontSize: fonts._18,
-        fontFamily : 'PopinsReg',
+        fontFamily: 'PopinsReg',
     },
     subheadertext: {
         fontSize: fonts._14,
-        fontFamily : 'PopinsReg',
+        fontFamily: 'PopinsReg',
     },
     auto_grow_text: {
         fontSize: fonts._14,
-        fontFamily : 'PopinsReg',
+        fontFamily: 'PopinsReg',
     },
     taginput: {
         backgroundColor: colors.TRANSPARENT,
@@ -426,25 +483,33 @@ var styles = {
         alignSelf: 'center',
         marginRight: 10,
         fontSize: fonts._14,
-        fontFamily : 'PopinsReg',
+        fontFamily: 'PopinsReg',
     },
     row_settings_title:
     {
         color: colors.BLACK,
         fontSize: fonts._14,
-        fontFamily : 'PopinsReg',
+        fontFamily: 'PopinsReg',
     },
     row_settings_subtitle:
     {
         color: colors.SECONDARY_TEXTCOLOR,
         fontSize: fonts._13,
-        fontFamily : 'PopinsReg',
+        fontFamily: 'PopinsReg',
     },
     title: {
         color: colors.BLACK,
-        fontSize: 26,
+        fontSize: fonts._22,
         flex: 1,
-        fontFamily : 'PopinsBold'
+        fontFamily: 'PopinsMed'
+    },
+    titleSmall: {
+        color: colors.BLACK,
+        fontSize: fonts._18,
+        flex: 1,
+        marginLeft: 25,
+        marginTop: 2,
+        fontFamily: 'PopinsMed'
     },
     themeDialog: {
         backgroundColor: colors.WHITE,
@@ -456,9 +521,9 @@ var styles = {
         backgroundColor: colors.WHITE
     },
     apply: {
-        fontSize: 14,
+        fontSize: fonts._12,
         color: colors.PRIMARY,
-        fontFamily : 'PopinsMed',
+        fontFamily: 'PopinsMed',
     }
 
 };
@@ -470,27 +535,6 @@ var styles = {
 
 Typography.loadTypographies(styles);
 {/* <Text h1 pink>Hello World</Text> */ }
-
-function em(value) {
-    return unit * value;
-}
-
-
-function normalize(value) {
-
-    console.log('normalize called');
-    if (PixelRatio.get() === 2) {
-        console.log(" 4s,5s, till 6s ,7,8");
-        return value;
-    } else if (PixelRatio.get() === 3) {
-        console.log(" 6splus,7plus,8plus,x ");
-        return (value + 2);
-    } else {
-        console.log(" ipad ");
-        return (value + 3);
-    }
-
-}
 
 
 module.exports = styles;

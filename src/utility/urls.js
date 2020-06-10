@@ -34,7 +34,8 @@ export default urls = {
   urlPaymentOptions: baseUrl + 'payment_mode/payment_mode',
   urlImpMessage: baseUrl + 'checkImportantMessage/checkImportantMessage',
   urlForgotPass: baseUrl + 'login/forgot_password',
-  urlPayUHash: baseUrl + '/payu_hash/gethash'
+  urlPayUHash: baseUrl + '/payu_hash/gethash',
+  urlGetFilters: baseUrl + '/filter/filters'
 };
 
 // findsrinivas.guni@gmail.com

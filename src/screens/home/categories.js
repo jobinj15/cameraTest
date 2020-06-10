@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
 import {
@@ -9,12 +9,16 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import {observer, inject} from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import constants from '../../utility/constants';
+import ImpMessage from './ImpMessage';
+import Banner from './banner'
+import LabelStrip from './labelStrip';
+import SearchByBrands from './searchByBrands';
 @inject('catHomeStore')
 @observer
 export default class Categories extends Component {
@@ -34,18 +38,25 @@ export default class Categories extends Component {
         <FlatList
           navigation={this.props.navigation}
           extraData={this.state}
-          style={{width: Dimensions.get('window').width}}
-          contentContainerStyle={{alignItems: 'flex-start'}}
+          style={{ width: Dimensions.get('window').width }}
+          contentContainerStyle={{ alignItems: 'flex-start' }}
           showsVerticalScrollIndicator={false}
           data={this.props.catHomeStore.categories}
           renderItem={this.renderRow.bind(this)}
           ItemSeparatorComponent={this.renderSeparator}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index) => index.toString()}
           numColumns={4}
+          // ListHeaderComponent={
+          //   this.getHeaders()
+          // }
+          // ListFooterComponent={
+          //   this.getFooters()
+          // }
         />
       </View>
     );
   }
+
 
   navigateTo(item) {
     this.props.navigation.navigate('Products', {
@@ -54,7 +65,7 @@ export default class Categories extends Component {
   }
 
 
- getRandomColor() {
+  getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
     for (var i = 0; i < 6; i++) {
@@ -63,7 +74,7 @@ export default class Categories extends Component {
     return color;
   }
 
-  renderRow({item, index}) {
+  renderRow({ item, index }) {
     // console.log('onCategories renderRow ' + JSON.stringify(item))
 
     var rowStyles = {
@@ -83,7 +94,7 @@ export default class Categories extends Component {
     // }
 
     var image = require('../../assets/images/pic1.jpg');
-    if (item.img) image = {uri: item.img};
+    if (item.img) image = { uri: item.img };
 
     return (
       <TouchableWithoutFeedback
@@ -113,7 +124,7 @@ export default class Categories extends Component {
                         /> */}
 
             <Image
-              style={{height: 50, width: 50}}
+              style={{ height: 50, width: 50 }}
               source={image}
               resizeMode="contain"
             />
@@ -122,7 +133,7 @@ export default class Categories extends Component {
           <Text
             style={[
               styles.labelSmall,
-              {marginTop: 8, textAlign: 'center'},
+              { marginTop: 8, textAlign: 'center' },
             ]}
             numberOfLines={1}>
             {item.name}

@@ -19,8 +19,7 @@ export default class SearchByBrands extends Component {
                     navigation={this.props.navigation}
                     extraData={this.state}
                     horizontal
-                    contentContainerStyle={{ alignItems: 'center' }}
-                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
                     data={this.props.searchByBrandsStore.brands}
                     renderItem={this.renderRow.bind(this)}
                     ItemSeparatorComponent={this.renderSeparator}
@@ -29,6 +28,12 @@ export default class SearchByBrands extends Component {
 
             </View>
         );
+    }
+
+    renderSeparator() {
+        return (<View
+            style={{ width: 15, height: 10}}
+        />)
     }
 
     renderRow({ item, index }) {
@@ -41,7 +46,7 @@ export default class SearchByBrands extends Component {
                     style={[styles.searchByBrandsContainer]}
                 >
                     <Image
-                        style={styles.styleFull}
+                        style={{ width: 80, height: 40 }}
                         source={item.image}
                         resizeMode="contain"
                     />

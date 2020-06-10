@@ -69,7 +69,7 @@ export default class ImpMessage extends Component {
             )
 
         return (
-            <View style={[styles.styleFull, { marginBottom: 8, padding: 15 }]}>
+            <View style={[styles.styleFull, { marginBottom: 8, padding: 15,flex:undefined}]}>
 
                 <Card style={{ flex: 1 }}
                     containerStyle={{

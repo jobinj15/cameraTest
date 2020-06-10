@@ -4,7 +4,7 @@ import global from '../../utility/global';
 import { Card, Button } from 'react-native-ui-lib';
 import {
     View, TouchableWithoutFeedback, TouchableOpacity, Text,
-    ActivityIndicator, FlatList, ScrollView
+    ActivityIndicator, FlatList, ScrollView, Image
 } from 'react-native';
 import { observer, inject } from "mobx-react";
 import constants from '../../utility/constants';
@@ -13,6 +13,7 @@ import PlusView from '../../components/custom_views/plusView';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import ToolBar from '../../components/toolbar'
+import fonts from '../../utility/fonts';
 
 var listApiData = {
     page_no: 0,
@@ -79,7 +80,7 @@ class Cart extends Component {
         return {
             header: (
                 <ToolBar
-                    title='Cart'
+                    title='Cart To Buy'
                     showTitleH={true}
                     showBackButton={false}
                 />
@@ -143,28 +144,28 @@ class Cart extends Component {
                 }
 
 
-                <ScrollView
+                {/* <ScrollView
                     showsVerticalScrollIndicator={false}
                     style={{ flex: 1 }}
-                >
-                    <View style={[styles.styleFull]}>
+                > */}
+                <View style={[styles.styleFull]}>
 
-                        <FlatList
-                            navigation={this.props.navigation}
-                            extraData={this.state}
-                            showsVerticalScrollIndicator={false}
-                            data={cartStore.cart}
-                            refreshing={cartStore.refreshing}
-                            onRefresh={this.handleRefresh.bind(this)}
-                            renderItem={this.renderRow.bind(this)}
-                            ItemSeparatorComponent={this.renderSeparator}
-                            keyExtractor={(item, index) => index.toString()}
-                        />
+                    <FlatList
+                        navigation={this.props.navigation}
+                        extraData={this.state}
+                        showsVerticalScrollIndicator={false}
+                        data={cartStore.cart}
+                        refreshing={cartStore.refreshing}
+                        onRefresh={this.handleRefresh.bind(this)}
+                        renderItem={this.renderRow.bind(this)}
+                        ItemSeparatorComponent={this.renderSeparator}
+                        keyExtractor={(item, index) => index.toString()}
+                        ListFooterComponent={
+                            this.drawCouponView()
+                        } />
 
-                        {this.drawCouponView()}
-
-                    </View>
-                </ScrollView>
+                </View>
+                {/* </ScrollView> */}
                 {this.bottomView()}
 
 
@@ -180,17 +181,11 @@ class Cart extends Component {
 
     drawButtonView(item, index) {
 
-        if (index == 0)
-            console.log('drawButtonView: ' + JSON.stringify(item))
-
+    
         if (item.loading)
             return (
                 <View
-                    style={[styles.plusContainer, {
-                        marginTop: 10,
-                        justifyContent: 'center',
-                        borderColor: colors.WHITE
-                    }]}
+                    style={[styles.plusContainer,{justifyContent:'center'}]}
                 >
                     <ActivityIndicator size="small" color={colors.DARKGRAY} />
 
@@ -206,8 +201,8 @@ class Cart extends Component {
                     onPress={() => {
                         this.onAddToCart(index);
                     }}
-                    labelStyle={{ fontWeight: 'PopinsBold', fontSize: 14 }}
-                    style={[styles.addContainer, { marginTop: 10 }]}
+                    labelStyle={{ fontFamily: 'PopinsBold', fontSize: fonts._10, marginTop: 3 }}
+                    style={[styles.addContainer]}
                     borderRadius={3}
                     enableShadow
                 />
@@ -217,8 +212,6 @@ class Cart extends Component {
         return (
             <View
                 style={[styles.plusContainer, {
-                    marginTop: 10,
-                    borderColor: colors.ListViewBG
                 }]}
             >
 
@@ -230,8 +223,8 @@ class Cart extends Component {
                 />
                 <Text
                     style={[styles.stripLabel, {
-                        textAlign: 'center', marginTop: 4
-                        , color: colors.GREY
+                        textAlign: 'center',fontFamily:'PopinsBold',flex:undefined
+                        , color: colors.BLACK,fontSize : fonts._18,paddingHorizontal:15
                     }]}
                 >{item.cart_quantity}</Text>
 
@@ -244,7 +237,6 @@ class Cart extends Component {
         )
 
     }
-
 
 
     renderSeparator = () => {
@@ -352,6 +344,7 @@ class Cart extends Component {
                         paddingHorizontal: 20,
                         paddingVertical: 10,
                         marginTop: 8,
+                        marginBottom:70,
                         flexDirection: 'row',
                         alignItems: 'center',
                         backgroundColor: colors.WHITE
@@ -370,7 +363,7 @@ class Cart extends Component {
 
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: fonts._12,
                                 fontWeight: cartStore.couponApplied ? 'PopinsBold' : 'PopinsReg',
                                 color: colors.BLACK
                             }}
@@ -383,7 +376,7 @@ class Cart extends Component {
                             cartStore.couponApplied &&
                             <Text
                                 style={{
-                                    fontSize: 12,
+                                    fontSize: fonts._10,
                                     color: colors.DARKGRAY
                                 }}
                             >
@@ -465,112 +458,129 @@ class Cart extends Component {
 
     renderRow({ item, index }) {
 
-        // console.log('Products row ' + JSON.stringify(item))
 
-        var image = require('../../assets/images/pic2.jpg');
-        var marginBottom = 0;
+        let image = require('../../assets/images/pic2.jpg');
+        let variant = '';
 
-        // if ((cartStore.cart.length - 1) == index)
-        //     marginBottom = 60;
+        if (Array.isArray(item.variants) && item.variants.length)
+            variant = item.variants[0].value;
 
         if (Array.isArray(item.images) && item.images.length) {
             image = { uri: item.images[0].images };
-            // console.log('Products row ' + JSON.stringify(image))
         }
 
         return (
 
-            <Card style={{ flex: 1, borderRadius: 0, marginBottom: marginBottom }} key={index}>
+            <TouchableWithoutFeedback
+                onPress={
+                    () => {
+                        this.navigateTo(index)
+                    }
+                }
+            >
+                <Card style={{ flex: 1, borderRadius: 0 }} key={index}>
 
-                <View
-                    style={{ padding: 10, flex: 1 }}
-                >
                     <View
-                        style={{ flexDirection: 'row', flex: 1 }}
+                        style={{ paddingHorizontal: 15, paddingVertical: 15 }}
                     >
-
-                        <Card.Image imageSource={image}
-                            style={{ height: 100, width: 100, marginRight: 20 }}
-                            cover={true}
-                        />
-
                         <View
-                            style={{
-                                justifyContent: 'center',
-                                flex: 1
-                            }}
+                            style={{ flexDirection: 'row', flex: 1 }}
                         >
 
-                            <Text
-                                style={[styles.stripLabel, { marginTop: 10 }]}
-                                numberOfLines={2}
+                            <View
+                                style={styles.productImage}
                             >
-                                {item.name}
-                            </Text>
+                                <Image source={image}
+                                    style={{ width: 70, height: 70 }}
+                                />
 
-                            <Text
-                                style={[styles.labelSmall]}
-                                numberOfLines={2}
-                            >
-                                {item.description}
-                            </Text>
+                            </View>
 
-                            <Text
-                                style={[styles.labelSmall, { marginTop: 8 }]}
+                            <View
+                                style={{
+                                    justifyContent: 'center',
+                                    flex: 1
+                                }}
                             >
 
-                                {item.quantity}
+                                <Text
+                                    style={[styles.stripLabel, {
+                                        flex: undefined
+                                    }]}
+                                    numberOfLines={2}
+                                >
+                                    {item.name}
+                                </Text>
 
-                            </Text>
+                                {/* <Text
+                                    style={[styles.labelSmall]}
+                                    numberOfLines={2}
+                                >
+                                    {item.description}
+                                </Text> */}
 
-                            <Text
-                                style={[styles.labelSmall, { marginTop: 8, color: colors.GREEN_4 }]}
-                            >
+                                <Text
+                                    style={[styles.weight]}
+                                >
 
-                                {constants.SYMBOL_RUPEE + item.price}
+                                    {variant}
 
-                            </Text>
+                                </Text>
 
+                                <Text
+                                    style={[styles.amount, { marginTop: 8 }]}
+                                >
+
+                                    {constants.SYMBOL_RUPEE + item.price}
+
+                                </Text>
+
+
+
+                            </View>
 
                         </View>
 
-                    </View>
-
-                    <View
-                        style={{ flexDirection: 'row', flex: 1 }}
-                    >
                         <View
-                            style={{
-                                flex: 1
-                            }}
-                        />
+                            style={{ flexDirection: 'row', flex: 1 }}
+                        >
+                            <View
+                                style={{
+                                    flex: 1
+                                }}
+                            />
 
-                        {this.drawButtonView(item, index)}
+                            {this.drawButtonView(item, index)}
+
+                        </View>
+
+                        <TouchableWithoutFeedback
+                            onPress={() => {
+                                removeCartApiData.cart_id = item.id
+                                cartStore.deleteItem(global.sendAsFormData(removeCartApiData), index);
+                            }}
+                        >
+                            <Icon name={'ios-close'} size={30} color={colors.BLACK}
+                                style={{
+                                    position: 'absolute',
+                                    top: 5,
+                                    padding: 5,
+                                    right: 20
+                                }}
+                            />
+
+                        </TouchableWithoutFeedback>
+
 
                     </View>
-
-                    <TouchableWithoutFeedback
-                        onPress={() => {
-                            removeCartApiData.cart_id = item.id
-                            cartStore.deleteItem(global.sendAsFormData(removeCartApiData), index);
-                        }}
-                    >
-                        <Icon name={'ios-close'} size={30} color={colors.BLACK}
-                            style={{
-                                position: 'absolute',
-                                top: 5,
-                                padding: 5,
-                                right: 20
-                            }}
-                        />
-
-                    </TouchableWithoutFeedback>
-
-                </View>
-            </Card >
+                </Card >
+            </TouchableWithoutFeedback>
         )
 
     }
+
+
+
 
 
 }

@@ -69,7 +69,7 @@ export default class HomeTab extends Component {
 
     renderRow({ item, index }) {
 
-        console.log('Banners renderRow ' + JSON.stringify(item))
+        // console.log('Banners renderRow ' + JSON.stringify(item))
 
 
         return (

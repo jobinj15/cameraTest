@@ -7,6 +7,8 @@ import { observer, inject } from "mobx-react";
 import constants from '../../utility/constants';
 import colors from '../../styles/colors';
 import PlusView from '../../components/custom_views/plusView';
+import ToolBar from '../../components/toolbar';
+import { ScrollView } from 'react-native-gesture-handler';
 
 var prodDetStore, prodListStore, cartStore;
 
@@ -71,9 +73,20 @@ export default class ProductDetails extends Component {
 
     }
 
-    static navigationOptions = {
-        title: 'Details',
+    static navigationOptions = ({ navigation }) => {
+        console.log('Navigation ProdList: ' + navigation)
+        return {
+            header: (
+                <ToolBar
+                    title={'Details'}
+                    showTitle={true}
+                    navigation={navigation}
+                    showBackButton={true}
+                />
+            ),
+        };
     };
+
 
     componentDidMount() {
 
@@ -211,7 +224,7 @@ export default class ProductDetails extends Component {
 
                 >
                     <Text
-                        style={[styles.labelSmallX1, { marginRight: 20 }]}
+                        style={[styles.labelSmallX1, { marginRight: 20, color: colors.DARKGRAY2 }]}
                     >
                         {mainItem.optionmastername}
                     </Text>
@@ -260,7 +273,7 @@ export default class ProductDetails extends Component {
 
         if (prodDetStore.message) {
             return (
-                global.getNoDataView(constants.NO_INTERNET_REF,constants.NO_INTERNET_REF)
+                global.getNoDataView(constants.NO_INTERNET_REF, constants.NO_INTERNET_REF)
             )
         }
 
@@ -271,7 +284,7 @@ export default class ProductDetails extends Component {
 
         if (!prodDetStore.isApiLoaded && !prodDetStore.loading)
             return (
-                <View/>
+                <View />
             )
 
         if (prodDetStore.loading) {
@@ -295,88 +308,95 @@ export default class ProductDetails extends Component {
         return (
             <View style={[styles.styleFull, { backgroundColor: colors.ListViewBG }]}>
 
-                <Card.Image imageSource={image}
-                    style={{
-                        height: 180, width: global.DEVICE_WIDTH - 20, marginTop: 10,
-                        marginHorizontal: 10
-                    }}
-                    cover={false}
-                />
-
-                <View
-                    style={{
-                        padding: 10, backgroundColor: colors.WHITE, marginTop: 5,
-                        marginHorizontal: 10
-                    }}
+                {/* <ScrollView
+                    showsVerticalScrollIndicator={false}
                 >
-                    <Text
-                        style={[styles.stripLabel, { backgroundColor: colors.GREEN }]}
-                    >
-                        {item.name}
-                    </Text>
-
-                    <Text
-                        style={[styles.labelSmall]}
-                    >
-                        {item.description}
-                    </Text>
-
-                    <Text
-                        style={[styles.labelSmall, { marginTop: 8 }]}
-                    >
-
-                        {item.quantity}
-
-                    </Text>
-
-                    <Text
-                        style={[styles.labelSmall, { marginTop: 8, color: colors.GREEN_4 }]}
-                    >
-
-                        {constants.SYMBOL_RUPEE + item.price}
-
-                    </Text>
-
-
-                    <View
-                        style={{
-                            marginVertical: 15
-                        }}
-                    >
-                        {
-                            //     <View
-                            //         style={{
-                            //             backgroundColor: 'red', width:50,
-                            //             height: 50
-                            //         }}
-                            //     ></View>
-                            this.drawVariants(item)
-                        }
-
-                    </View>
-
-
-                    <View
-                        style={{ flexDirection: 'row' }}
-                    >
-                        <View
+                    <View> */}
+                        <Card.Image imageSource={image}
                             style={{
-                                flex: 1
+                                height: 180, width: global.DEVICE_WIDTH - 20, marginTop: 10,
+                                marginHorizontal: 10
                             }}
+                            cover={false}
                         />
 
-                        {this.drawButtonView(item)}
+                        <View
+                            style={{
+                                padding: 10, backgroundColor: colors.WHITE, marginTop: 5,
+                                marginHorizontal: 10
+                            }}
+                        >
+                            <Text
+                                style={[styles.stripLabel]}
+                            >
+                                {item.name}
+                            </Text>
 
-                    </View>
+                            <Text
+                                style={[styles.labelSmall]}
+                            >
+                                {item.description}
+                            </Text>
 
-                </View>
+                            <Text
+                                style={[styles.labelSmall, { marginTop: 8 }]}
+                            >
 
-                {this.bottomView()}
-                {
-                    item.cart_quantity ? global.bottomBlockView() : <View />
-                }
+                                {item.quantity}
 
-            </View>
+                            </Text>
+
+                            <Text
+                                style={[styles.amount, { marginTop: 8 }]}
+                            >
+
+                                {constants.SYMBOL_RUPEE + item.price}
+
+                            </Text>
+
+
+                            <View
+                                style={{
+                                    marginVertical: 15
+                                }}
+                            >
+                                {
+                                    //     <View
+                                    //         style={{
+                                    //             backgroundColor: 'red', width:50,
+                                    //             height: 50
+                                    //         }}
+                                    //     ></View>
+                                    this.drawVariants(item)
+                                }
+
+                            </View>
+
+
+                            <View
+                                style={{ flexDirection: 'row' }}
+                            >
+                                <View
+                                    style={{
+                                        flex: 1
+                                    }}
+                                />
+
+                                {this.drawButtonView(item)}
+
+                            </View>
+
+                        </View>
+
+                        {this.bottomView()}
+                        {
+                            item.cart_quantity ? global.bottomBlockView() : <View />
+                        }
+                    {/* </View>
+
+                </ScrollView> */}
+
+            </View >
         );
     }
 
@@ -391,7 +411,6 @@ export default class ProductDetails extends Component {
                     style={[styles.plusContainer, {
                         marginTop: 10,
                         justifyContent: 'center',
-                        borderColor: colors.WHITE
                     }]}
                 >
                     <ActivityIndicator size="small" color={colors.DARKGRAY} />
@@ -408,26 +427,23 @@ export default class ProductDetails extends Component {
         return (
             <View
                 style={[styles.plusContainer, {
-                    marginTop: 10,
-                    borderColor: colors.ListViewBG
                 }]}
             >
 
-
                 <PlusView
-                    index={this.state.index}
+                    index={0}
                     type={constants.TYPE_MINUS}
                     onPress={this.onMinusClicked}
                 />
                 <Text
                     style={[styles.stripLabel, {
-                        textAlign: 'center', marginTop: 4
-                        , color: colors.GREY
+                        textAlign: 'center', fontFamily: 'PopinsBold', flex: undefined
+                        , color: colors.BLACK, fontSize: fonts._18, paddingHorizontal: 15
                     }]}
                 >{item.cart_quantity}</Text>
 
                 <PlusView
-                    index={this.state.index}
+                    index={0}
                     type={constants.TYPE_PLUS}
                     onPress={this.onPlusClicked}
                 />
@@ -437,7 +453,7 @@ export default class ProductDetails extends Component {
     }
 
 
-    
+
 
     bottomView() {
         return (

@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text,Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { observer, inject } from "mobx-react";
 import global from '../utility/global';
 import styles from '../styles/style';
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp,
+  } from 'react-native-responsive-screen';
+  
 
 @inject("cartStore")
 @observer
@@ -19,7 +24,7 @@ export default class CartBubble extends Component {
             return (
                 <View
                     style={[global.getCircleViewStyle(18),
-                    { backgroundColor: 'red', top: 7, right: 35, position: 'absolute' }]}
+                    { backgroundColor: 'red', top: 2, right: wp('5%'), position: 'absolute' }]}
                 >
                     <Text
                         style={styles.labelMini}
@@ -43,8 +48,8 @@ export default class CartBubble extends Component {
                     alignItems: 'center', justifyContent: 'center'
                 }}
             >
-                <Icon name={this.props.icon} size={25} color={this.props.tintColor} />
-
+                {/* <Icon name={this.props.icon} size={25} color={this.props.tintColor} /> */}
+                <Image style={{width:30,height:30}} source={this.props.icon} tintColor={this.props.tintColor} />
                  {this.getBubble(store)} 
             </View>
         )

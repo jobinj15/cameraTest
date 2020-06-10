@@ -16,7 +16,7 @@ import addressListStore from "./profile/addressListStore";
 import selectAddressStore from "./order/SelectAddressStore";
 import paymentsStore from "./order/PaymentsStore";
 import couponStore from "./order/CouponStore";
-import themeStore from "./ThemeStore";
+import filterStore from "./products/FilterStore";
 
 
 export default {
@@ -37,4 +37,5 @@ export default {
   paymentsStore: new paymentsStore(),
   productDetailsStore: new productDetailsStore(),
   couponStore: new couponStore(),
+  filterStore: new filterStore(),
 };

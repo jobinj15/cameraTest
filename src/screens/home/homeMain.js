@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, Image } from 'react-native';
+import { View, FlatList, ScrollView, Image } from 'react-native';
 import {
   Assets,
-  Constants,  
+  Constants,
   Button,
   Colors,
   Typography,
@@ -24,12 +24,12 @@ import ToolBar from '../../components/toolbar';
 
 const TAG = 'HomeTab'
 
-var cartCountApiData={
-  user_id : ''
+var cartCountApiData = {
+  user_id: ''
 }
 
- class HomeTab extends Component {
-  
+class HomeTab extends Component {
+
   constructor(props) {
     super(props);
     console.log(TAG + ' NAV: ' + this.props.navigation)
@@ -40,47 +40,123 @@ var cartCountApiData={
     return {
       header: (
         <ToolBar
-            title='Grocerie'
-            showTitleH = {true}
-            showBackButton={false}
-          />
+          title={constants.APP_NAME}
+          showTitleH={false}
+          showDropdown={true}
+          showEndButton={true}
+          endIcon={'ios-search'}
+          iconType={constants.IC_IONIC}
+          showBackButton={false}
+        />
       ),
     };
   };
 
 
-  navigateTo(){
+  navigateTo() {
     this.props.navigation.navigate('Products', {
       itemId: 86,
       otherParam: 'anything you want here',
     });
-  } 
+  }
 
-  componentDidMount(){
+  componentDidMount() {
     global.getItem(constants.USER).then(result => {
       if (!result) return;
 
       this.setUserIdToApiData(result)
 
       this.callApi()
-  });
+    });
 
   }
 
-  setUserIdToApiData(result){
-     cartCountApiData.user_id = result.user_id;
+  setUserIdToApiData(result) {
+    cartCountApiData.user_id = result.user_id;
   }
 
-  callApi(){
-   this.props.cartStore.getCartCount(global.sendAsFormData(cartCountApiData))
+  callApi() {
+    this.props.cartStore.getCartCount(global.sendAsFormData(cartCountApiData))
   }
+
+
+
+  getHeaders() {
+    return (
+      <View>
+        <ImpMessage />
+        <Banner
+          navigation={this.props.navigation}
+        />
+        <LabelStrip
+          style={{
+            marginTop: 40
+          }}
+          label={constants.TXT_CATEGORIES}
+        />
+        <Categories
+          style={{
+            marginTop: 5
+          }}
+          navigation={this.props.navigation}
+        />
+
+      </View>
+    )
+  }
+
+  getFooters() {
+    return (
+      <View>
+        <Image
+          style={{
+            height: 70,
+            width: global.DEVICE_WIDTH - 30,
+            alignSelf: 'center',
+            marginTop: 25
+          }}
+          source={require('../../assets/images/pic1.jpg')}
+        />
+
+        <LabelStrip
+          style={{
+            marginTop: 30
+          }}
+          label={constants.TXT_SEARCH_BYBRAND}
+        />
+
+        <SearchByBrands
+          style={{
+            marginTop: 8
+          }}
+        />
+
+        <LabelStrip
+          style={{
+            marginTop: 25
+          }}
+          label={constants.TXT_RECOMMENDATION}
+        />
+
+        <Recommendations
+          style={{
+            marginTop: 8
+          }}
+        />
+
+
+
+      </View>
+    )
+  }
+
 
 
   render() {
     return (
       <View style={[styles.styleFull, { padding: 0, backgroundColor: colors.WHITE }]}>
 
-        <ScrollView>
+        {/* <ScrollView>
           <View>
 
             <ImpMessage/>            
@@ -94,20 +170,19 @@ var cartCountApiData={
                 marginTop: 20
               }}
               label={constants.TXT_CATEGORIES}
-            />
+            /> */}
 
-            <Categories
+        {/* <Categories
               style={{
                 marginTop: 20
               }}
               navigation={this.props.navigation}
-            />
+            /> */}
 
-            {/* <Image
+        {/* <Image
               style={{
                 height: 70,
                 width:global.DEVICE_WIDTH-30,
-                backgroundColor:'red',
                 alignSelf:'center',
                 marginTop: 20
               }}
@@ -123,7 +198,7 @@ var cartCountApiData={
 
             <SearchByBrands
               style={{
-                marginTop: 20
+                marginVertical: 20
               }}
             />
 
@@ -133,12 +208,25 @@ var cartCountApiData={
               }}
               label={constants.TXT_RECOMMENDATION}
             />
- */}
+
 
           </View>
 
-        </ScrollView>
+        </ScrollView> */}
 
+        <FlatList
+          navigation={this.props.navigation}
+          extraData={this.state}
+          showsVerticalScrollIndicator={false}
+          data={[]}
+          keyExtractor={(item, index) => index.toString()}
+          ListHeaderComponent={
+            this.getHeaders()
+          }
+          ListFooterComponent={
+            this.getFooters()
+          }
+        />
 
 
       </View>

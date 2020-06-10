@@ -140,7 +140,7 @@ export default class MyOrders extends Component {
                 </Text>
 
                 <Text
-                    style={[styles.labelSmallX1, { marginLeft: 15 }]}
+                    style={[styles.labelSmallX1, { marginLeft: 15,color:colors.GREY}]}
                 >
                     {value}
 

@@ -182,7 +182,7 @@ export default class OrderDetails extends Component {
                                         </Text>
 
                                         <Text
-                                            style={[styles.labelSmallX1, { marginTop: 10 }]}
+                                            style={[styles.amount, { marginTop: 10 }]}
                                         >
                                             {constants.SYMBOL_RUPEE + '307.80'}
                                         </Text>
@@ -222,7 +222,7 @@ export default class OrderDetails extends Component {
     }
 
 
-    drawKeyValue(key, value, moreStyles = {}, fontColor = {}) {
+    drawKeyValue(key, value, moreStyles = {}, fontColor = {color:colors.DARKGRAY}) {
 
         return (
             <View
@@ -234,7 +234,7 @@ export default class OrderDetails extends Component {
             >
 
                 <Text
-                    style={[styles.stripLabel, { flex: 1, fontWeight: 'PopinsMed' }, fontColor]}
+                    style={[styles.labelKey, { flex: 1, fontWeight: 'PopinsMed' }, fontColor]}
                 >
                     {key}
 

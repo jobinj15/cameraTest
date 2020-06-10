@@ -55,6 +55,30 @@ export default userRepo = {
        .done();
  
    },
+
+
+   getFilter(callback) {
+ 
+     fetch(URL_FILE.urlGetFilters, {
+       method: "POST",
+       headers: global.getEncodedHeader(),
+     })
+       .then(response => response.json())
+       .then(responseData => {
+         console.log("Data from getFilter Api : " + JSON.stringify(responseData));
+         var hasError = responseData.error;
+         callback(hasError, responseData);
+ 
+       })
+       .catch(err => {
+         console.log("response error :: " + err);
+         callback(true, global.getExceptionMessage());
+       })
+       .done();
+ 
+   },
+ 
+ 
  
 
   getProducts(data, callback) {
