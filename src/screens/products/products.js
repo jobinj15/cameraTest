@@ -68,13 +68,13 @@ export default class Products extends Component {
         listApiData.cat_id = item.id
         prodStore.cat_id = item.id
 
+        this.updateToolbarTitle(item.name)
 
         console.log(TAG, 'Item: ' + JSON.stringify(item));
     }
 
     componentDidMount() {
         prodStore.onApiActionDone = this.onApiActionDone;
-        this.updateToolbarTitle('Fruits')
 
         global.getItem(constants.USER).then(result => {
             if (!result) return;
@@ -89,11 +89,12 @@ export default class Products extends Component {
     }
 
     static navigationOptions = ({ navigation }) => {
-        console.log('Navigation ProdList: ' + navigation)
+        console.log('Navigation ProdList: ' + JSON.stringify(navigation.state.params))
+        // constants.TXT_PRODUCTS
         return {
             header: (
                 <ToolBar
-                    title={constants.TXT_PRODUCTS}
+                    title={navigation.state.params.Title}
                     showTitle={true}
                     showEndButton={true}
                     endIcon={'settings'}
@@ -367,9 +368,10 @@ export default class Products extends Component {
     }
 
     updateToolbarTitle = (titleText) => {
-        const { setParams } = this.props.navigation;
         console.log('updateToolbarTitle: ' + titleText)
-        setParams({ title: titleText })
+        this.props.navigation.setParams({
+            Title: titleText,
+        });    
     }
 
 

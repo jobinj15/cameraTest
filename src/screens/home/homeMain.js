@@ -36,7 +36,8 @@ class HomeTab extends Component {
   }
 
   static navigationOptions = ({ navigation }) => {
-    //return header with Custom View which will replace the original header 
+    //return header with Custom View which will replace the original header
+ 
     return {
       header: (
         <ToolBar
