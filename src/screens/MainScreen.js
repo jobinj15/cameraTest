@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, Image, StyleSheet, Platform } from 'react-native';
 import HomeContainer from './home/homeContainer';
 import CartContainer from './order/CartContainer';
+import CategoryContainer from './home/CategoryContainer';
 import ProfileContainer from './profile/profileContainer';
 import ColorsTab from './home/colorsTab';
 import BodyChart from './test/bodychart';
@@ -101,8 +102,14 @@ const screens = {
   Home: {
     screen: HomeContainer,
   },
-  Categories : ColorsTab,
-  Cart: CartContainer,
+  Categories: () => <CategoryContainer/>,
+  Cart: {
+    screen:CartContainer,
+    navigationOptions: {      
+      gesturesEnabled: true,
+      tabBarVisible: false,
+   }
+  },
   Like : Dummy,
   Profile: ProfileContainer,
 }

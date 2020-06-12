@@ -429,6 +429,12 @@ var styles = {
         alignItems: 'center', justifyContent: 'center',
         borderRadius: 15, backgroundColor: colors.PRODUCT_BG
     },
+
+    productThumbnail:{
+        resizeMode: 'contain',
+        height: 110, 
+        width: 110,
+    },
     hr: {
         backgroundColor: 'lightgrey',
         // backgroundColor: 'rgba(0, 0, 0, 0.4)',

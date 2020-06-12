@@ -187,7 +187,7 @@ export default class ToolBar extends Component {
 
       case constants.IC_FONTISCO:
         return (
-          <IconFIS name={icon} size={25} color={colors.BLACK} />
+          <IconFIS name={icon} size={20} color={colors.BLACK} />
         )
 
     }

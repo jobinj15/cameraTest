@@ -2,7 +2,7 @@ import {Typography, Colors} from 'react-native-ui-lib';
 
 const colors = {
   GREY: "#999",
-  GREY2: "#7f0000",
+  GREY2: "#c6c6c6",
   DISCOUNT: "#c6c6c6",
   TAB_INACTIVE: "#b8b8b8",
   GRAD_RED1 : "#ff7a5f",

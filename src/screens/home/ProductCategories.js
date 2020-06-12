@@ -19,7 +19,7 @@ import IconM from 'react-native-vector-icons/MaterialCommunityIcons'
 
 var context;
 
-class ProfileList extends Component {
+class ProductCategories extends Component {
     constructor(props) {
         super(props);
 
@@ -351,4 +351,4 @@ class ProfileList extends Component {
 
 }
 
-export default ProfileList
+export default ProductCategories

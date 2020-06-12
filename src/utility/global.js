@@ -87,6 +87,10 @@ export default global = {
   BANNERHEIGHT: normalizeHeight(160),
   DEVICE_WIDTH: Dimensions.get('window').width,
   DEVICE_HEIGHT: Dimensions.get('window').height,
+  IMAGE:{
+    THUMBNAIL_PLACEHOLDER:require('../assets/images/placeholder.jpeg')
+  },
+
   CONSTANTS: {
     ID: 'id',
     USER_ID: 'user_id',

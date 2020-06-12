@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
 import {
@@ -9,56 +9,84 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import { observer, inject } from 'mobx-react';
+import {observer, inject} from 'mobx-react';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+
+import colors from '../../styles/colors';
+
 import Ripple from 'react-native-material-ripple';
 import constants from '../../utility/constants';
 import ImpMessage from './ImpMessage';
-import Banner from './banner'
+import Banner from './banner';
 import LabelStrip from './labelStrip';
 import SearchByBrands from './searchByBrands';
+import ToolBar from '../../components/toolbar';
+
+import IconI from 'react-native-vector-icons/Ionicons';
+import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
+
 @inject('catHomeStore')
 @observer
 export default class Categories extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      type: 'normal',
+    };
   }
+
+  static navigationOptions = ({navigation}) => {
+    //return header with Custom View which will replace the original header
+    return {
+      header: (
+        <ToolBar
+          title='Categories'
+          showTitleH={false}
+          showDropdown={true}
+          showBackButton={false}
+        />
+      ),
+    };
+  };
 
   componentDidMount() {
     const store = this.props.catHomeStore;
-    store.getCategories();
+    // const type = this.props.type;
+    console.log(' type :: ' + this.props.type);
+    this.setState({type: this.props.type}, () => {
+      store.getCategories();
+    });
   }
 
   //0 4 8
   render() {
     return (
       <View style={[{}, this.props.style ? this.props.style : {}]}>
+
         <FlatList
           navigation={this.props.navigation}
           extraData={this.state}
-          style={{ width: Dimensions.get('window').width }}
-          contentContainerStyle={{ alignItems: 'flex-start' }}
+          style={{width: Dimensions.get('window').width}}
+          contentContainerStyle={{alignItems: 'flex-start'}}
           showsVerticalScrollIndicator={false}
           data={this.props.catHomeStore.categories}
           renderItem={this.renderRow.bind(this)}
           ItemSeparatorComponent={this.renderSeparator}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => index.toString()}      
           numColumns={4}
         />
       </View>
     );
   }
 
-
   navigateTo(item) {
     this.props.navigation.navigate('Products', {
       [constants.PARAM_ITEM]: item,
     });
   }
-
 
   getRandomColor() {
     var letters = '0123456789ABCDEF';
@@ -69,7 +97,7 @@ export default class Categories extends Component {
     return color;
   }
 
-  renderRow({ item, index }) {
+  renderRow({item, index}) {
     // console.log('onCategories renderRow ' + JSON.stringify(item))
 
     var rowStyles = {
@@ -89,19 +117,53 @@ export default class Categories extends Component {
     // }
 
     var image = require('../../assets/images/pic1.jpg');
-    if (item.img) image = { uri: item.img };
+    if (item.img) image = {uri: item.img};
 
-    return (
-      <Ripple
-        onPress={() => {
-          this.navigateTo(item);
-        }}
-        style={{
-          padding: 10,
-          width: wp('25%'),
-        }}
-        >
-        
+    if (this.state.type && this.state.type == 'main') {
+      return (
+        <Ripple
+          onPress={() => {
+            this.navigateTo(item);
+          }}
+          style={{
+            padding: 10,
+            width: wp('100%')
+          }}>
+          <View style={{flexDirection: 'row', flex: 1}}>
+            <View style={styles.productImage}>
+              <Image source={image} style={styles.productThumbnail} />
+            </View>
+
+            <View
+              style={{
+                justifyContent: 'center',
+                flex: 1,
+              }}>
+              <Text
+                style={[
+                  styles.stripLabel,
+                  {
+                    flex: undefined,
+                  },
+                ]}
+                numberOfLines={2}>
+                {item.name}
+              </Text>
+            </View>
+          </View>
+          {/* <View style={[global.getCircleViewStyle(80),{backgroundColor:item.color}]}> */}
+        </Ripple>
+      );
+    } else {
+      return (
+        <Ripple
+          onPress={() => {
+            this.navigateTo(item);
+          }}
+          style={{
+            padding: 10,
+            width: wp('25%'),
+          }}>
           {/* <View style={[global.getCircleViewStyle(80),{backgroundColor:item.color}]}> */}
           <View
             style={{
@@ -114,27 +176,25 @@ export default class Categories extends Component {
               backgroundColor: item.color,
             }}>
             {/* <Image
-                            style={styles.styleFull}
-                            source={item.image}
-                            resizeMode="contain"
-                        /> */}
+                              style={styles.styleFull}
+                              source={item.image}
+                              resizeMode="contain"
+                          /> */}
 
             <Image
-              style={{ height: 50, width: 50 }}
+              style={{height: 50, width: 50}}
               source={image}
               resizeMode="contain"
             />
           </View>
 
           <Text
-            style={[
-              styles.labelSmall,
-              { marginTop: 8, textAlign: 'center' },
-            ]}
+            style={[styles.labelSmall, {marginTop: 8, textAlign: 'center'}]}
             numberOfLines={1}>
             {item.name}
           </Text>
-      </Ripple>
-    );
+        </Ripple>
+      );
+    }
   }
 }

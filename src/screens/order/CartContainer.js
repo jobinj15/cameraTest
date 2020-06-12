@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import Cart from './Cart';
+import Cart from './cart';
 import ApplyCoupon from './ApplyCoupon';
 import SelectAddress from './SelectAddress';
 import SelectPayment from './SelectPayment';
@@ -10,37 +10,34 @@ import AddressList from '../profile/AddressList';
 import OrderSuccess from './OrderSuccess';
 import PayWithPayU from './PayWithPayU';
 
-const onBoardStack = createStackNavigator(
-  {
+const onBoardStack = createStackNavigator({
     ApplyCoupon: {
-      screen: ApplyCoupon,
+        screen: ApplyCoupon,
     },
     Cart: {
-      screen: Cart,
+        screen: Cart,
     },
     PayWithPayU: {
-      screen: PayWithPayU,
+        screen: PayWithPayU,
     },
     SelectAddress: {
-      screen: SelectAddress,
+        screen: SelectAddress,
     },
     SelectPayment: {
-      screen: SelectPayment,
+        screen: SelectPayment,
     },
     OrderSuccess: {
-      screen: OrderSuccess,
+        screen: OrderSuccess,
     },
     AddAddress: {
-      screen: AddAddress,
+        screen: AddAddress,
     },
     AddressList: {
-      screen: AddressList,
+        screen: AddressList,
     },
-  },
-  {
+}, {
     initialRouteName: 'Cart',
-  },
-);
+}, );
 
 const Container = createAppContainer(onBoardStack);
 
