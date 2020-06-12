@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import ToolBar from '../../components/toolbar'
 import fonts from '../../utility/fonts';
+import Ripple from 'react-native-material-ripple';
 
 var listApiData = {
     page_no: 0,
@@ -148,13 +149,14 @@ class Cart extends Component {
                     showsVerticalScrollIndicator={false}
                     style={{ flex: 1 }}
                 > */}
-                <View style={[styles.styleFull]}>
+                <View style={[styles.styleFull,{backgroundColor:colors.ListViewBG}]}>
 
                     <FlatList
                         navigation={this.props.navigation}
                         extraData={this.state}
                         showsVerticalScrollIndicator={false}
                         data={cartStore.cart}
+                        style={{ backgroundColor: colors.WHITE}}
                         refreshing={cartStore.refreshing}
                         onRefresh={this.handleRefresh.bind(this)}
                         renderItem={this.renderRow.bind(this)}
@@ -181,11 +183,11 @@ class Cart extends Component {
 
     drawButtonView(item, index) {
 
-    
+
         if (item.loading)
             return (
                 <View
-                    style={[styles.plusContainer,{justifyContent:'center'}]}
+                    style={[styles.plusContainer, { justifyContent: 'center' }]}
                 >
                     <ActivityIndicator size="small" color={colors.DARKGRAY} />
 
@@ -223,8 +225,8 @@ class Cart extends Component {
                 />
                 <Text
                     style={[styles.stripLabel, {
-                        textAlign: 'center',fontFamily:'PopinsBold',flex:undefined
-                        , color: colors.BLACK,fontSize : fonts._18,paddingHorizontal:15
+                        textAlign: 'center', fontFamily: 'PopinsBold', flex: undefined
+                        , color: colors.BLACK, fontSize: fonts._18, paddingHorizontal: 15
                     }]}
                 >{item.cart_quantity}</Text>
 
@@ -242,7 +244,7 @@ class Cart extends Component {
     renderSeparator = () => {
         return (
             <View
-                style={styles.productSeperator}
+                style={styles.productSeperator2}
             />
         );
     };
@@ -339,85 +341,96 @@ class Cart extends Component {
                 }
             >
 
+
                 <View
                     style={{
-                        paddingHorizontal: 20,
-                        paddingVertical: 10,
-                        marginTop: 8,
-                        marginBottom:70,
-                        flexDirection: 'row',
+                        marginBottom: 70,
                         alignItems: 'center',
-                        backgroundColor: colors.WHITE
                     }}
                 >
 
-
-                    <IconM name={'brightness-percent'} size={30} color={colors.DARKGRAY} />
+                    <View
+                        style={{
+                            height: 8,
+                            backgroundColor: colors.ListViewBG,
+                            alignSelf: 'stretch'
+                        }}
+                    />
 
                     <View
                         style={{
-                            marginLeft: 15,
-                            flex: 1
+                            paddingHorizontal: 20,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            paddingVertical: 10
                         }}
                     >
-
-                        <Text
-                            style={{
-                                fontSize: fonts._12,
-                                fontWeight: cartStore.couponApplied ? 'PopinsBold' : 'PopinsReg',
-                                color: colors.BLACK
-                            }}
-                        >
-                            {cartStore.couponApplied && cartStore.couponCode ?
-                                global.capitalize(cartStore.couponCode) : global.capitalize(constants.TXT_APPLY_COUPON)}{' '}
-                        </Text>
-
-                        {
-                            cartStore.couponApplied &&
-                            <Text
-                                style={{
-                                    fontSize: fonts._10,
-                                    color: colors.DARKGRAY
-                                }}
-                            >
-                                {'Offer Applied on the bill'}{' '}
-                            </Text>
-                        }
-
-                    </View>
-
-                    <View
-
-                    >
-
-                    </View>
-
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.showAlertDialog(DIALOG_REMOVE_COUPON)
-                        }}
-                        underlayColor='transparent'
-                    >
+                        <IconM name={'brightness-percent'} size={30} color={colors.DARKGRAY} />
 
                         <View
-                            style={cartStore.couponApplied ? global.getCircleViewStyle(20, { backgroundColor: colors.LIGHT_GRAY_TEXT }) :
-                                global.getCircleViewStyle(20, { backgroundColor: colors.WHITE })}
+                            style={{
+                                marginLeft: 15,
+                                flex: 1
+                            }}
                         >
+
+                            <Text
+                                style={{
+                                    fontSize: fonts._12,
+                                    fontWeight: cartStore.couponApplied ? 'PopinsBold' : 'PopinsReg',
+                                    color: colors.BLACK
+                                }}
+                            >
+                                {cartStore.couponApplied && cartStore.couponCode ?
+                                    global.capitalize(cartStore.couponCode) : global.capitalize(constants.TXT_APPLY_COUPON)}{' '}
+                            </Text>
+
                             {
                                 cartStore.couponApplied &&
-                                <Icon name={'md-close'} size={25} color={colors.DARKGRAY} />
+                                <Text
+                                    style={{
+                                        fontSize: fonts._10,
+                                        color: colors.DARKGRAY
+                                    }}
+                                >
+                                    {'Offer Applied on the bill'}{' '}
+                                </Text>
                             }
-
-
-                            {
-                                !cartStore.couponApplied &&
-                                <Icon name={'ios-arrow-forward'} size={25} color={colors.DARKGRAY} />
-                            }
-
 
                         </View>
-                    </TouchableOpacity>
 
+                        <View
+
+                        >
+
+                        </View>
+
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.showAlertDialog(DIALOG_REMOVE_COUPON)
+                            }}
+                            underlayColor='transparent'
+                        >
+
+                            <View
+                                style={cartStore.couponApplied ? global.getCircleViewStyle(20, { backgroundColor: colors.LIGHT_GRAY_TEXT }) :
+                                    global.getCircleViewStyle(20, { backgroundColor: colors.WHITE })}
+                            >
+                                {
+                                    cartStore.couponApplied &&
+                                    <Icon name={'md-close'} size={25} color={colors.DARKGRAY} />
+                                }
+
+
+                                {
+                                    !cartStore.couponApplied &&
+                                    <Icon name={'ios-arrow-forward'} size={25} color={colors.DARKGRAY} />
+                                }
+
+
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
             </TouchableWithoutFeedback>
@@ -427,16 +440,14 @@ class Cart extends Component {
 
     bottomView() {
         return (
-            <TouchableWithoutFeedback
+            <Ripple
                 onPress={() => {
                     if (cartStore.total)
                         this.navigateTo('SelectAddress')
                 }}
+                style={styles.bottomView}
+                rippleColor={colors.RIPPLE}
             >
-                <View
-                    style={styles.bottomView}
-                >
-
                     <Text
                         style={[styles.stripLabel, { color: colors.WHITE }]}
                     >
@@ -449,9 +460,7 @@ class Cart extends Component {
                         {constants.TXT_CHECKOUT}
                     </Text>
 
-
-                </View>
-            </TouchableWithoutFeedback>
+            </Ripple>
         )
     }
 
@@ -466,7 +475,7 @@ class Cart extends Component {
             variant = item.variants[0].value;
 
         if (Array.isArray(item.images) && item.images.length) {
-            image = { uri: item.images[0].images };
+            image = { uri: item.images[0] };
         }
 
         return (
@@ -474,11 +483,11 @@ class Cart extends Component {
             <TouchableWithoutFeedback
                 onPress={
                     () => {
-                        this.navigateTo(index)
+                        // this.navigateTo(index)
                     }
                 }
             >
-                <Card style={{ flex: 1, borderRadius: 0 }} key={index}>
+                <Card style={{ flex: 1, borderRadius: 0 }} key={index} elevation={0} enableShadow={false}>
 
                     <View
                         style={{ paddingHorizontal: 15, paddingVertical: 15 }}

@@ -126,6 +126,16 @@ var styles = {
         fontSize: fonts._20,
         color: 'black'
     },
+    topLeft:{
+      position:'absolute',
+      top:10,
+      left:10
+    },
+    productKey:{
+        fontSize: fonts._14,
+        fontFamily: 'PopinsBold',        
+        color: colors.BLACK
+    },
     bigBoldOnBoard: {
         fontFamily: 'PopinsBold',
         fontSize: fonts._24,
@@ -164,12 +174,13 @@ var styles = {
         fontSize: fonts._18
     },
     variant: {
-        padding: 8,
+        paddingVertical: 5,
+        paddingHorizontal: 15,
         fontSize: fonts._14,
-        fontFamily: 'PopinsReg',
+        fontFamily: 'PopinsMed',
         borderRadius: 5,
-        backgroundColor: colors.GREY,
-        color: colors.WHITE
+        marginTop:2,
+        borderWidth:1
     },
     filterItem: {
         paddingVertical: 8,
@@ -202,7 +213,7 @@ var styles = {
     labelSmall: {
         color: colors.GREY,
         fontFamily: 'PopinsReg',
-        fontSize: fonts._10
+        fontSize: fonts._12
     },
     addressListCard: {
         flex: 1,
@@ -285,8 +296,9 @@ var styles = {
         backgroundColor: colors.LIGHT_GRAY
     },
     productSeperator2: {
-        height: 1,
-        backgroundColor: colors.WHITE
+        height: 0.5,
+        marginHorizontal:25,
+        backgroundColor: colors.SEPARATOR
     },
     banner: {
         width: '100%',
@@ -339,6 +351,7 @@ var styles = {
         paddingVertical: 10,
         justifyContent: "center",
         alignSelf: "center",
+        rippleColor: colors.PINK_4,
         alignItems: "center",
         paddingHorizontal: 30,
         borderRadius: 5,

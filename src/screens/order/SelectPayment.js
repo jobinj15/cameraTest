@@ -8,6 +8,7 @@ import { observer, inject } from "mobx-react";
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
 import ToolBar from '../../components/toolbar';
+import Ripple from 'react-native-material-ripple';
 
 var confirmApiData = {
     user_id: '',
@@ -54,19 +55,18 @@ class SelectPayment extends Component {
         store.selectedPayMode = undefined
     }
 
-    // static navigationOptions = ({ navigation }) => {
-    //     //return header with Custom View which will replace the original header 
-    //     return {
-    //         header: (
-    //             <ToolBar
-    //                 title={'Select Payment'}
-    //                 showTitle={true}
-    //                 showBackButton={true}
-    //             />
-    //         ),
-    //     };
-    // };
-
+    static navigationOptions = ({ navigation }) => {
+        return {
+            header: (
+                <ToolBar
+                    title={'Select Payment'}
+                    showTitle={true}
+                    navigation={navigation}
+                    showBackButton={true}
+                />
+            ),
+        };
+    };
     componentDidMount() {
         // this.props.navigation = this.props.navigation
         store.setAfterPayment(this.afterPaymentDone);
@@ -97,32 +97,30 @@ class SelectPayment extends Component {
             return (<View />)
 
         return (
-            <TouchableWithoutFeedback
+            <Ripple
                 onPress={() => {
-                    if(store.selectedPayMode.name!='COD')
-                    this.navigateTo();
+                    if (store.selectedPayMode.name != 'COD')
+                        this.navigateTo();
                     else
-                    store.confirmOrder(global.sendAsFormData(confirmApiData))
+                        store.confirmOrder(global.sendAsFormData(confirmApiData))
                 }}
+                style={[styles.bottomView, { height: 45 }]}
+                rippleColor={colors.RIPPLE}
             >
-                <View
-                    style={[styles.bottomView, { height: 45 }]}
+
+                <Text
+                    style={[styles.stripLabel, { color: colors.WHITE }]}
                 >
+                    {constants.TXT_TOTAL + constants.SYMBOL_RUPEE + this.state.total}
+                </Text>
 
-                    <Text
-                        style={[styles.stripLabel, { color: colors.WHITE }]}
-                    >
-                        {constants.TXT_TOTAL + constants.SYMBOL_RUPEE + this.state.total}
-                    </Text>
+                <Text
+                    style={[styles.stripLabel, { color: colors.WHITE, flex: undefined }]}
+                >
+                    {constants.TXT_CONFIRM_ORDER}
+                </Text>
 
-                    <Text
-                        style={[styles.stripLabel, { color: colors.WHITE, flex: undefined }]}
-                    >
-                        {constants.TXT_CONFIRM_ORDER}
-                    </Text>
-
-                </View>
-            </TouchableWithoutFeedback>
+            </Ripple>
         )
     }
 

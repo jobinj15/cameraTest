@@ -25,6 +25,7 @@ export default class Reommendations extends Component {
                     showsVerticalScrollIndicator={false}
                     data={this.props.recoHomeStore.recomm}
                     renderItem={this.renderRow.bind(this)}
+                    style={{backgroundColor:colors.WHITE}}
                     ItemSeparatorComponent={this.renderSeparator}
                     keyExtractor={(item, index) => index.toString()}
 
@@ -54,7 +55,7 @@ export default class Reommendations extends Component {
                     backgroundColor={colors.GREEN_4}
                     label={constants.TXT_ADDTOCART}
                     onPress={() => {
-                        this.onAddToCart(index);
+                        // this.onAddToCart(index);
                     }}
                     labelStyle={{ fontFamily: 'PopinsBold', fontSize: fonts._10}}
                     style={[styles.addContainer]}
@@ -74,7 +75,7 @@ export default class Reommendations extends Component {
                 <PlusView
                     index={index}
                     type={constants.TYPE_MINUS}
-                    onPress={this.onMinusClicked}
+                    // onPress={this.onMinusClicked}
                 />
                 <Text
                     style={[styles.stripLabel, {
@@ -86,7 +87,7 @@ export default class Reommendations extends Component {
                 <PlusView
                     index={index}
                     type={constants.TYPE_PLUS}
-                    onPress={this.onPlusClicked}
+                    // onPress={this.onPlusClicked}
                 />
             </View>
         )
@@ -193,7 +194,7 @@ export default class Reommendations extends Component {
                     }
                 }
             >
-                <Card style={{ flex: 1, borderRadius: 0 }} key={index}>
+                <Card style={{ flex: 1, borderRadius: 0 }} key={index} elevation={0} enableShadow={false}>
 
                     <View
                         style={{ paddingHorizontal: 15, paddingVertical: 15 }}

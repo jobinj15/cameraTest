@@ -6,7 +6,7 @@ import colors from '../../styles/colors';
 import constants from '../../utility/constants';
 import ToolBar from '../../components/toolbar';
 import { StackActions, NavigationActions } from 'react-navigation';
-
+import Ripple from 'react-native-material-ripple';
 
 
 class OrderSuccess extends Component {
@@ -74,21 +74,20 @@ class OrderSuccess extends Component {
 
                 </Text>
 
-                <TouchableWithoutFeedback
+                <Ripple
                     onPress={() => {
                         this.backHome();
                     }}
+                    style={[styles.largeButton, { width: undefined, marginLeft: 0, paddingHorizontal: 40 }]}
+                    rippleColor={colors.WHITE}
                 >
-                    <View
-                        style={[styles.largeButton, { width: undefined, marginLeft: 0, paddingHorizontal: 40 }]}
-                    >
+                    
                         <Text
                             style={styles.buttonText}
                         >
                             {constants.TXT_DONE}{" "}
                         </Text>
-                    </View>
-                </TouchableWithoutFeedback>
+                </Ripple>
 
 
             </View>

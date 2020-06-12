@@ -13,7 +13,8 @@ import constants from '../../utility/constants';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Dialog, RadioGroup, RadioButton } from 'react-native-ui-lib';
 import ToolBar from '../../components/toolbar';
-
+import IconI from 'react-native-vector-icons/Ionicons'
+import IconM from 'react-native-vector-icons/MaterialCommunityIcons'
 
 
 var context;
@@ -22,34 +23,53 @@ class ProfileList extends Component {
     constructor(props) {
         super(props);
 
+        this.showLogoutAlert = this.showLogoutAlert.bind(this)        
+        this.logout = this.logout.bind(this)        
+
         this.state = {
             isDialogVisible: false,
             currTheme: themeStore.theme,
             data: [
                 {
                     text: 'Account',
-                    icon: '',
+                    desc: constants.TXT_ACC_DESC,
+                    icon: 'account',
                     navigate: ''
                 },
                 {
-                    text: 'Address',
-                    icon: '',
-                    navigate: 'Addresses'
-                },
-                {
                     text: 'Orders',
-                    icon: '',
+                    desc: constants.TXT_ORDERS_DESC,
+                    icon: 'dropbox',
                     navigate: 'MyOrders'
                 },
                 {
-                    text: 'Theme',
-                    icon: '',
-                    onClick: this.openThemeDialog.bind(this)
-                }
+                    text: 'Address',
+                    desc: constants.TXT_ADDR_DESC,
+                    icon: 'map-marker',
+                    navigate: 'Addresses'
+                },
+                {
+                    text: 'Logout',
+                    desc: '',
+                    onClick : this.showLogoutAlert,
+                    icon: 'logout',
+                    navigate: ''
+                },
+                // {
+                //     text: 'Theme',
+                //     icon: '',
+                //     onClick: this.openThemeDialog.bind(this)
+                // }
 
             ]
 
         }
+    }
+
+    
+
+    showLogoutAlert(){
+        global.showAlert(constants.TITLE_DELETE, constants.DES_LOGOUT, this.logout);
     }
 
     openThemeDialog() {
@@ -87,29 +107,30 @@ class ProfileList extends Component {
         BackHandler.removeEventListener("hardwareBackPress", this.handleBack);
     }
 
-    backHome() {
+    logout() {
         const resetAction = StackActions.reset({
             index: 0,
             key: null,
             actions: [NavigationActions.navigate({
-                routeName: 'Home', params: {
-                    // navigator: this.props.navigation
+                routeName: 'OnBoard', params: {
                 }
-            })]
+            })]cd 
         });
 
         this.props.navigation.dispatch(resetAction);
+        global.storeItem(constants.USER,null)
 
     }
 
-
+    
     static navigationOptions = ({ navigation }) => {
         //return header with Custom View which will replace the original header 
         return {
             header: (
                 <ToolBar
                     title={constants.TXT_PROFILE}
-                    showTitleH={true}
+                    showTitleH={false}
+                    showDropdown={true}
                     showBackButton={false}
                 />
             ),
@@ -140,7 +161,7 @@ class ProfileList extends Component {
                 themeStore.theme = index;
                 prefs.theme = index;
                 global.storeItem(constants.PREFS, prefs)
-                this.backHome()
+                // this.logout()
             })
         }
         this.closeDialog();
@@ -189,13 +210,18 @@ class ProfileList extends Component {
 
     render() {
         return (
-            <View style={[styles.styleFull, { backgroundColor: colors.ListViewBG }]}>
+            <View style={[styles.styleFull, { backgroundColor: colors.WHITE, paddingHorizontal: 5 }]}>
+
 
                 <FlatList
                     navigation={this.props.navigation}
                     extraData={this.state}
+                    style={{backgroundColor:colors.WHITE}}
                     showsVerticalScrollIndicator={false}
                     data={this.state.data}
+                    ListHeaderComponent={
+                        this.getHeader()
+                    }
                     renderItem={this.renderRow.bind(this)}
                     ItemSeparatorComponent={this.renderSeparator}
                     keyExtractor={(item, index) => index.toString()}
@@ -215,10 +241,53 @@ class ProfileList extends Component {
         );
     }
 
+    getHeader() {
+        return (
+            <View
+                style={{
+                    alignSelf: 'stretch',
+                    padding: 5,
+                    alignItems: 'center',
+                    marginBottom: 15,
+                    marginTop:5,
+                    flexDirection: 'row'
+                }}
+            >
+
+                <View
+                    style={global.getCircleViewStyle(90, { backgroundColor: colors.DISCOUNT })}
+                >
+                </View>
+
+                <View
+                    style={{ flex: 1, marginLeft: 15 }}
+                >
+
+                    <Text
+                        style={[styles.productKey, {
+                            alignSelf: 'stretch', fontSize: fonts._16,
+                        }]}
+                    >
+                        {'Will Smith'}
+                    </Text>
+
+                    <Text
+                        style={[styles.labelSmall, { color: colors.DISCOUNT, alignSelf: 'stretch' }]}
+                        numberOfLines={1}
+                    >
+                        {'will.smith@storeinsta.com'}
+                    </Text>
+                </View>
+
+            </View>
+
+        )
+    }
+
     renderSeparator = () => {
         return (
             <View
-                style={styles.productSeperator}
+                style={styles.productSeperator2}
             />
         );
     };
@@ -238,18 +307,43 @@ class ProfileList extends Component {
             >
 
                 <View
-                    style={[styles.styleFull, { paddingVertical: 10, paddingHorizontal: 15, backgroundColor: colors.WHITE }]}
+                    style={[styles.styleFull, {
+                        paddingVertical: 10, paddingHorizontal: 10,
+                        flexDirection: 'row', alignItems: 'center',
+                        backgroundColor: colors.WHITE
+                    }]}
+
                 >
 
-                    <Text
-                        style={[styles.labelProfile]}
-                    >
-                        {item.text}
+                    <IconM name={item.icon} size={30} color={colors.DISCOUNT} />
 
-                    </Text>
+                    <View
+                        style={{ flex: 1, marginLeft: 15 }}
+                    >
+
+                        <Text
+                            style={[styles.productKey]}
+                        >
+                            {item.text}
+
+                        </Text>
+
+                        {
+                            item.desc ? <Text
+                                style={[styles.labelSmall, { color: colors.DISCOUNT }]}
+                            >
+                                {item.desc}
+                            </Text> : <View />
+                        }
+
+
+                    </View>
+
+                    <IconI name={'ios-arrow-forward'} size={25} color={colors.BLACK} />
 
 
                 </View>
+
             </TouchableWithoutFeedback>
 
         )

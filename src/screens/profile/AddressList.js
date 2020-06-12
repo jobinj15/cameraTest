@@ -7,6 +7,8 @@ import { observer, inject } from "mobx-react";
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import ToolBar from '../../components/toolbar';
+import Ripple from 'react-native-material-ripple';
 
 var listApiData = {
     page_no: 0,
@@ -139,24 +141,20 @@ export default class AdressList extends Component {
 
     bottomView() {
         return (
-            <TouchableWithoutFeedback
+            <Ripple
                 onPress={() => {
                     this.navigateTo('AddAddress')
                 }}
+                rippleColor={colors.RIPPLE}
+                style={styles.bottomView}
             >
-                <View
-                    style={styles.bottomView}
+                <Text
+                    style={[styles.stripLabel, { color: colors.WHITE, textAlign: 'center' }]}
                 >
+                    {constants.TXT_ADD_ADDRESS}
+                </Text>
 
-                    <Text
-                        style={[styles.stripLabel, { color: colors.WHITE, textAlign: 'center' }]}
-                    >
-                        {constants.TXT_ADD_ADDRESS}
-                    </Text>
-
-                </View>
-
-            </TouchableWithoutFeedback>
+            </Ripple>
         )
     }
 
@@ -172,6 +170,19 @@ export default class AdressList extends Component {
     handleRadioClick(index) {
         store.toggleSelection(index, this.props.navigation)
     }
+
+    static navigationOptions = ({ navigation }) => {
+        return {
+            header: (
+                <ToolBar
+                    title={'My Address'}
+                    showTitle={true}
+                    navigation={navigation}
+                    showBackButton={true}
+                />
+            ),
+        };
+    };
 
     renderRow({ item, index }) {
 
@@ -237,24 +248,27 @@ export default class AdressList extends Component {
                         style={[styles.topRight]}
                     >
 
-                        <TouchableWithoutFeedback
+                        <Ripple
                             onPress={() => {
                                 this.navigateTo('AddAddress', constants.MODE_EDIT, item)
                             }}
+                            rippleColor={colors.RIPPLE}
                         >
                             <Icon name="edit" size={20} color={colors.GREY} />
-                        </TouchableWithoutFeedback>
+                        </Ripple>
 
                         {
                             // !item.selected &&
-                            <TouchableWithoutFeedback
+                            <Ripple
                                 onPress={() => {
                                     this.state.deleteIndex = index;
                                     global.showAlert(constants.TITLE_DELETE, constants.DES_DEL, this.onDeleteYes)
                                 }}
+                                rippleColor={colors.RIPPLE}
+                                style={{ marginLeft: 10 }}
                             >
-                                <Icon name="delete" size={20} color={colors.GREY} style={{ marginLeft: 10 }} />
-                            </TouchableWithoutFeedback>
+                                <Icon name="delete" size={20} color={colors.GREY} />
+                            </Ripple>
 
                         }
 

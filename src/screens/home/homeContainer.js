@@ -20,7 +20,7 @@ const onBoardStack = createStackNavigator(
       screen: Products,
     },
     ProductDetail: {
-      screen: ProductDetail,
+      screen: ProductDetail
     },
   },
   {

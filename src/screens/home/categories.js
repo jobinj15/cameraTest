@@ -14,6 +14,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import Ripple from 'react-native-material-ripple';
 import constants from '../../utility/constants';
 import ImpMessage from './ImpMessage';
 import Banner from './banner'
@@ -46,12 +47,6 @@ export default class Categories extends Component {
           ItemSeparatorComponent={this.renderSeparator}
           keyExtractor={(item, index) => index.toString()}
           numColumns={4}
-          // ListHeaderComponent={
-          //   this.getHeaders()
-          // }
-          // ListFooterComponent={
-          //   this.getFooters()
-          // }
         />
       </View>
     );
@@ -97,15 +92,16 @@ export default class Categories extends Component {
     if (item.img) image = { uri: item.img };
 
     return (
-      <TouchableWithoutFeedback
+      <Ripple
         onPress={() => {
           this.navigateTo(item);
-        }}>
-        <View
-          style={{
-            padding: 10,
-            width: wp('25%'),
-          }}>
+        }}
+        style={{
+          padding: 10,
+          width: wp('25%'),
+        }}
+        >
+        
           {/* <View style={[global.getCircleViewStyle(80),{backgroundColor:item.color}]}> */}
           <View
             style={{
@@ -138,8 +134,7 @@ export default class Categories extends Component {
             numberOfLines={1}>
             {item.name}
           </Text>
-        </View>
-      </TouchableWithoutFeedback>
+      </Ripple>
     );
   }
 }

@@ -8,6 +8,7 @@ import colors from '../../styles/colors';
 import constants from '../../utility/constants';
 import ToolBar from '../../components/toolbar';
 import { ScrollView } from 'react-native-gesture-handler';
+import Ripple from 'react-native-material-ripple';
 
 var store;
 
@@ -22,7 +23,7 @@ export default class SelectAddress extends Component {
         super(props);
 
         this.state = {
-          selectedAddress:undefined
+            selectedAddress: undefined
         }
 
         store = this.props.addressListStore
@@ -31,109 +32,106 @@ export default class SelectAddress extends Component {
         this.state.total = navigation.getParam('total', null)
         this.state.userId = navigation.getParam(constants.PARAM_USER, null)
         this.onFirstAddressAdded = this.onFirstAddressAdded.bind(this)
-        this.afterAddressListLoaded= this.afterAddressListLoaded.bind(this)
+        this.afterAddressListLoaded = this.afterAddressListLoaded.bind(this)
 
 
     }
 
-    onFirstAddressAdded(){
+    onFirstAddressAdded() {
         console.log('onFirstAddressAdded called!')
         store.getAddressList(global.sendAsFormData(addressApiData))
     }
 
-    afterAddressListLoaded(){
+    afterAddressListLoaded() {
 
         console.log('afterAddressListLoaded\n ' + JSON.stringify(this.props.navigation))
 
-        if(store.addressList.length==0)
-        this.navigateTo('AddAddress',constants.MODE_FIRST_ADD)
+        if (store.addressList.length == 0)
+            this.navigateTo('AddAddress', constants.MODE_FIRST_ADD)
     }
 
 
 
-    // static navigationOptions = ({ navigation }) => {
-    //     return {
-    //         header: (
-    //             <ToolBar
-    //                 title={constants.TXT_PROFILE}
-    //                 showTitleH={true}
-    //                 showBackButton={false}
-    //             />
-    //         ),
-    //     };
-    // };
-
+    static navigationOptions = ({ navigation }) => {
+        return {
+            header: (
+                <ToolBar
+                    title={'Select Address'}
+                    showTitle={true}
+                    navigation={navigation}
+                    showBackButton={true}
+                />
+            ),
+        };
+    };
     componentDidMount() {
         // this.props.navigation = this.props.navigation
         addressApiData.user_id = this.state.userId;
         store.setAfterAddressListLoaded(this.afterAddressListLoaded);
-        store.getAddressList(global.sendAsFormData(addressApiData),0)
+        store.getAddressList(global.sendAsFormData(addressApiData), 0)
 
         // console.log('currTheme :' + window.theme)
-    } 
+    }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         // store.addressList = [];
         store.loadingCharges = false;
         store.loadingAddress = false;
         store.setAfterAddressListLoaded(undefined);
     }
 
-    navigateTo(route,mode) {
+    navigateTo(route, mode) {
 
         console.log('navigateTo: ' + JSON.stringify(this.props.navigation))
 
         this.props.navigation.navigate(route, {
-            [constants.PARAM_ADDRESS] : store.selectedAddress,
-            [constants.PARAM_USER] : this.state.userId,
-            [constants.PARAM_MODE] : mode,
-            'onFirstAddressAdded' : this.onFirstAddressAdded,
-            total : this.state.total
-        });    
+            [constants.PARAM_ADDRESS]: store.selectedAddress,
+            [constants.PARAM_USER]: this.state.userId,
+            [constants.PARAM_MODE]: mode,
+            'onFirstAddressAdded': this.onFirstAddressAdded,
+            total: this.state.total
+        });
     }
 
 
     bottomView() {
 
-        if(!store.selectedAddress || !store.selectedAddress.id)
-        return(
-            <View/>
-        )
+        if (!store.selectedAddress || !store.selectedAddress.id)
+            return (
+                <View />
+            )
 
         return (
-            <TouchableWithoutFeedback
-            onPress={
-                ()=>{
-                    this.navigateTo('SelectPayment')
+            <Ripple
+                onPress={
+                    () => {
+                        this.navigateTo('SelectPayment')
+                    }
                 }
-            }
-            >
-                <View
                 style={styles.bottomView}
+                rippleColor={colors.RIPPLE}
             >
+                
+                    <Text
+                        style={[styles.stripLabel, { color: colors.WHITE }]}
+                    >
+                        {constants.TXT_TOTAL + constants.SYMBOL_RUPEE + this.state.total}
+                    </Text>
 
-                <Text
-                    style={[styles.stripLabel, { color: colors.WHITE }]}
-                >
-                    {constants.TXT_TOTAL + constants.SYMBOL_RUPEE + this.state.total}
-                </Text>
-
-                <Text
-                    style={[styles.stripLabel, { color: colors.WHITE, flex: undefined }]}
-                >
-                    {constants.TXT_CONTINUE}
-                </Text>
-
-            </View>
-            </TouchableWithoutFeedback>
+                    <Text
+                        style={[styles.stripLabel, { color: colors.WHITE, flex: undefined }]}
+                    >
+                        {constants.TXT_CONTINUE}
+                    </Text>
+            </Ripple>
         )
     }
 
-    handleChangeAddress(){
-        if(store.addressList.length==0){
-          this.navigateTo('AddAddress',constants.MODE_FIRST_ADD)
+    handleChangeAddress() {
+        if (store.addressList.length == 0) {
+            this.navigateTo('AddAddress', constants.MODE_FIRST_ADD)
         }
-        else this.navigateTo('AddressList',constants.MODE_SELECT)
+        else this.navigateTo('AddressList', constants.MODE_SELECT)
     }
 
 
@@ -148,25 +146,23 @@ export default class SelectAddress extends Component {
                         style={
                             { margin: 15 }
                         }
-                    >  
+                    >
 
                         {this.drawAddressCard()}
 
-                        <TouchableWithoutFeedback
+                        <Ripple
                             onPress={() => {
                                 this.handleChangeAddress();
                             }}
+                            rippleColor={colors.RIPPLE}
+                            style={[styles.largeButton, { width: undefined, marginLeft: 0, paddingHorizontal: 40 }]}
                         >
-                            <View
-                                style={[styles.largeButton, { width: undefined, marginLeft: 0, paddingHorizontal: 40 }]}
+                            <Text
+                                style={styles.buttonText}
                             >
-                                <Text
-                                    style={styles.buttonText}
-                                >
-                                    {constants.TXT_ADD_CHANGE_ADDRESS}{" "}
-                                </Text>
-                            </View>
-                        </TouchableWithoutFeedback>
+                                {constants.TXT_ADD_CHANGE_ADDRESS}{" "}
+                            </Text>
+                        </Ripple>
                     </View>
 
                 </ScrollView>
@@ -186,7 +182,7 @@ export default class SelectAddress extends Component {
     drawAddressCard() {
 
         var address = store.selectedAddress;
-        
+
         if (!address || !address.id)
             return (<View />)
 
@@ -195,7 +191,7 @@ export default class SelectAddress extends Component {
                 style={[styles.styleFull, {
                     paddingTop: 20, paddingBottom: 10,
                     paddingHorizontal: 15,
-                    marginBottom:20,
+                    marginBottom: 20,
                     backgroundColor: colors.WHITE
                 }]}
             >

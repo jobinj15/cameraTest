@@ -5,6 +5,8 @@ import constants from '../../utility/constants';
 import global from '../../utility/global';
 import user_repository from '../../repos/user_repository';
 import { FloatingTitleTextInputField } from "../../components/custom_views/floatingtext";
+import Ripple from 'react-native-material-ripple';
+import colors from '../../styles/colors/default';
 
 var forgotApiData = {
   username: ''
@@ -95,22 +97,20 @@ export default class Forgot extends Component {
             />
 
 
-            <TouchableWithoutFeedback
+            <Ripple
               onPress={() => {
                 this.handleClick();
               }}
+              rippleColor={colors.RIPPLE}
+              style={[styles.largeButton, {marginLeft: 0, paddingHorizontal: 40,marginTop:10 }]}
             >
-              <View
-                style={[styles.largeButton, {marginLeft: 0, paddingHorizontal: 40,marginTop:10 }]}
-              >
+              
                 <Text
                   style={styles.buttonText}
                 >
                   {global.capitalize(constants.TXT_RESET)}{" "}
                 </Text>
-              </View>
-            </TouchableWithoutFeedback>
-
+            </Ripple>
 
           </View>
 

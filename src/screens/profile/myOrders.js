@@ -6,6 +6,7 @@ import { Card, Button } from 'react-native-ui-lib';
 import { observer, inject } from "mobx-react";
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
+import ToolBar from '../../components/toolbar';
 
 var listApiData = {
     page_no: 0,
@@ -111,6 +112,19 @@ export default class MyOrders extends Component {
             </View>
         );
     }
+
+    static navigationOptions = ({ navigation }) => {
+        return {
+            header: (
+                <ToolBar
+                    title={'My Orders'}
+                    showTitle={true}
+                    navigation={navigation}
+                    showBackButton={true}
+                />
+            ),
+        };
+    };
 
     renderSeparator = () => {
         return (

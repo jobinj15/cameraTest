@@ -5,6 +5,8 @@ import global from '../../utility/global'
 import { FloatingTitleTextInputField } from "../../components/custom_views/floatingtext";
 import constants from '../../utility/constants'
 import user_repository from '../../repos/user_repository'
+import Ripple from 'react-native-material-ripple';
+import colors from '../../styles/colors/default';
 
 const fields = {
   FIRST_NAME: 'first_name',
@@ -274,24 +276,22 @@ export default class Signup extends Component {
 
           </View>
 
-          <TouchableWithoutFeedback
+          <Ripple
             onPress={() => {
               this.handleRegister();
             }}
+            style={[styles.largeButton, {
+              marginLeft: 0, paddingHorizontal: 40, marginBottom: 60,
+              marginTop: 20
+            }]}
+            rippleColor={colors.RIPPLE}
           >
-            <View
-              style={[styles.largeButton, {
-                marginLeft: 0, paddingHorizontal: 40, marginBottom: 60,
-                marginTop: 20
-              }]}
-            >
               <Text
                 style={styles.buttonText}
               >
                 {global.capitalize(constants.TXT_REGISTER)}{" "}
               </Text>
-            </View>
-          </TouchableWithoutFeedback>
+          </Ripple>
 
         </ScrollView>
 

@@ -9,6 +9,8 @@ import constants from '../../utility/constants'
 import user_repository from '../../repos/user_repository'
 import colors from '../../styles/colors';
 import stores from '../stores';
+import ToolBar from '../../components/toolbar';
+import Ripple from 'react-native-material-ripple';
 
 var pinApiData = {
   pincode: ''
@@ -114,6 +116,28 @@ export default class AddAddress extends Component {
 
   }
 
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header: (
+        <ToolBar
+          title={navigation.state.params.Title}
+          showTitle={true}
+          navigation={navigation}
+          showBackButton={true}
+        />
+      ),
+    };
+  };
+
+
+  updateToolbarTitle = (titleText) => {
+    console.log('updateToolbarTitle: ' + titleText)
+    this.props.navigation.setParams({
+      Title: titleText,
+    });
+  }
+
+
   afterAddressAdded() {
 
     //Set first address as selected address so that it can be displayed in cart page
@@ -160,7 +184,10 @@ export default class AddAddress extends Component {
   componentDidMount() {
     // this.doRegister();
     store.setAfterAddressAdded(this.afterAddressAdded);
-  }
+    this.updateToolbarTitle(this.state.mode == constants.MODE_EDIT ? constants.TXT_UPDATE + ' Address'
+      : constants.TXT_ADD_ADDRESS)
+
+    }
 
   validateAndAddAddress() {
     var item;
@@ -348,12 +375,12 @@ export default class AddAddress extends Component {
 
             <FloatingTitleTextInputField
               attrName={constants.TXT_STATE}
-              title={constants.TXT_STATE}              
+              title={constants.TXT_STATE}
               style={{
                 marginBottom: 15
               }}
               disabled={store.loading}
-              value={store.state==constants.TXT_STATE?'':store.state}
+              value={store.state == constants.TXT_STATE ? '' : store.state}
               updateMasterState={this._updateMasterState}
               otherTextInputProps={{
                 editable: false
@@ -377,7 +404,7 @@ export default class AddAddress extends Component {
                 marginBottom: 100
               }}
               disabled={store.loading}
-              value={store.city==constants.TXT_CITY?'':store.city}
+              value={store.city == constants.TXT_CITY ? '' : store.city}
               updateMasterState={this._updateMasterState}
               otherTextInputProps={{
                 editable: false
@@ -402,22 +429,20 @@ export default class AddAddress extends Component {
           style={[styles.bottomlayout, { bottom: 0 }]}
         >
 
-          <TouchableWithoutFeedback
+          <Ripple
             onPress={() => {
               this.handleAddAddress();
             }}
+            style={[styles.largeButton, { width: undefined, marginLeft: 0, paddingHorizontal: 40 }]}
+            rippleColor={colors.RIPPLE}
           >
-            <View
-              style={[styles.largeButton, { width: undefined, marginLeft: 0, paddingHorizontal: 40 }]}
-            >
               <Text
                 style={styles.buttonText}
               >
                 {this.state.mode == constants.MODE_EDIT ? global.capitalize(constants.TXT_UPDATE)
                   : global.capitalize(constants.TXT_ADD)}{" "}
               </Text>
-            </View>
-          </TouchableWithoutFeedback>
+          </Ripple>
 
 
         </View>

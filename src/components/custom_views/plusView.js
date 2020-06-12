@@ -5,6 +5,8 @@ import { View, TouchableWithoutFeedback, Text, Image, FlatList } from 'react-nat
 import Icon from 'react-native-vector-icons/AntDesign'
 import constants from '../../utility/constants';
 import colors from '../../styles/colors';
+import Ripple from 'react-native-material-ripple';
+
 
 export default class PlusView extends Component {
 
@@ -20,21 +22,22 @@ export default class PlusView extends Component {
 
         return (
 
-            <TouchableWithoutFeedback
+            <Ripple
                 onPress={() => {
                     if (this.props.onPress)
                         this.props.onPress(this.props.index)
                 }}
+                style={[styles.plusBox, type == constants.TYPE_MINUS ? {
+                    borderTopLeftRadius: 3,
+                    borderBottomLeftRadius: 3
+                } : {
+                        borderTopRightRadius: 3,
+                        borderBottomRightRadius: 3
+                    }
+                ]}
             >
                 <View
-                    style={[styles.plusBox, type == constants.TYPE_MINUS ? {
-                        borderTopLeftRadius: 3,
-                        borderBottomLeftRadius: 3
-                    } : {
-                            borderTopRightRadius: 3,
-                            borderBottomRightRadius: 3
-                        }
-                    ]}
+
                 >
 
                     {/* <Text
@@ -48,7 +51,7 @@ export default class PlusView extends Component {
 
                 </View>
 
-            </TouchableWithoutFeedback>
+            </Ripple>
 
 
         )

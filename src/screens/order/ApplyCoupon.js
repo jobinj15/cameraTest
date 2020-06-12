@@ -46,8 +46,18 @@ class ApplyCoupon extends Component {
 
     }
 
-    static navigationOptions = {
-        title: 'Apply Coupon',
+    
+    static navigationOptions = ({ navigation }) => {
+        return {
+            header: (
+                <ToolBar
+                    title={'Apply Coupon'}
+                    showTitle={true}
+                    navigation={navigation}
+                    showBackButton={true}
+                />
+            ),
+        };
     };
 
 
@@ -89,6 +99,8 @@ class ApplyCoupon extends Component {
     applyCoupon(){
         
     }
+
+
 
 
     render() {

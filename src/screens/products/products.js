@@ -4,6 +4,7 @@ import global from '../../utility/global';
 import { Card, Button } from 'react-native-ui-lib';
 import { View, TouchableWithoutFeedback, Text, FlatList, Image, ActivityIndicator } from 'react-native';
 import { observer, inject } from "mobx-react";
+import Ripple from 'react-native-material-ripple';
 import constants from '../../utility/constants';
 import colors from '../../styles/colors';
 import ToolBar from '../../components/toolbar';
@@ -143,9 +144,9 @@ export default class Products extends Component {
     }
 
 
-    handleRefresh() {
+    handleRefresh(isFilter) {
         listApiData.page_no = 0
-        prodStore.refreshing = true
+        isFilter ? prodStore.loading = true : prodStore.refreshing = true
         this.callApi()
     }
 
@@ -168,6 +169,7 @@ export default class Products extends Component {
                     extraData={this.state}
                     showsVerticalScrollIndicator={false}
                     data={prodStore.products}
+                    style={{ backgroundColor: colors.WHITE }}
                     renderItem={this.renderRow.bind(this)}
                     onRefresh={this.handleRefresh.bind(this)}
                     onEndReached={this.handleLoadMore.bind(this)}
@@ -273,7 +275,7 @@ export default class Products extends Component {
         this.state.selectedFilters = filters
         this.resetStore()
         listApiData.value_id = filters.toString();
-        this.handleRefresh()
+        this.handleRefresh(true)
     }
 
 
@@ -312,18 +314,17 @@ export default class Products extends Component {
 
         if (!item.cart_quantity)
             return (
-                <Button
-                    backgroundColor={colors.GREEN_4}
-                    label={constants.TXT_ADDTOCART}
-                    onPress={() => {
-                        this.onAddToCart(index);
-                    }}
-                    labelStyle={{ fontFamily: 'PopinsBold', fontSize: fonts._10 }}
-                    style={[styles.addContainer]}
-                    borderRadius={3}
-                    enableShadow
-                />
-
+                    <Button
+                        style={[styles.addContainer]}
+                        onPress={() => {
+                            this.onAddToCart(index);
+                        }}
+                        backgroundColor={colors.GREEN_4}
+                        label={constants.TXT_ADDTOCART}
+                        labelStyle={{ fontFamily: 'PopinsBold', fontSize: fonts._10 }}
+                        borderRadius={3}
+                        enableShadow
+                    />
             )
 
         return (
@@ -371,7 +372,7 @@ export default class Products extends Component {
         console.log('updateToolbarTitle: ' + titleText)
         this.props.navigation.setParams({
             Title: titleText,
-        });    
+        });
     }
 
 
@@ -385,7 +386,7 @@ export default class Products extends Component {
             variant = item.variants[0].value;
 
         if (Array.isArray(item.images) && item.images.length) {
-            image = { uri: item.images[0].images };
+            image = { uri: item.images[0] };
         }
 
         return (
@@ -397,7 +398,7 @@ export default class Products extends Component {
                     }
                 }
             >
-                <Card style={{ flex: 1, borderRadius: 0 }} key={index}>
+                <Card style={{ flex: 1, borderRadius: 0 }} key={index} elevation={0} enableShadow={false}>
 
                     <View
                         style={{ paddingHorizontal: 15, paddingVertical: 15 }}
@@ -468,7 +469,7 @@ export default class Products extends Component {
                                             textDecorationLine: 'line-through', color: colors.DISCOUNT
                                         }]}
                                     >
-                                        {constants.SYMBOL_RUPEE + '22'}
+                                        {constants.SYMBOL_RUPEE + item.discount}
                                     </Text>
 
                                     {this.drawButtonView(item, index)}

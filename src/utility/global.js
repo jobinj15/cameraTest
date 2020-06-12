@@ -10,6 +10,7 @@ import {
 import Snackbar from 'react-native-snackbar'
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from '@react-native-community/async-storage';
+import { StackActions, NavigationActions } from 'react-navigation';
 var dateFormat = require('dateformat');
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import constants from './constants';
@@ -230,6 +231,8 @@ export default global = {
 
   showAlert(title, description, onOkay, onCancel, txtYes = "Yes", txtNo = "No", cancelable = true) {
 
+    console.log('showAlert called!')
+
     Alert.alert(
       title,
       description,
@@ -237,6 +240,7 @@ export default global = {
         {
           text: txtYes,
           onPress: () => {
+            console.log('showAlert onOkay!')
             if (onOkay) onOkay()
           }
         },
@@ -419,6 +423,21 @@ export default global = {
     }
     return true;
   },
+
+  backHome(navgation) {
+    const resetAction = StackActions.reset({
+        index: 0,
+        key: null,
+        actions: [NavigationActions.navigate({
+            routeName: 'Home', params: {
+                // navigator: this.props.navigation
+            }
+        })]
+    });
+
+    navgation.dispatch(resetAction);
+
+},
 
   capitalize(text) {
 

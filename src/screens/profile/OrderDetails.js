@@ -7,6 +7,7 @@ import { observer, inject } from "mobx-react";
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
 import PTRView from 'react-native-pull-to-refresh';
+import ToolBar from '../../components/toolbar';
 
 var orderDetailApiData = {
     user_id: '',
@@ -58,6 +59,19 @@ export default class OrderDetails extends Component {
         store.isApiLoaded = false;
         store.order = {}
     }
+
+    static navigationOptions = ({ navigation }) => {
+        return {
+            header: (
+                <ToolBar
+                    title={'Order Details'}
+                    showTitle={true}
+                    navigation={navigation}
+                    showBackButton={true}
+                />
+            ),
+        };
+    };
 
 
     navigateTo(item) {

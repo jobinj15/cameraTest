@@ -6,6 +6,7 @@ import { FloatingTitleTextInputField } from "../../components/custom_views/float
 import constants from '../../utility/constants'
 import user_repository from '../../repos/user_repository'
 import { StackActions, NavigationActions } from 'react-navigation';
+import Ripple from 'react-native-material-ripple';
 import colors from '../../styles/colors';
 import {
   heightPercentageToDP as hp,
@@ -171,12 +172,12 @@ export default class Login extends Component {
         <ScrollView
           keyboardShouldPersistTaps='handled'
           style={{
-            paddingHorizontal: 15,flex:1
+            paddingHorizontal: 15, flex: 1
           }}
           showsVerticalScrollIndicator={false}
         >
           <View
-          style={{flex:1}} 
+            style={{ flex: 1 }}
           >
 
             <Text
@@ -244,25 +245,23 @@ export default class Login extends Component {
             </View>
           </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback
+          <Ripple
+            style={[styles.largeButton, { paddingHorizontal: 40, marginTop: 20}]}
+            rippleColor={colors.RIPPLE}
             onPress={() => {
               this.handleLogin();
             }}
           >
-            <View
-              style={[styles.largeButton, { paddingHorizontal: 40, marginTop: 20 }]}
-            >
               <Text
                 style={styles.buttonText}
               >
                 {global.capitalize(constants.TXT_LOGIN)}{" "}
               </Text>
-            </View>
-          </TouchableWithoutFeedback>
+          </Ripple>
 
 
           <View
-            style={{marginTop:hp('33%'),flexDirection:'row',justifyContent:'center'}}
+            style={{ marginTop: hp('33%'), flexDirection: 'row', justifyContent: 'center' }}
           >
 
             <Text
