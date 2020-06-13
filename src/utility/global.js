@@ -87,8 +87,8 @@ export default global = {
   BANNERHEIGHT: normalizeHeight(160),
   DEVICE_WIDTH: Dimensions.get('window').width,
   DEVICE_HEIGHT: Dimensions.get('window').height,
-  IMAGE:{
-    THUMBNAIL_PLACEHOLDER:require('../assets/images/placeholder.jpeg')
+  IMAGE: {
+    THUMBNAIL_PLACEHOLDER: require('../assets/images/placeholder.jpeg')
   },
 
   CONSTANTS: {
@@ -302,14 +302,16 @@ export default global = {
           }}
         >
           <Image
-            style={{ height: 30, width: 30, tintcolor: colors.PRIMARY, marginRight: 10, marginBottom: 10 }}
+            style={{
+              height: from ? 160 : 30, width: from ? 160 : 30, tintcolor: colors.PRIMARY,
+              marginRight: 10, marginBottom: from ? 20 : 10,marginTop:-20
+            }}
             source={getIcon(from)}
           />
 
           <Text
-            style={[styles.stripLabel, {
-              color: colors.DARKGRAY, fontWeight: '500', textAlign: 'center',
-              flex: undefined
+            style={[styles.bigBold, {
+              color: colors.DARKGRAY, textAlign: 'center',
             }]}
           >
             {message ? message : constants.TXT_NO_DATA}
@@ -323,10 +325,10 @@ export default global = {
     )
   },
 
-  bottomBlockView(morestyles={}) {
+  bottomBlockView(morestyles = {}) {
     return (
       <View
-        style={[styles.bottomView, { height: 45, backgroundColor: "rgba(255,255,255,0.6)" },morestyles]}
+        style={[styles.bottomView, { height: 45, backgroundColor: "rgba(255,255,255,0.6)" }, morestyles]}
       />
     )
   },
@@ -430,18 +432,18 @@ export default global = {
 
   backHome(navgation) {
     const resetAction = StackActions.reset({
-        index: 0,
-        key: null,
-        actions: [NavigationActions.navigate({
-            routeName: 'Home', params: {
-                // navigator: this.props.navigation
-            }
-        })]
+      index: 0,
+      key: null,
+      actions: [NavigationActions.navigate({
+        routeName: 'Home', params: {
+          // navigator: this.props.navigation
+        }
+      })]
     });
 
     navgation.dispatch(resetAction);
 
-},
+  },
 
   capitalize(text) {
 
@@ -604,7 +606,20 @@ function getIcon(from) {
   switch (from) {
 
     case constants.NO_INTERNET_REF:
-      return require('../assets/images/no_data.jpg')
+      return require('../assets/images/no_data.jpg');
+
+    case constants.FRM_PRODUCTS:
+      return require('../assets/images/empty_products.png');
+
+    case constants.FRM_ORDERS:
+      return require('../assets/images/empty_orders.png');
+
+    case constants.FRM_ADDRESS:
+      return require('../assets/images/empty_address.png');
+
+    case constants.FRM_CART:
+      return require('../assets/images/empty_cart.png');
+
 
     default:
       return require('../assets/images/no_data.jpg')

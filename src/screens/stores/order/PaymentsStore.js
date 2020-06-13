@@ -100,7 +100,7 @@ class PaymentsStore {
     this.loading = false;
 
     if (!isError) {
-      this.afterPaymentDone()
+      this.afterPaymentDone(responseData.order_id)
     }
     else global.showMessage(responseData.message)
 

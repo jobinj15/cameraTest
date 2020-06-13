@@ -109,6 +109,7 @@ export default class AdressList extends Component {
                     extraData={this.state}
                     showsVerticalScrollIndicator={false}
                     data={store.addressList}
+                    style={{backgroundColor:colors.WHITE}}
                     onRefresh={this.handleRefresh.bind(this)}
                     refreshing={store.refreshing}
                     renderItem={this.renderRow.bind(this)}
@@ -123,7 +124,7 @@ export default class AdressList extends Component {
 
                 {
                     (store.apiLoaded && !store.addressList.length)
-                    && global.getNoDataView()
+                    && global.getNoDataView(constants.TXT_EMP_ADDRESS,constants.FRM_ADDRESS)
                 }
 
                 {
@@ -162,7 +163,7 @@ export default class AdressList extends Component {
     renderSeparator = () => {
         return (
             <View
-                style={styles.productSeperator}
+                style={styles.productSeperator2}
             />
         );
     };
@@ -233,7 +234,7 @@ export default class AdressList extends Component {
                         </Text>
 
                         <Text
-                            style={[styles.labelSmallX1, { marginTop: 10 }]}
+                            style={[styles.labelSmall, { marginTop: 5 }]}
                         >
                             {item.address + ' ' + item.area + ' , ' + item.city + ' , ' + item.state
                                 + ' , ' + item.pin_code
@@ -245,7 +246,9 @@ export default class AdressList extends Component {
                     </View>
 
                     <View
-                        style={[styles.topRight]}
+                    style={{
+                        alignItems:'center',marginLeft:10
+                    }}
                     >
 
                         <Ripple
@@ -253,6 +256,7 @@ export default class AdressList extends Component {
                                 this.navigateTo('AddAddress', constants.MODE_EDIT, item)
                             }}
                             rippleColor={colors.RIPPLE}
+                            style={{padding:3,backgroundColor:colors.SEPARATOR}}
                         >
                             <Icon name="edit" size={20} color={colors.GREY} />
                         </Ripple>
@@ -265,7 +269,7 @@ export default class AdressList extends Component {
                                     global.showAlert(constants.TITLE_DELETE, constants.DES_DEL, this.onDeleteYes)
                                 }}
                                 rippleColor={colors.RIPPLE}
-                                style={{ marginLeft: 10 }}
+                                style={{padding:3,backgroundColor:colors.SEPARATOR,marginTop:5}}
                             >
                                 <Icon name="delete" size={20} color={colors.GREY} />
                             </Ripple>

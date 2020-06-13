@@ -107,7 +107,7 @@ const screens = {
     screen:CartContainer,
     navigationOptions: {      
       gesturesEnabled: true,
-      tabBarVisible: false,
+      tabBarVisible: true,
    }
   },
   Like : Dummy,

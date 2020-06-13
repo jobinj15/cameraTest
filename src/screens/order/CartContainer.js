@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import Cart from './cart';
+import Cart from './Cart';
 import ApplyCoupon from './ApplyCoupon';
 import SelectAddress from './SelectAddress';
 import SelectPayment from './SelectPayment';

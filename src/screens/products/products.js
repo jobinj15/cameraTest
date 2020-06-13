@@ -176,7 +176,7 @@ export default class Products extends Component {
 
         {prodStore.apiLoaded &&
           !prodStore.products.length &&
-          global.getNoDataView()}
+          global.getNoDataView(constants.TXT_EMP_PRODUCTS,constants.FRM_PRODUCTS)}
 
         {prodStore.message ? (
           global.getNoDataView(

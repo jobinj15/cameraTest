@@ -13,6 +13,8 @@ const ratioY = DEVICE_HEIGHT < 568 ? (DEVICE_HEIGHT < 480 ? 0.75 : 0.875) : 1;
 const unit = base_unit * ratioX;
 
 export default fonts = {
+    _6: normalize(6),
+    _7: normalize(7),
     _8: normalize(8),
     _9: normalize(9),
     _10: normalize(10),

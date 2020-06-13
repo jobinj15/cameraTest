@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
-import {Card, Button} from 'react-native-ui-lib';
+import { Card, Button } from 'react-native-ui-lib';
 import {
   View,
   TouchableWithoutFeedback,
@@ -12,12 +12,13 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import {observer, inject} from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import constants from '../../utility/constants';
 import colors from '../../styles/colors';
 import PlusView from '../../components/custom_views/plusView';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconF from 'react-native-vector-icons/FontAwesome';
 import ToolBar from '../../components/toolbar';
 import fonts from '../../utility/fonts';
 import Ripple from 'react-native-material-ripple';
@@ -80,7 +81,7 @@ class Cart extends Component {
     cartStore.loading = false;
   }
 
-  static navigationOptions = ({navigation}) => {
+  static navigationOptions = ({ navigation }) => {
     //return header with Custom View which will replace the original header
     return {
       header: (
@@ -126,32 +127,14 @@ class Cart extends Component {
   render() {
     return (
       <View style={[styles.styleFull]}>
-        {cartStore.loading && global.getLoader()}
 
-        {cartStore.apiLoaded &&
-          !cartStore.cart.length &&
-          global.getNoDataView()}
-
-        {cartStore.message ? (
-          global.getNoDataView(
-            constants.NO_INTERNET_REF,
-            constants.NO_INTERNET_REF,
-          )
-        ) : (
-          <View />
-        )}
-
-        {/* <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    style={{ flex: 1 }}
-                > */}
-        <View style={[styles.styleFull, {backgroundColor: colors.ListViewBG}]}>
+        <View style={[styles.styleFull, { backgroundColor: colors.ListViewBG }]}>
           <FlatList
             navigation={this.props.navigation}
             extraData={this.state}
             showsVerticalScrollIndicator={false}
             data={cartStore.cart}
-            style={{backgroundColor: colors.WHITE}}
+            style={{ backgroundColor: colors.WHITE }}
             refreshing={cartStore.refreshing}
             onRefresh={this.handleRefresh.bind(this)}
             renderItem={this.renderRow.bind(this)}
@@ -160,7 +143,23 @@ class Cart extends Component {
             ListFooterComponent={this.drawCouponView()}
           />
         </View>
-        {/* </ScrollView> */}
+
+        {cartStore.loading && global.getLoader()}
+
+        {cartStore.apiLoaded &&
+          !cartStore.cart.length &&
+          global.getNoDataView(constants.TXT_EMP_CART, constants.FRM_CART)}
+
+        {cartStore.message ? (
+          global.getNoDataView(
+            constants.NO_INTERNET_REF,
+            constants.NO_INTERNET_REF,
+          )
+        ) : (
+            <View />
+          )}
+
+
         {this.bottomView()}
       </View>
     );
@@ -175,7 +174,7 @@ class Cart extends Component {
   drawButtonView(item, index) {
     if (item.loading)
       return (
-        <View style={[styles.plusContainer, {justifyContent: 'center'}]}>
+        <View style={[styles.plusContainer, { justifyContent: 'center' }]}>
           <ActivityIndicator size="small" color={colors.DARKGRAY} />
         </View>
       );
@@ -322,27 +321,42 @@ class Cart extends Component {
         <View
           style={{
             marginBottom: 70,
+            flex: 1,
             alignItems: 'center',
           }}>
           <View
             style={{
-              height: 8,
-              backgroundColor: colors.ListViewBG,
+              height: 0.5,
+              backgroundColor: colors.SEPARATOR,
+              marginHorizontal: 25,
               alignSelf: 'stretch',
             }}
           />
 
+          <Text
+            style={[
+              styles.stripLabel, {
+                width: global.DEVICE_WIDTH - 30, marginTop: 20
+              }]}
+          >
+            {constants.TXT_COUPONS}
+          </Text>
+
           <View
             style={{
-              paddingHorizontal: 20,
+              paddingRight: 5,
+              paddingLeft: 10,
               flexDirection: 'row',
               alignItems: 'center',
-              paddingVertical: 10,
+              borderRadius: 5,
+              backgroundColor: colors.SEPARATOR,
+              marginHorizontal: 10,
+              paddingVertical: 15,
             }}>
-            <IconM
-              name={'brightness-percent'}
-              size={30}
-              color={colors.DARKGRAY}
+            <IconF
+              name={'tag'}
+              size={25}
+              color={colors.BLACK}
             />
 
             <View
@@ -352,15 +366,15 @@ class Cart extends Component {
               }}>
               <Text
                 style={{
-                  fontSize: fonts._12,
+                  fontSize: fonts._16,
                   fontWeight: cartStore.couponApplied
                     ? 'PopinsBold'
                     : 'PopinsReg',
                   color: colors.BLACK,
                 }}>
                 {cartStore.couponApplied && cartStore.couponCode
-                  ? global.capitalize(cartStore.couponCode)
-                  : global.capitalize(constants.TXT_APPLY_COUPON)}{' '}
+                  ? (cartStore.couponCode)
+                  : (constants.TXT_APPLY_COUPON)}{' '}
               </Text>
 
               {cartStore.couponApplied && (
@@ -384,22 +398,16 @@ class Cart extends Component {
               <View
                 style={
                   cartStore.couponApplied
-                    ? global.getCircleViewStyle(20, {
-                        backgroundColor: colors.LIGHT_GRAY_TEXT,
-                      })
-                    : global.getCircleViewStyle(20, {
-                        backgroundColor: colors.WHITE,
-                      })
                 }>
                 {cartStore.couponApplied && (
-                  <Icon name={'md-close'} size={25} color={colors.DARKGRAY} />
+                  <Icon name={'md-close'} size={25} color={colors.BLACK} />
                 )}
 
                 {!cartStore.couponApplied && (
                   <Icon
                     name={'ios-arrow-forward'}
                     size={25}
-                    color={colors.DARKGRAY}
+                    color={colors.BLACK}
                   />
                 )}
               </View>
@@ -418,19 +426,19 @@ class Cart extends Component {
         }}
         style={styles.bottomView}
         rippleColor={colors.RIPPLE}>
-        <Text style={[styles.stripLabel, {color: colors.WHITE}]}>
+        <Text style={[styles.stripLabel, { color: colors.WHITE }]}>
           {constants.TXT_TOTAL + constants.SYMBOL_RUPEE + cartStore.total}
         </Text>
 
         <Text
-          style={[styles.stripLabel, {color: colors.WHITE, flex: undefined}]}>
+          style={[styles.stripLabel, { color: colors.WHITE, flex: undefined }]}>
           {constants.TXT_CHECKOUT}
         </Text>
       </Ripple>
     );
   }
 
-  renderRow({item, index}) {
+  renderRow({ item, index }) {
     let image = global.IMAGE.THUMBNAIL_PLACEHOLDER;
     let variant = '';
 
@@ -438,7 +446,7 @@ class Cart extends Component {
       variant = item.variants[0].value;
 
     if (Array.isArray(item.images) && item.images.length) {
-      image = {uri: item.images[0]};
+      image = { uri: item.images[0] };
     }
 
     return (
@@ -447,12 +455,12 @@ class Cart extends Component {
           // this.navigateTo(index)
         }}>
         <Card
-          style={{flex: 1, borderRadius: 0}}
+          style={{ flex: 1, borderRadius: 0 }}
           key={index}
           elevation={0}
           enableShadow={false}>
-          <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
-            <View style={{flexDirection: 'row', flex: 1}}>
+          <View style={{ paddingHorizontal: 15, paddingVertical: 15 }}>
+            <View style={{ flexDirection: 'row', flex: 1 }}>
               <View style={styles.productImage}>
                 <Image source={image} style={styles.productThumbnail} />
               </View>
@@ -482,13 +490,13 @@ class Cart extends Component {
 
                 <Text style={[styles.weight]}>{variant}</Text>
 
-                <Text style={[styles.amount, {marginTop: 8}]}>
+                <Text style={[styles.amount, { marginTop: 8 }]}>
                   {constants.SYMBOL_RUPEE + item.price}
                 </Text>
               </View>
             </View>
 
-            <View style={{flexDirection: 'row', flex: 1}}>
+            <View style={{ flexDirection: 'row', flex: 1 }}>
               <View
                 style={{
                   flex: 1,

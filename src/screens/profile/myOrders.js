@@ -7,6 +7,7 @@ import { observer, inject } from "mobx-react";
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
 import ToolBar from '../../components/toolbar';
+import fonts from '../../utility/fonts';
 
 var listApiData = {
     page_no: 0,
@@ -85,6 +86,7 @@ export default class MyOrders extends Component {
                     navigation={this.props.navigation}
                     extraData={this.state}
                     showsVerticalScrollIndicator={false}
+                    style={{ backgroundColor: colors.WHITE }}
                     data={this.props.myOrdersStore.orders}
                     renderItem={this.renderRow.bind(this)}
                     onRefresh={this.handleRefresh.bind(this)}
@@ -100,7 +102,7 @@ export default class MyOrders extends Component {
 
                 {
                     (store.apiLoaded && !store.orders.length)
-                    && global.getNoDataView()
+                    && global.getNoDataView(constants.TXT_EMP_ORDERS,constants.FRM_ORDERS)
                 }
 
                 {
@@ -117,7 +119,7 @@ export default class MyOrders extends Component {
         return {
             header: (
                 <ToolBar
-                    title={'My Orders'}
+                    title={constants.TITLE_ORDERLIST}
                     showTitle={true}
                     navigation={navigation}
                     showBackButton={true}
@@ -129,7 +131,7 @@ export default class MyOrders extends Component {
     renderSeparator = () => {
         return (
             <View
-                style={styles.productSeperator}
+                style={styles.productSeperator2}
             />
         );
     };
@@ -143,18 +145,18 @@ export default class MyOrders extends Component {
                     flexDirection: 'row',
                     alignItems: 'center',
                     flex: 1
-                }, moreStyles]}
+                }]}
             >
 
                 <Text
-                    style={[styles.stripLabel, { flex: undefined }]}
+                    style={[styles.labelSmall, { flex: 1, color: colors.BLACK }]}
                 >
                     {key}
 
                 </Text>
 
                 <Text
-                    style={[styles.labelSmallX1, { marginLeft: 15,color:colors.GREY}]}
+                    style={[styles.labelMed, moreStyles]}
                 >
                     {value}
 
@@ -163,6 +165,65 @@ export default class MyOrders extends Component {
 
             </View>
         )
+
+    }
+
+    getOrderStatus(status, text, payMode) {
+
+        let fontStyle = [styles.labelSmall2]
+        let viewStyle = [styles.orderStatus]
+
+        switch (status) {
+
+            default: {
+                fontStyle = [...fontStyle, { color: colors.FT_DELIVERED }];
+                viewStyle = [...viewStyle, { backgroundColor: colors.BG_DELIVERED }]
+                break;
+            }
+
+        }
+
+
+
+        return (
+
+            <View
+                style={[{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    flex: 1
+                }]}
+            >
+
+                <View
+                    style={{
+                        flex: 1
+                    }}
+                >
+                    <View
+                        style={viewStyle}
+                    >
+                        <Text
+                            style={fontStyle}
+                        >
+                            {text}
+                        </Text>
+
+                    </View>
+
+                </View>
+
+                <Text
+                    style={[styles.labelSmall, { color: colors.BLACK }]}
+                >
+                    {payMode}
+
+                </Text>
+
+            </View>
+
+        )
+
 
     }
 
@@ -177,32 +238,19 @@ export default class MyOrders extends Component {
                     this.navigateTo(item)
                 }}
             >
-                <Card style={{ flex: 1, borderRadius: 0 }} key={index}>
+                <Card style={{ flex: 1, borderRadius: 0 }} key={index} elevation={0} enableShadow={false}>
 
                     <View
                         style={{ padding: 15 }}
                     >
 
-                        <View
-                            style={{
-                                flex: 1, flexDirection: 'row'
-                            }}
-                        >
-                            {this.drawKeyValue(constants.TXT_ORDERNO, item.order_id)}
+                        {this.drawKeyValue(constants.TXT_ORDERNO + item.order_id, item.order_date)}
+                        {this.drawKeyValue(item.total_quantity + ' items ordered', constants.SYMBOL_RUPEE +
+                            item.total,
+                            { color: colors.PRIMARY, fontSize: fonts._16 })}
+                        {this.getOrderStatus(item.order_status, item.order_status_name, 'COD')}
 
-                            <Text
-                                style={[styles.stripLabel, { color: colors.GREEN_4, flex: undefined }]}
-                            >
-                                {item.order_date}
-
-                            </Text>
-
-                        </View>
-
-                        {this.drawKeyValue(constants.TXT_TOTAL, item.total, { marginTop: 5 })}
-                        {this.drawKeyValue(constants.TXT_ITEMS, item.total_quantity, { marginTop: 5 })}
-
-                        <Text
+                        {/* <Text
                             style={[
                                 styles.labelSmall
                             ], {
@@ -213,7 +261,7 @@ export default class MyOrders extends Component {
                         >
                             {item.order_status_name}
 
-                        </Text>
+                        </Text> */}
 
                     </View>
 

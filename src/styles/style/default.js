@@ -168,6 +168,11 @@ var styles = {
         fontFamily: 'PopinsReg',
         fontSize: fonts._14
     },
+    labelMed: {
+        color: colors.BLACK,
+        fontFamily: 'PopinsMed',
+        fontSize: fonts._13
+    },
     amount: {
         fontFamily: 'PopinsBold',
         color: colors.PRIMARY,
@@ -215,10 +220,22 @@ var styles = {
         fontFamily: 'PopinsReg',
         fontSize: fonts._12
     },
+    labelMini2: {
+        color: colors.GREY,
+        fontFamily: 'PopinsReg',
+        fontSize: fonts.FONT_SIZE_SMALLER
+    },
+    orderStatus:{
+      width:100,
+      borderRadius:5,
+      alignItems:'center',
+      justifyContent:'center'
+    },
     addressListCard: {
         flex: 1,
         flexDirection: 'row',
         paddingTop: 20, paddingBottom: 10,
+        alignItems:'center',
         paddingHorizontal: 15,
         backgroundColor: colors.WHITE
     },
@@ -259,8 +276,9 @@ var styles = {
     bottomView: {
         backgroundColor: colors.GREEN_4,
         position: 'absolute',
-        width: DEVICE_WIDTH,
+        alignSelf: 'stretch',
         bottom: 0,
+        borderRadius:5,
         flexDirection: 'row',
         paddingVertical: 10,
         paddingHorizontal: 10,

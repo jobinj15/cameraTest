@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
-import { View, TouchableWithoutFeedback, Text, Image, ScrollView } from 'react-native';
+import { View, TouchableWithoutFeedback, Text, Image, FlatList } from 'react-native';
 import { Card, Button } from 'react-native-ui-lib';
 import { observer, inject } from "mobx-react";
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
 import PTRView from 'react-native-pull-to-refresh';
 import ToolBar from '../../components/toolbar';
+import fonts from '../../utility/fonts';
 
 var orderDetailApiData = {
     user_id: '',
@@ -34,7 +35,7 @@ export default class OrderDetails extends Component {
         this.setApiData()
     }
 
-    resetStore(){
+    resetStore() {
         store.isApiLoaded = false;
         store.loading = false;
         // store.refreshing = false;
@@ -95,10 +96,6 @@ export default class OrderDetails extends Component {
                 global.getNoDataView()
             )
 
-        // if (!store.isApiLoaded && !store.loading)
-        //     return (
-        //         <View/>
-        //     )
 
         if (store.loading) {
             return (
@@ -113,130 +110,107 @@ export default class OrderDetails extends Component {
         }
 
         return (
-            // <PTRView
-            //     onRefresh={this.callApi()}
-            // >
-                <View style={[styles.styleFull, { backgroundColor: colors.ListViewBG }]}>
+            <View style={[styles.styleFull, { backgroundColor: colors.WHITE, paddingHorizontal: 15 }]}>
 
-                    <ScrollView>
-
-                        <View>
-
-                            <Card style={{ borderRadius: 0 }} >
-
-                                <Text
-                                    style={[styles.labelSmall, {
-                                        color: colors.DARKGRAY,
-                                        fontWeight: 'PopinsBold', padding: 15
-                                    }]}
-                                >
-                                    {'Placed on ' + store.order.order_date}
-                                </Text>
-
-                                <View
-                                    style={[styles.largeButton,{width:'90%'}]}
-                                >
-                                    <Text
-                                        style={[styles.stripLabel, { color: colors.WHITE, flex: undefined }]}
-                                    >
-                                        {store.order.order_status_name}
-                                    </Text>
-
-                                </View>
-
-                                <Text
-                                    style={[styles.labelSmall, { margin: 15 }]}
-                                >
-                                    {constants.TXT_DELIVERED_ON}
-                                </Text>
-
-                                <Text
-                                    style={[styles.stripLabel, { paddingBottom: 15, paddingHorizontal: 15 }]}
-                                >
-                                    {store.order.date}
-                                </Text>
-
-                            </Card>
-
-                            <Card
-                                style={{
-                                    marginTop: 10, padding: 15
-                                }}
-                                borderRadius={0}
-                            >
-
-                                <Text
-                                    style={[styles.stripLabel, {}]}
-                                >
-                                    {store.order.total_quantity + ' Items  |  Amount '
-                                        + constants.SYMBOL_RUPEE + store.order.total}
-                                </Text>
-
-                                <View
-                                    style={{
-                                        flexDirection: 'row',
-                                        paddingVertical: 15
-                                    }}
-                                >
-
-                                    <Card.Image imageSource={image}
-                                        style={{ height: 100, width: 100, marginRight: 20 }}
-                                        cover={true}
-                                    />
-
-                                    <View
-                                        style={{
-                                            justifyContent: 'center',
-                                        }}
-                                    >
-                                        <Text
-                                            style={[styles.stripLabel, { flex: undefined }]}
-                                        >
-                                            {store.order.name}
-                                        </Text>
-
-                                        <Text
-                                            style={[styles.amount, { marginTop: 10 }]}
-                                        >
-                                            {constants.SYMBOL_RUPEE + '307.80'}
-                                        </Text>
+                <FlatList
+                    navigation={this.props.navigation}
+                    extraData={this.state}
+                    showsVerticalScrollIndicator={false}
+                    data={[]}
+                    keyExtractor={(item, index) => index.toString()}
+                    ListHeaderComponent={
+                        this.getHeaders()
+                    }
+                    ListFooterComponent={
+                        this.getFooters()
+                    }
+                />
 
 
-                                    </View>
-                                </View>
-
-                            </Card>
-
-
-                            <Card
-                                style={{
-                                    marginTop: 10,
-                                    padding: 15
-                                }}
-                                borderRadius={0}
-                            >
-                                <Text
-                                    style={[styles.stripLabel, { flex: undefined, color: colors.DARKGRAY2 }]}
-                                >
-                                    {constants.TXT_PAYMENT_DETAILS}
-                                </Text>
-
-                                {this.drawKeyValue('Price', store.order.price, { marginTop: 10 })}
-                                {/* {this.drawKeyValue(constants.TXT_SAVINGS, store.order.savings, { marginTop: 5 },{color:colors.GREEN_4})} */}
-                                {this.drawKeyValue('Quantity', store.order.quantity, { marginTop: 5 })}
-                                {this.drawKeyValue('SubTotal', store.order.subtotal, { marginTop: 5 })}
-
-                                {this.drawKeyValue('Total', store.order.total, { marginTop: 10 }, { color: colors.GREEN_4 })}
-                            </Card>
-                        </View>
-                    </ScrollView>
-                </View>
-            // </PTRView>
+            </View>
         );
     }
 
+    getHeaders() {
 
-    drawKeyValue(key, value, moreStyles = {}, fontColor = {color:colors.DARKGRAY}) {
+        var item = store.order;
+
+        return (
+            <View>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        flex: 1,
+                        marginTop: 20,
+                        alignItems: 'center',
+                        alignSelf: 'stretch'
+                    }}
+                >
+                    <View
+                        style={{
+                            flex: 1,
+                        }}
+                    >
+                        <Text
+                            style={[styles.labelSmall, { color: colors.BLACK }]}
+                        >
+                            {item.order_date}
+
+                        </Text>
+
+                        <Text
+                            style={[styles.labelSmall, { color: colors.BLACK }]}
+                        >
+                            {constants.TXT_ORDERNO.replace('No', 'ID') + this.state.order.order_id}
+
+                        </Text>
+
+
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: 'row', alignItems: 'center'
+                        }}
+                    >
+                        <Text
+                            style={[styles.labelSmall, { color: colors.BLACK }]}
+                        >
+                            {'Amt: '}
+
+                        </Text>
+
+                        <Text
+                            style={[styles.labelKey, { color: colors.PRIMARY, flex: undefined }]}
+                        >
+                            {constants.SYMBOL_RUPEE + item.total}
+
+                        </Text>
+
+                    </View>
+
+                </View>
+
+                <Text
+                    style={[styles.productKey,{fontSize:fonts._16,marginTop:25,marginBottom:15}]}
+                >
+                    {constants.TXT_ORDERED}
+                </Text>
+
+
+            </View>
+        )
+    }
+
+    getFooters() {
+        return (
+            <View>
+
+            </View>)
+    }
+
+
+    drawKeyValue(key, value, moreStyles = {}, fontColor = { color: colors.DARKGRAY }) {
 
         return (
             <View

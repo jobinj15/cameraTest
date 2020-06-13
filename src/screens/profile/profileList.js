@@ -66,6 +66,8 @@ class ProfileList extends Component {
         }
     }
 
+    
+
     showLogoutAlert(){
         global.showAlert(constants.TITLE_DELETE, constants.DES_LOGOUT, this.logout);
     }
@@ -112,7 +114,7 @@ class ProfileList extends Component {
             actions: [NavigationActions.navigate({
                 routeName: 'OnBoard', params: {
                 }
-            })] 
+            })]
         });
 
         this.props.navigation.dispatch(resetAction);
