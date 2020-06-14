@@ -14,7 +14,6 @@ import colors from '../../styles/colors';
 import constants from '../../utility/constants';
 import PTRView from 'react-native-pull-to-refresh';
 import ToolBar from '../../components/toolbar';
-import fonts from '../../utility/fonts';
 
 import OrderStatus from './order/order_status';
 import OrderItems from './order/order_items';

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
 import { View, TouchableWithoutFeedback, Text, Image, FlatList } from 'react-native';
-import { Card } from 'react-native-ui-lib';
 import { observer, inject } from "mobx-react";
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
@@ -108,21 +107,15 @@ export default class SelectAddress extends Component {
                         this.navigateTo('SelectPayment')
                     }
                 }
-                style={styles.bottomView}
+                style={[styles.bottomView,{bottom:15,marginHorizontal:10}]}
                 rippleColor={colors.RIPPLE}
             >
-                
-                    <Text
-                        style={[styles.stripLabel, { color: colors.WHITE }]}
-                    >
-                        {constants.TXT_TOTAL + constants.SYMBOL_RUPEE + this.state.total}
-                    </Text>
 
-                    <Text
-                        style={[styles.stripLabel, { color: colors.WHITE, flex: undefined }]}
-                    >
-                        {constants.TXT_CONTINUE}
-                    </Text>
+                <Text
+                    style={[styles.stripLabel, { color: colors.WHITE,textAlign:'center'}]}
+                >
+                    {global.capitalize(constants.TXT_PROCEED_PAY)}
+                </Text>
             </Ripple>
         )
     }
@@ -136,10 +129,75 @@ export default class SelectAddress extends Component {
 
 
 
+    drawKeyValue(key, value, moreStyles = {}) {
+
+        return (
+            <View
+                style={[{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop:5,
+                    flex: 1
+                }, moreStyles]}
+            >
+
+                <Text
+                    style={[styles.labelSmall, { flex: 1,color:colors.BLACK}]}
+                >
+                    {key}
+
+                </Text>
+
+                <Text
+                    style={[styles.labelSmall, {color:colors.BLACK}]}
+                    >
+                    {value}
+
+                </Text>
+
+
+            </View>
+        )
+
+    }
+
+
+    drawTotal(key, value, moreStyles = {}) {
+
+        return (
+            <View
+                style={[{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop:10,
+                    flex: 1
+                }, moreStyles]}
+            >
+
+                <Text
+                    style={[styles.productKey, { flex: 1,color:colors.BLACK}]}
+                >
+                    {key}
+
+                </Text>
+
+                <Text
+                    style={[styles.labelSmall, {color:colors.PRIMARY}]}
+                    >
+                    {value}
+
+                </Text>
+
+
+            </View>
+        )
+
+    }
+
 
     render() {
         return (
-            <View style={[styles.styleFull]}>
+            <View style={[styles.styleFull, { backgroundColor: colors.WHITE }]}>
 
                 <ScrollView>
                     <View
@@ -150,7 +208,43 @@ export default class SelectAddress extends Component {
 
                         {this.drawAddressCard()}
 
-                        <Ripple
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignSelft: 'stretch',
+                                marginTop: 25
+                            }}
+                        >
+                            <Text
+                                style={[styles.labelSmall, { color: colors.BLACK, flex: 1 }]}
+                            >
+                                {constants.TXT_APPLY_COUPON.replace('Apply', 'Applied')}
+                            </Text>
+
+
+                            <Text
+                                style={[styles.labelSmall, { color: colors.PRIMARY }]}
+                            >
+                                {'New20'}
+                            </Text>
+
+
+                        </View>
+
+                        <Text
+                            style={[styles.productKey, { marginTop: 25 }]}
+                        >
+                            {constants.TXT_SUMMARY}
+
+                        </Text>
+
+                        {this.drawKeyValue('Subtotal', constants.SYMBOL_RUPEE+'150.00')}
+                        {this.drawKeyValue('Delivery Charges', constants.TXT_FREE)}
+                        {this.drawKeyValue('Discount','-10.00')}
+                        {this.drawTotal(constants.TXT_TOTAL.replace(':',''),constants.SYMBOL_RUPEE+ this.state.total)}
+
+
+                        {/* <Ripple
                             onPress={() => {
                                 this.handleChangeAddress();
                             }}
@@ -162,7 +256,7 @@ export default class SelectAddress extends Component {
                             >
                                 {constants.TXT_ADD_CHANGE_ADDRESS}{" "}
                             </Text>
-                        </Ripple>
+                        </Ripple> */}
                     </View>
 
                 </ScrollView>
@@ -187,31 +281,49 @@ export default class SelectAddress extends Component {
             return (<View />)
 
         return (
-            <Card
+            <View
                 style={[styles.styleFull, {
-                    paddingTop: 20, paddingBottom: 10,
-                    paddingHorizontal: 15,
-                    marginBottom: 20,
-                    backgroundColor: colors.WHITE
                 }]}
             >
-
                 <Text
-                    style={[styles.stripLabel]}
+                    style={[styles.productKey]}
                 >
-                    {address.name}
+                    {constants.TXT_DEL_ADDRESS}
 
                 </Text>
 
-                <Text
-                    style={[styles.labelSmallX1, { marginTop: 10 }]}
-                >
-                    {address.address + ' ' + address.area + ' , ' + address.city + ' , ' + address.state
-                        + ' , ' + address.pin_code
-                    }
 
-                </Text>
-            </Card>
+                <View
+                    style={{
+                        flexDirection: 'row', alignSelf: 'stretch',
+                        alignItems: 'center'
+                    }}
+                >
+
+                    <Text
+                        style={[styles.labelSmall, { flex: 1 }]}
+                    >
+                        {address.address + ' ' + address.area + ' , ' + address.city + ' , ' + address.state
+                            + ' , ' + address.pin_code
+                        }
+
+                    </Text>
+
+                    <TouchableWithoutFeedback
+                        onPress={() => {
+                            this.handleChangeAddress();
+
+                        }}
+                    >
+                        <Text
+                            style={[styles.labelSmall, { color: colors.PRIMARY }]}
+                        >
+                            {constants.TXT_CHANGE}
+                        </Text>
+
+                    </TouchableWithoutFeedback>
+                </View>
+            </View>
 
         )
     }

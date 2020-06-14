@@ -17,7 +17,6 @@ import {
 } from 'react-native-responsive-screen';
 import colors from '../../styles/colors';
 
-
 import {StackActions, NavigationActions} from 'react-navigation';
 import {Dialog, RadioGroup, RadioButton} from 'react-native-ui-lib';
 import ToolBar from '../../components/toolbar';
@@ -29,6 +28,21 @@ import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 var context;
 
 class ProfileList extends Component {
+
+  static navigationOptions = ({navigation}) => {
+    //return header with Custom View which will replace the original header
+    return {
+      header: (
+        <ToolBar
+          title={constants.TXT_PROFILE}
+          showTitleH={false}
+          showDropdown={true}
+          showBackButton={false}
+        />
+      ),
+    };
+  };
+
   constructor(props) {
     super(props);
 
@@ -73,9 +87,7 @@ class ProfileList extends Component {
     };
   }
 
-  showLogoutAlert() {
-    global.showAlert(constants.TITLE_DELETE, constants.DES_LOGOUT, this.logout);
-  }
+ 
 
   openThemeDialog() {
     console.log('openThemeDialog ' + themeStore.theme);
@@ -95,19 +107,9 @@ class ProfileList extends Component {
     this.setState({isDialogVisible: false});
   }
 
-  handleBack = () => {
-    if (this.state.isDialogVisible) {
-      this.closeDialog();
-      return true;
-    }
-    // else this.state.navigation.pop();
 
-    return false;
-  };
 
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBack);
-  }
+
 
   logout() {
     const resetAction = StackActions.reset({
@@ -125,19 +127,34 @@ class ProfileList extends Component {
     global.storeItem(constants.USER, null);
   }
 
-  static navigationOptions = ({navigation}) => {
-    //return header with Custom View which will replace the original header
-    return {
-      header: (
-        <ToolBar
-          title={constants.TXT_PROFILE}
-          showTitleH={false}
-          showDropdown={true}
-          showBackButton={false}
-        />
-      ),
-    };
+
+
+  showLogoutAlert() {
+    global.showAlert(constants.TITLE_DELETE, constants.DES_LOGOUT, this.logout);
+  }
+
+ 
+
+ 
+
+ 
+
+  handleBack = () => {
+    if (this.state.isDialogVisible) {
+      this.closeDialog();
+      return true;
+    }
+    // else this.state.navigation.pop();
+
+    return false;
   };
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBack);
+  }
+
+ 
+
 
   componentDidMount() {
     // this.props.navigation = this.props.navigation

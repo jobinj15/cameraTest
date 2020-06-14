@@ -6,9 +6,10 @@ const baseUrl = "http://www.appoctet.com/ecommerce/app_api/";
 // appoctet@2020
 //https://www.freecodecamp.org/forum/t/push-a-new-local-branch-to-a-remote-git-repository-and-track-it-too/13222
 // cd D:/Android/Projects/srinivas_guni-ecommerce-050e8e904900/srinivas_guni-ecommerce-050e8e904900
+// pip install --no-index --find-links /path/to/download/dir/ -r requirements.txt
 
 // git push -u origin V1Jobin
-
+// pip install 'tensorflow-2.2.0-cp38-cp38-win_amd64.whl' --no-index --find-links '.'
 export default urls = {
   urlLogin: baseUrl + "login/checkUser",
   urlRegister: baseUrl + 'login/register',
