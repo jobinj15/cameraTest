@@ -435,6 +435,19 @@ var styles = {
         height: 110, 
         width: 110,
     },
+
+    productImageSmall: {
+        height: 78, width: 78, marginRight: 25, padding: 20,
+        alignItems: 'center', justifyContent: 'center',
+        borderRadius: 8, backgroundColor: colors.PRODUCT_BG
+    },
+
+    productThumbnailSmall:{
+        resizeMode: 'contain',
+        height: 78, 
+        width: 78,
+    },
+
     hr: {
         backgroundColor: 'lightgrey',
         // backgroundColor: 'rgba(0, 0, 0, 0.4)',

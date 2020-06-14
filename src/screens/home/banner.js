@@ -22,7 +22,6 @@ import { observer, inject } from "mobx-react";
 import global from '../../utility/global';
 import constants from '../../utility/constants';
 
-
 @inject("bannerStore")
 @observer
 export default class HomeTab extends Component {
@@ -37,7 +36,6 @@ export default class HomeTab extends Component {
 
     componentDidMount() {
         console.disableYellowBox = true;
-
         global.getItem(constants.USER).then(result => {
             if (!result) return;
             store.getBanners(result.user_id)
