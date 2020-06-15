@@ -71,7 +71,7 @@ class OrderStatus extends Component {
             item.done = doneStatus;
             item.selected = false;
           }
-          item.description = 'testjgsjdfg'
+          // item.description = 'testjgsjdfg'
         }
 
         return { data: data }
@@ -163,7 +163,7 @@ class OrderStatus extends Component {
           backgroundColor: 'transparent',
         }}>
         <View
-          style={[global.getCircleViewStyle(22), { backgroundColor: 'green' }]}
+          style={[global.getCircleViewStyle(22), { backgroundColor: item.done?'green':colors.GREY }]}
         >
 
          {item.done && <Icon name={'done'} size={15} color={colors.WHITE} />}         
