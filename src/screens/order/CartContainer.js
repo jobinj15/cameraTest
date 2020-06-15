@@ -8,7 +8,7 @@ import SelectPayment from './SelectPayment';
 import AddAddress from '../profile/AddAddress';
 import AddressList from '../profile/AddressList';
 import OrderSuccess from './OrderSuccess';
-import PayWithPayU from './PayWithPayU';
+// import PayWithPayU from './PayWithPayU';
 
 const onBoardStack = createStackNavigator({
     ApplyCoupon: {
@@ -17,9 +17,9 @@ const onBoardStack = createStackNavigator({
     Cart: {
         screen: Cart,
     },
-    PayWithPayU: {
-        screen: PayWithPayU,
-    },
+    // PayWithPayU: {
+    //     screen: PayWithPayU,
+    // },
     SelectAddress: {
         screen: SelectAddress,
     },

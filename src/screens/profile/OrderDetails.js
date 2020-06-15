@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
 import {
@@ -8,8 +8,8 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import {Card, Button} from 'react-native-ui-lib';
-import {observer, inject} from 'mobx-react';
+import { Card, Button } from 'react-native-ui-lib';
+import { observer, inject } from 'mobx-react';
 import colors from '../../styles/colors';
 import constants from '../../utility/constants';
 import PTRView from 'react-native-pull-to-refresh';
@@ -36,7 +36,7 @@ export default class OrderDetails extends Component {
 
     store = this.props.orderDetailsStore;
 
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     this.state.order = navigation.getParam(constants.PARAM_ORDER, null);
     this.state.userId = navigation.getParam(constants.PARAM_USER, null);
 
@@ -70,12 +70,14 @@ export default class OrderDetails extends Component {
     store.order = {};
   }
 
-  static navigationOptions = ({navigation}) => {
+  static navigationOptions = ({ navigation }) => {
     return {
       header: (
         <ToolBar
           title={'Order Details'}
           showTitle={true}
+          showBoxButton={true}
+          boxText={constants.TXT_CANCEL}
           navigation={navigation}
           showBackButton={true}
         />
@@ -110,12 +112,12 @@ export default class OrderDetails extends Component {
     var image = require('../../assets/images/pic1.jpg');
 
     if (store.order.image) {
-      image = {uri: store.order.image};
+      image = { uri: store.order.image };
     }
 
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{flex: 1, padding: 10, backgroundColor: 'white'}}>
+        <View style={{ flex: 1, padding: 10, backgroundColor: 'white' }}>
           {this.orderOverview(orderData)}
           {this.orderStatusView(orderData)}
           {this.orderItemsView(orderData)}
@@ -246,7 +248,7 @@ export default class OrderDetails extends Component {
     key,
     value,
     moreStyles = {},
-    fontColor = {color: colors.DARKGRAY},
+    fontColor = { color: colors.DARKGRAY },
   ) {
     return (
       <View
@@ -261,7 +263,7 @@ export default class OrderDetails extends Component {
         <Text
           style={[
             styles.labelKey,
-            {flex: 1, fontWeight: 'PopinsMed'},
+            { flex: 1, fontWeight: 'PopinsMed' },
             fontColor,
           ]}>
           {key}
@@ -282,7 +284,9 @@ export default class OrderDetails extends Component {
           justifyContent: 'space-between',
         }}>
         <View>
-          <Text>{orderData ? orderData.order_date : ''}</Text>
+          <Text>{orderData && orderData.order_date ? global.formatDate(orderData.order_date + constants.DATE_SUFFIX,
+            'ddd, dd mmm'
+          ) : ''}</Text>
           <View
             style={{
               flex: 1,
@@ -292,7 +296,16 @@ export default class OrderDetails extends Component {
             <Text>Order ID : {orderData ? orderData.order_id : ''}</Text>
           </View>
         </View>
-        <View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center'
+          }}
+        >
+          <Text
+            style={{ marginBottom: 5 }}
+          >Amt: </Text>
+
           <Text style={[styles.amount]}>
             {constants.SYMBOL_RUPEE + (orderData ? orderData.order_total : '')}
           </Text>
@@ -308,10 +321,13 @@ export default class OrderDetails extends Component {
           flex: 1,
           flexDirection: 'column',
           justifyContent: 'flex-start',
-          marginTop: 10,
+          marginTop: 20,
         }}>
-        <Text style={[styles.stripLabel, {flex: 0}]}>Track Order</Text>
-        <OrderStatus />
+        <Text style={[styles.stripLabel, { flex: 0 }]}>Track Order</Text>
+        <OrderStatus 
+         data = {orderData.tracking_status?orderData.tracking_status:[]}
+         statusCode = {orderData.order_status_code}
+        />
       </View>
     );
   };
@@ -324,7 +340,7 @@ export default class OrderDetails extends Component {
           justifyContent: 'flex-start',
           marginTop: 10,
         }}>
-        <Text style={[styles.stripLabel, {flex: 0}]}>Ordered Items</Text>
+        <Text style={[styles.stripLabel, { flex: 0 }]}>Ordered Items</Text>
         <OrderItems orders={orderData.items} />
       </View>
     );
@@ -340,14 +356,14 @@ export default class OrderDetails extends Component {
           justifyContent: 'flex-start',
           marginTop: 10,
         }}>
-        <Text style={[styles.stripLabel, {flex: 0}]}>Delivery Address</Text>
-        <Text style={styles.labelSmallX}>
+        <Text style={[styles.stripLabel, { flex: 0 }]}>Delivery Address</Text>
+        <Text style={[styles.labelSmall, { fontSize: fonts.FONT_SIZE_SMALL }]}>
           {orderData ? orderData.name : ''}
         </Text>
-        <Text style={styles.labelSmallX}>
+        <Text style={[styles.labelSmall, { fontSize: fonts.FONT_SIZE_SMALL }]}>
           {orderData ? orderData.address : ''}
         </Text>
-        <Text style={styles.labelSmallX}>
+        <Text style={[styles.labelSmall, { fontSize: fonts.FONT_SIZE_SMALL }]}>
           {orderData ? orderData.mobile : ''}
         </Text>
       </View>
@@ -365,8 +381,8 @@ export default class OrderDetails extends Component {
           justifyContent: 'flex-start',
           marginTop: 10,
         }}>
-        <Text style={[styles.stripLabel, {flex: 0}]}>Payment</Text>
-        <Text style={styles.labelSmallX1}>
+        <Text style={[styles.stripLabel, { flex: 0 }]}>Payment</Text>
+        <Text style={[styles.labelSmall, { fontSize: fonts.FONT_SIZE_SMALL }]}>
           {orderData ? orderData.payment_type : ''}
         </Text>
       </View>

@@ -498,7 +498,17 @@ export default global = {
     return currentDate;
   },
 
+  formatDate(date,format='isoDateTime'){
+    
+    if(!date)
+    return;
 
+    // console.log('formatDate: ' + date)
+
+    date = dateFormat(date,format)
+    return date; 
+  },
+   
   getRelativeTime1(current, lastSync) {
     console.log('getRelativeTime');
     console.log('current :: ' + current);

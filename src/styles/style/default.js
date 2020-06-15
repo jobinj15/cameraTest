@@ -54,6 +54,12 @@ var styles = {
     statusBar: {
         height: STATUSBAR_HEIGHT,
     },
+    iosElevation:{
+        shadowColor: colors.BLACK,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 2
+    },
     touchable: {
         alignSelf: 'center',
         height: 45,
@@ -220,6 +226,10 @@ var styles = {
         fontFamily: 'PopinsReg',
         fontSize: fonts._12
     },
+    addressActions:{
+        padding: 3, backgroundColor: colors.SEPARATOR,
+        borderRadius: 3
+    },
     labelMini2: {
         color: colors.GREY,
         fontFamily: 'PopinsReg',
@@ -278,6 +288,18 @@ var styles = {
         position: 'absolute',
         alignSelf: 'stretch',
         bottom: 0,
+        borderRadius:5,
+        flexDirection: 'row',
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+    },
+    bottomView2: {
+        backgroundColor: colors.WHITE,
+        position: 'absolute',
+        alignSelf: 'stretch',
+        bottom: 0,
+        borderWidth:1,
+        borderColor:colors.PRIMARY,
         borderRadius:5,
         flexDirection: 'row',
         paddingVertical: 10,

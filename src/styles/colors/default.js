@@ -13,6 +13,7 @@ const colors = {
   RIPPLE : 'rgb(0, 0, 0)',
   ORANGE: '#C50',
   TRANS_BLACK : 'rgba(0,0,0,0.2)',
+  TRANS_WHITE : 'rgba(255,255,255,0.3)',
   BG_DELIVERED : 'rgba(46,0,191,0.1)',
   FT_DELIVERED : '#00bf8c',
   BG_CANCELLED : '#2eff3131',

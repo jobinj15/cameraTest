@@ -283,8 +283,8 @@ export default class ProductDetails extends Component {
                 <View
                     style={[styles.topLeft]}
                 >
-                    <IconM name={'arrow-back'} size={25} color={colors.WHITE} 
-                    style={{backgroundColor:colors.TRANS_BLACK,borderRadius:41/2,padding:8}}
+                    <IconM name={'arrow-back'} size={25} color={colors.BLACK} 
+                    style={{backgroundColor:colors.TRANS_WHITE,borderRadius:41/2,padding:8}}
                     />
 
                 </View>
@@ -319,7 +319,7 @@ export default class ProductDetails extends Component {
         const item = prodDetStore.product;
         console.log('ProductDetails ' + JSON.stringify(item))
 
-        var images = [require('../../assets/images/pic2.jpg')];
+        var images = [require('../../assets/images/placeholder.jpeg')];
 
         if (Array.isArray(item.images) && item.images.length) {
             images = item.images;

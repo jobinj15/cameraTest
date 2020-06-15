@@ -16,6 +16,7 @@ import IconF from 'react-native-vector-icons/FontAwesome';
 import IconFIS from 'react-native-vector-icons/Fontisto';
 import IconO from 'react-native-vector-icons/Octicons';
 import IconI from 'react-native-vector-icons/Ionicons';
+import Ripple from 'react-native-material-ripple';
 import styles from '../styles/style';
 import global from '../utility/global';
 import colors from '../styles/colors';
@@ -73,7 +74,8 @@ export default class ToolBar extends Component {
   }
 
   close() {
-    this.props.navigation.pop();
+    this.props.navigation.goBack(null)
+    // this.props.navigation.pop();
   }
 
 
@@ -157,6 +159,27 @@ export default class ToolBar extends Component {
               </TouchableHighlight>
             </View>
           }
+
+
+          {this.props.showBoxButton &&
+            <Ripple style={{
+              justifyContent: 'center', paddingVertical: 3,paddingHorizontal:8,
+              borderWidth:0.5,
+              borderRadius: 5
+            }}
+            rippleColor = {colors.RIPPLE}
+            >
+
+              <Text
+              style={[styles.labelSmall]}
+              >
+               {this.props.boxText}
+              </Text>
+
+            </Ripple>
+          }
+
+
 
 
         </View>

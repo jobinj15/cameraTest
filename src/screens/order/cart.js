@@ -86,10 +86,11 @@ class Cart extends Component {
     return {
       header: (
         <ToolBar
-          title="My Cart"
+          title="Your Cart"
           showTitleH={false}
           showDropdown={true}
-          showBackButton={false}
+          navigation={navigation}
+          showBackButton={true}
         />
       ),
     };
@@ -423,21 +424,53 @@ class Cart extends Component {
 
   bottomView() {
     return (
-      <Ripple
-        onPress={() => {
-          if (cartStore.total) this.navigateTo('SelectAddress');
-        }}
-        style={styles.bottomView}
-        rippleColor={colors.RIPPLE}>
-        <Text style={[styles.stripLabel, { color: colors.WHITE }]}>
-          {constants.TXT_TOTAL + constants.SYMBOL_RUPEE + cartStore.total}
-        </Text>
 
-        <Text
-          style={[styles.stripLabel, { color: colors.WHITE, flex: undefined }]}>
-          {constants.TXT_CHECKOUT}
-        </Text>
-      </Ripple>
+      <View
+        style={[styles.bottomView, {
+          backgroundColor: colors.WHITE, elevation: 2,
+          width: global.DEVICE_WIDTH, alignItems: 'center'
+        }]}
+        {...styles.iosElevation}
+      >
+
+        <View
+          style={{ flex: 1,marginTop:10 }}
+        >
+
+          <Text
+            style={[styles.labelSmall, {
+              color: colors.BLACK, fontSize: fonts.FONT_SIZE_SMALLER
+            }]}
+          >
+            {constants.TXT_TOTAL_ITEMS + cartStore.noOfItems}
+
+          </Text>
+
+          <Text
+            style={[styles.bigBold, { color: colors.PRIMARY }]}
+          >
+            {constants.SYMBOL_RUPEE + cartStore.total}
+          </Text>
+
+          <Text style={[styles.labelSmall,{fontSize: fonts.FONT_SIZE_SMALLER}]}>
+            {constants.TXT_COST_DESC}
+          </Text>
+
+        </View>
+
+        <Ripple
+          onPress={() => {
+            if (cartStore.total) this.navigateTo('SelectAddress');
+          }}
+          style={[styles.largeButton,{width:undefined}]}
+          rippleColor={colors.RIPPLE}>
+          <Text style={[styles.buttonText]}>
+            {constants.TXT_CHECKOUT}
+          </Text>
+        </Ripple>
+      </View>
+
+
     );
   }
 

@@ -5,9 +5,9 @@ import android.content.Context;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import superinfotech.suraj.reactnativepayumoney.PayumoneyPackage;
-import superinfotech.suraj.reactnativepayumoney.PayumoneyPackage;
-import superinfotech.suraj.reactnativepayumoney.PayumoneyPackage;
+//import superinfotech.suraj.reactnativepayumoney.PayumoneyPackage;
+//import superinfotech.suraj.reactnativepayumoney.PayumoneyPackage;
+//import superinfotech.suraj.reactnativepayumoney.PayumoneyPackage;
 import com.airbnb.android.react.lottie.LottiePackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.azendoo.reactnativesnackbar.SnackbarPackage;

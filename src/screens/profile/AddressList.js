@@ -9,6 +9,7 @@ import constants from '../../utility/constants';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import ToolBar from '../../components/toolbar';
 import Ripple from 'react-native-material-ripple';
+import fonts from '../../utility/fonts';
 
 var listApiData = {
     page_no: 0,
@@ -109,7 +110,7 @@ export default class AdressList extends Component {
                     extraData={this.state}
                     showsVerticalScrollIndicator={false}
                     data={store.addressList}
-                    style={{backgroundColor:colors.WHITE}}
+                    style={{ backgroundColor: colors.WHITE }}
                     onRefresh={this.handleRefresh.bind(this)}
                     refreshing={store.refreshing}
                     renderItem={this.renderRow.bind(this)}
@@ -124,7 +125,7 @@ export default class AdressList extends Component {
 
                 {
                     (store.apiLoaded && !store.addressList.length)
-                    && global.getNoDataView(constants.TXT_EMP_ADDRESS,constants.FRM_ADDRESS)
+                    && global.getNoDataView(constants.TXT_EMP_ADDRESS, constants.FRM_ADDRESS)
                 }
 
                 {
@@ -147,10 +148,10 @@ export default class AdressList extends Component {
                     this.navigateTo('AddAddress')
                 }}
                 rippleColor={colors.RIPPLE}
-                style={styles.bottomView}
+                style={[styles.bottomView2,{bottom:15,marginHorizontal:10}]}
             >
                 <Text
-                    style={[styles.stripLabel, { color: colors.WHITE, textAlign: 'center' }]}
+                    style={[styles.stripLabel, { color: colors.PRIMARY, textAlign: 'center' }]}
                 >
                     {constants.TXT_ADD_ADDRESS}
                 </Text>
@@ -246,17 +247,38 @@ export default class AdressList extends Component {
                     </View>
 
                     <View
-                    style={{
-                        alignItems:'center',marginLeft:10
-                    }}
+                        style={{
+                            alignItems: 'center', marginLeft: 10
+                        }}
                     >
+
+                        <Ripple
+                            onPress={() => {
+                            }}
+                            rippleColor={colors.RIPPLE}
+                            style={[styles.addressActions,{
+                                paddingVertical: 3, paddingHorizontal: 6,
+                                justifyContent: 'center'
+                            }]}
+                        >
+                            <Text
+                                style={{
+                                    color: colors.BLACK, fontSize: fonts.FONT_SIZE_SMALLER,
+                                    marginBottom: 2,
+                                }}
+                            >
+                                {'Home'}
+                            </Text>
+                        </Ripple>
 
                         <Ripple
                             onPress={() => {
                                 this.navigateTo('AddAddress', constants.MODE_EDIT, item)
                             }}
                             rippleColor={colors.RIPPLE}
-                            style={{padding:3,backgroundColor:colors.SEPARATOR}}
+                            style={[styles.addressActions,{
+                                marginTop: 5
+                            }]}
                         >
                             <Icon name="edit" size={20} color={colors.GREY} />
                         </Ripple>
@@ -269,7 +291,9 @@ export default class AdressList extends Component {
                                     global.showAlert(constants.TITLE_DELETE, constants.DES_DEL, this.onDeleteYes)
                                 }}
                                 rippleColor={colors.RIPPLE}
-                                style={{padding:3,backgroundColor:colors.SEPARATOR,marginTop:5}}
+                                style={[styles.addressActions,{
+                                    marginTop: 5
+                                }]}
                             >
                                 <Icon name="delete" size={20} color={colors.GREY} />
                             </Ripple>

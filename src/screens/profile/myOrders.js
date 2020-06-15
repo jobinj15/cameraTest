@@ -244,7 +244,9 @@ export default class MyOrders extends Component {
                         style={{ padding: 15 }}
                     >
 
-                        {this.drawKeyValue(constants.TXT_ORDERNO + item.order_id, item.order_date)}
+                        {this.drawKeyValue(constants.TXT_ORDERNO + item.order_id, 
+                            item.order_date?global.formatDate(item.order_date+constants.DATE_SUFFIX,
+                            'dd mmm, yyyy'):'')}
                         {this.drawKeyValue(item.total_quantity + ' items ordered', constants.SYMBOL_RUPEE +
                             item.total,
                             { color: colors.PRIMARY, fontSize: fonts._16 })}
