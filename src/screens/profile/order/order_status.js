@@ -98,7 +98,7 @@ class OrderStatus extends Component {
           showsVerticalScrollIndicator={false}
           data={this.state.data}
           renderItem={this.renderRow.bind(this)}
-          keyExtractor={(item, index) => index.toString()}
+          listKey={(item, index) => 'OrderStatus' + index.toString()}
         />
       </View>
     );
@@ -197,7 +197,7 @@ class OrderStatus extends Component {
               // backgroundColor: 'transparent',
             }}>
             {this.dashLine(index, 1)}
-            {item.selected ? this.renderCircle(item) : this.renderCircle(item)}
+            {item.selected ? this.renderRipple(item) : this.renderCircle(item)}
             {this.dashLine(index, 2)}
           </View>
           <View style={{ marginLeft: 15, justifyContent: 'center', height: 50 }}>

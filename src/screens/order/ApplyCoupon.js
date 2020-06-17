@@ -10,6 +10,7 @@ import constants from '../../utility/constants';
 import colors from '../../styles/colors';
 import PlusView from '../../components/custom_views/plusView';
 import Icon from 'react-native-vector-icons/Ionicons';
+import IconF from 'react-native-vector-icons/FontAwesome5';
 import ToolBar from '../../components/toolbar'
 import fonts from '../../utility/fonts';
 
@@ -46,7 +47,7 @@ class ApplyCoupon extends Component {
 
     }
 
-    
+
     static navigationOptions = ({ navigation }) => {
         return {
             header: (
@@ -96,38 +97,27 @@ class ApplyCoupon extends Component {
         cartStore.getCart(formdata, listApiData.page_no)
     }
 
-    applyCoupon(){
-        
+    applyCoupon() {
+
     }
 
 
-
-
-    render() {
+    getHeaders() {
         return (
-            <View style={[styles.styleFull]}>
-
-                <View
-                    style={{
-                        padding: 10,
-                        backgroundColor: colors.ListViewBG
-                    }}
-                >
-
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            borderColor: colors.LIGHT_GRAY,
-                            borderWidth: 1,
-                            alignItems: "center",
-                            borderRadius: 3,
-                            backgroundColor: colors.WHITE,
-                            padding: 15
-                        }}
-                    >
+            <View
+                style={{
+                    flexDirection: 'row',
+                    borderColor: colors.LIGHT_GRAY,
+                    borderWidth: 1,
+                    alignItems: "center",
+                    borderRadius: 3,
+                    backgroundColor: colors.WHITE,
+                    padding: 15
+                }}
+            >
 
 
-                        {/* <FloatingTitleTextInputField
+                {/* <FloatingTitleTextInputField
                             attrName={'couponCode'}
                             title={constants.TXT_COUPON_CODE}
                             style={{ flex: 1 }}
@@ -142,60 +132,60 @@ class ApplyCoupon extends Component {
                             }}
                         /> */}
 
-                        <TextField
-                            label={constants.TXT_COUPON_CODE}
-                            autoFocus={true}
-                            labelHeight={20}
-                            maxLength={10}
-                            autoCapitalize={true}
-                            tintColor={colors.PRIMARY}
-                            containerStyle={{ flex: 1 }}
-                            titleFontSize={fonts._12}
-                            numberOfLines={1}
-                            onChangeText={code => {
-                                this.state.couponCode = code;
-                            }}
-                            value={this.state.couponCode}
-                        />
+                <TextField
+                    label={constants.TXT_COUPON_CODE}
+                    autoFocus={true}
+                    labelHeight={20}
+                    maxLength={10}
+                    autoCapitalize={true}
+                    tintColor={colors.PRIMARY}
+                    containerStyle={{ flex: 1 }}
+                    titleFontSize={fonts._12}
+                    numberOfLines={1}
+                    onChangeText={code => {
+                        this.state.couponCode = code;
+                    }}
+                    value={this.state.couponCode}
+                />
 
 
-                        <TouchableWithoutFeedback
-                            onPress={
-                                () => {
-                                    if (!this.state.couponCode)
-                                        global.showMessage(constants.ERROR_COUPON)
-                                    else {
-                                        this.applyCoupon()
-                                    }
-                                }
+                <TouchableWithoutFeedback
+                    onPress={
+                        () => {
+                            if (!this.state.couponCode)
+                                global.showMessage(constants.ERROR_COUPON)
+                            else {
+                                this.applyCoupon()
                             }
-                        >
-                            <Text
-                                style={[styles.apply, { marginLeft: 20 }]}
-                            >
-                                {global.capitalize(constants.TXT_APPLY)}
-                            </Text>
-
-                        </TouchableWithoutFeedback>
-
-
-
-                    </View>
-
+                        }
+                    }
+                >
                     <Text
-                        style={[styles.labelSmallX1, { color: colors.BLACK, marginTop: 8 }]}
+                        style={[styles.apply, { marginLeft: 20 }]}
                     >
-                        {global.capitalize(constants.TXT_AVAIL_COUPONS)}
+                        {global.capitalize(constants.TXT_APPLY)}
                     </Text>
 
+                </TouchableWithoutFeedback>
 
-                </View>
+
+
+            </View>
+
+        )
+    }
+
+    render() {
+        return (
+            <View style={[styles.styleFull]}>
 
                 <FlatList
                     navigation={this.props.navigation}
                     extraData={this.state}
                     showsVerticalScrollIndicator={false}
                     data={couponStore.coupons}
+                    style={{ backgroundColor: colors.WHITE }}
+                    ListHeaderComponent={this.getHeaders()}
                     renderItem={this.renderRow.bind(this)}
                     ItemSeparatorComponent={this.renderSeparator}
                     keyExtractor={(item, index) => index.toString()}
@@ -219,7 +209,7 @@ class ApplyCoupon extends Component {
     renderSeparator = () => {
         return (
             <View
-            // style={styles.productSeperator}
+                style={styles.productSeperator2}
             />
         );
     };
@@ -251,27 +241,35 @@ class ApplyCoupon extends Component {
                 <View
                     style={{
                         flexDirection: 'row',
-                        flex: 1,
+                        alignSelf: 'stretch',
                         alignItems: 'center'
                     }}
                 >
 
                     <View
                         style={{
-                            flex: 1
+                            flex: 1,
+                            alignItems: 'flex-start'
                         }}
                     >
                         <Text
-                            style={[styles.bigBold]}
+                            style={[styles.productKey, {
+                                borderStyle: 'dashed', borderWidth: 1,
+                                borderRadius: 1, paddingHorizontal: 5, paddingTop: 3,
+                                borderColor: colors.GREY
+                            }]}
                         >
                             {item.code}
                         </Text>
                     </View>
 
                     <Text
-                        style={[styles.bigBold, { color: colors.PRIMARY, fontSize: fonts._16 }]}
+                        style={[styles.buttonText, {
+                            color: colors.PRIMARY,
+                            fontSize: fonts._12
+                        }]}
                     >
-                        {global.capitalize(constants.TXT_APPLY)}
+                        {constants.TXT_APPLY}
                     </Text>
 
 
@@ -279,18 +277,44 @@ class ApplyCoupon extends Component {
 
 
                 <Text
-                    style={[styles.labelProfile, { marginTop: 10, marginBottom: 15, color: colors.DARKGRAY2 }]}
+                    style={[styles.productKey, { marginTop: 10, color: colors.DARKGRAY2 }]}
                 >
                     {item.title}
                 </Text>
 
-                {global.getSeperator()}
-
-                <Text
-                    style={[styles.labelSmallX1, { marginVertical: 10 }]}
+                <View
+                    style={{
+                        flex: 1, flexDirection: 'row'
+                    }}
                 >
-                    {item.description}
-                </Text>
+
+                    <Text
+                        style={[styles.labelSmall, {flex:1}]}
+                    >
+                        {item.description}
+                    </Text>
+
+                    <View
+                        style={{ flexDirection: 'row',alignItems:'center',marginLeft:15 }}
+                    >
+                        <Text
+                            style={[styles.labelMini2, { color: colors.BLACK,marginRight:5 }]}
+                        >
+
+                            {constants.TXT_VIEW_MORE}
+
+                        </Text>
+
+                        <IconF name={'plus'} size={10} color={colors.BLACK} />
+
+
+                    </View>
+
+
+                </View>
+
+
+
 
             </View>
         )

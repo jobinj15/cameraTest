@@ -466,7 +466,7 @@ export default class Products extends Component {
 
 function onEndIcon2Clicked() {
   console.log('onEndIcon2Clicked!');
-  this.navigateTo('Filter');
+  currObj.navigateTo('Filter');
   if (!currObj) {
     
   }

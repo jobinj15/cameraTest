@@ -59,7 +59,7 @@ class OrderItems extends Component {
           showsVerticalScrollIndicator={false}
           data={this.props.orders}
           renderItem={this.renderRow.bind(this)}
-          keyExtractor={(item, index) => index.toString()}
+          listKey={(item, index) => 'orderItems'+index.toString()}
         />
       </View>
     );

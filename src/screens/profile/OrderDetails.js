@@ -20,6 +20,7 @@ import fonts from '../../utility/fonts';
 import OrderStatus from './order/order_status';
 import OrderItems from './order/order_items';
 import LabelStrip from '../home/labelStrip';
+import { FlatList } from 'react-native-gesture-handler';
 
 var orderDetailApiData = {
   user_id: '',
@@ -94,6 +95,19 @@ export default class OrderDetails extends Component {
   }
 
   //0 4 8
+
+  getHeaders(orderData) {
+    return (
+      <View>
+        {this.orderOverview(orderData)}
+        {this.orderStatusView(orderData)}
+        {this.orderItemsView(orderData)}
+        {this.deliveryAddressView(orderData)}
+        {this.paymentView(orderData)}
+      </View>
+    )
+  }
+
   render() {
     if (store.message) {
       return global.getNoDataView(
@@ -117,15 +131,18 @@ export default class OrderDetails extends Component {
     }
 
     return (
-      <Animated.ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ flex: 1, padding: 10, backgroundColor: 'white' }}>
-          {this.orderOverview(orderData)}
-          {this.orderStatusView(orderData)}
-          {this.orderItemsView(orderData)}
-          {this.deliveryAddressView(orderData)}
-          {this.paymentView(orderData)}
-        </View>
-      </Animated.ScrollView>
+      <View style={[styles.styleFull, { padding: 0, backgroundColor: colors.WHITE,padding:15 }]}>
+        <FlatList
+          navigation={this.props.navigation}
+          extraData={this.state}
+          showsVerticalScrollIndicator={false}
+          data={[]}
+          keyExtractor={(item, index) => index.toString()}
+          ListHeaderComponent={
+            this.getHeaders(orderData)
+          }
+        />
+      </View>
 
       // <PTRView
       //     onRefresh={this.callApi()}
@@ -283,7 +300,9 @@ export default class OrderDetails extends Component {
           marginTop: 5,
           flexDirection: 'row',
           justifyContent: 'space-between',
-        }}>
+        }}
+        key={'orderOverview'}
+        >
         <View>
           <Text>{orderData && orderData.order_date ? global.formatDate(orderData.order_date + constants.DATE_SUFFIX,
             'ddd, dd mmm'
@@ -320,14 +339,14 @@ export default class OrderDetails extends Component {
       <View
         style={{
           flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
           marginTop: 20,
-        }}>
+        }}
+        key = {'orderStatusView'}
+        >
         <Text style={[styles.stripLabel, { flex: 0 }]}>Track Order</Text>
-        <OrderStatus 
-         data = {orderData.tracking_status?orderData.tracking_status:[]}
-         statusCode = {orderData.order_status_code}
+        <OrderStatus
+          data={orderData.tracking_status ? orderData.tracking_status : []}
+          statusCode={orderData.order_status_code}
         />
       </View>
     );
@@ -337,10 +356,10 @@ export default class OrderDetails extends Component {
       <View
         style={{
           flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
           marginTop: 10,
-        }}>
+        }}
+        key = {'orderItemsView'}
+        >
         <Text style={[styles.stripLabel, { flex: 0 }]}>Ordered Items</Text>
         <OrderItems orders={orderData.items} />
       </View>
@@ -353,10 +372,10 @@ export default class OrderDetails extends Component {
       <View
         style={{
           flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
           marginTop: 10,
-        }}>
+        }}
+        key={'deliveryAddressView'}
+        >
         <Text style={[styles.stripLabel, { flex: 0 }]}>Delivery Address</Text>
         <Text style={[styles.labelSmall, { fontSize: fonts.FONT_SIZE_SMALL }]}>
           {orderData ? orderData.name : ''}
@@ -378,10 +397,10 @@ export default class OrderDetails extends Component {
       <View
         style={{
           flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
           marginTop: 10,
-        }}>
+        }}
+        key={'paymentView'}
+        >
         <Text style={[styles.stripLabel, { flex: 0 }]}>Payment</Text>
         <Text style={[styles.labelSmall, { fontSize: fonts.FONT_SIZE_SMALL }]}>
           {orderData ? orderData.payment_type : ''}

@@ -187,7 +187,7 @@ export default class AddAddress extends Component {
     this.updateToolbarTitle(this.state.mode == constants.MODE_EDIT ? constants.TXT_UPDATE + ' Address'
       : constants.TXT_ADD_ADDRESS)
 
-    }
+  }
 
   validateAndAddAddress() {
     var item;
@@ -256,14 +256,14 @@ export default class AddAddress extends Component {
     return (
       <View
         style={[
-          styles.styleFull, { backgrounColor: colors.WHITE }
+          styles.styleFull, { backgroundColor: colors.WHITE }
         ]}
       >
 
         <ScrollView
           keyboardShouldPersistTaps='handled'
           style={{
-            padding: 15, backgrounColor: colors.WHITE,
+            padding: 15
           }}
           showsVerticalScrollIndicator={false}
         >
@@ -278,25 +278,6 @@ export default class AddAddress extends Component {
               }}
               disabled={store.loading}
               updateMasterState={this._updateMasterState}
-            />
-
-
-            <FloatingTitleTextInputField
-              attrName={fields.ADDRESS}
-              title={constants.TXT_ADDRESS}
-              value={this.state[fields.ADDRESS]}
-              disabled={store.loading}
-              style={{
-                marginBottom: 15,
-              }}
-              updateMasterState={this._updateMasterState}
-              textInputStyles={{ // here you can add additional TextInput styles
-                height: 80
-              }}
-              otherTextInputProps={{   // here you can add other TextInput props of your choice
-                numberOfLines: 5,
-                multiline: true
-              }}
             />
 
             <FloatingTitleTextInputField
@@ -317,6 +298,78 @@ export default class AddAddress extends Component {
               }}
             />
 
+            <View
+              style={{
+                alignSelf: 'stretch', flexDirection: 'row', marginBottom: 15
+              }}
+            >
+
+              <FloatingTitleTextInputField
+                attrName={fields.PINCODE}
+                title={constants.TXT_PIN}
+                value={this.state[fields.PINCODE]}
+                style={{
+                  flex: 1
+                }}
+                onChange={pin => {
+                  this.setState({ [fields.PINCODE]: pin.replace(/[^0-9]/g, '') }, () => {
+                    if (pin && pin.length > 5) {
+                      store.isValidPin = false;
+                      pinApiData.pincode = pin;
+                      store.getPin(global.sendAsFormData(pinApiData))
+                    }
+                    else {
+                      store.state = ''
+                    }
+                  })
+                }}
+                disabled={store.loading}
+                updateMasterState={this._updateMasterState}
+                otherTextInputProps={{   // here you can add other TextInput props of your choice
+                  keyboardType: "numeric",
+                  maxLength: 6,
+                }}
+              />
+
+
+              <FloatingTitleTextInputField
+                attrName={constants.TXT_STATE}
+                title={constants.TXT_STATE}
+                style={{
+                  marginLeft: 30, flex: 1
+                }}
+                disabled={store.loading}
+                value={store.state == constants.TXT_STATE ? '' : store.state}
+                updateMasterState={this._updateMasterState}
+                otherTextInputProps={{
+                  editable: false
+                }}
+              />
+
+
+
+
+            </View>
+
+
+            <FloatingTitleTextInputField
+              attrName={fields.ADDRESS}
+              title={constants.TXT_ADDRESS}
+              value={this.state[fields.ADDRESS]}
+              disabled={store.loading}
+              style={{
+                marginBottom: 15,
+              }}
+              updateMasterState={this._updateMasterState}
+              textInputStyles={{ // here you can add additional TextInput styles
+                height: 80
+              }}
+              otherTextInputProps={{   // here you can add other TextInput props of your choice
+                numberOfLines: 5,
+                multiline: true
+              }}
+            />
+
 
 
             <FloatingTitleTextInputField
@@ -332,30 +385,6 @@ export default class AddAddress extends Component {
               }}
             />
 
-
-            <FloatingTitleTextInputField
-              attrName={fields.PINCODE}
-              title={constants.TXT_PIN}
-              value={this.state[fields.PINCODE]}
-              style={{
-                marginBottom: 15
-              }}
-              onChange={pin => {
-                this.setState({ [fields.PINCODE]: pin.replace(/[^0-9]/g, '') }, () => {
-                  if (pin && pin.length > 5) {
-                    store.isValidPin = false;
-                    pinApiData.pincode = pin;
-                    store.getPin(global.sendAsFormData(pinApiData))
-                  }
-                })
-              }}
-              disabled={store.loading}
-              updateMasterState={this._updateMasterState}
-              otherTextInputProps={{   // here you can add other TextInput props of your choice
-                keyboardType: "numeric",
-                maxLength: 6,
-              }}
-            />
 
 
             <FloatingTitleTextInputField
@@ -373,20 +402,6 @@ export default class AddAddress extends Component {
 
 
 
-            <FloatingTitleTextInputField
-              attrName={constants.TXT_STATE}
-              title={constants.TXT_STATE}
-              style={{
-                marginBottom: 15
-              }}
-              disabled={store.loading}
-              value={store.state == constants.TXT_STATE ? '' : store.state}
-              updateMasterState={this._updateMasterState}
-              otherTextInputProps={{
-                editable: false
-              }}
-            />
-
             {/* <Text
               style={[styles.labelBorder, { marginBottom: 10 }]}
             >
@@ -400,9 +415,6 @@ export default class AddAddress extends Component {
             <FloatingTitleTextInputField
               attrName={constants.TXT_CITY}
               title={constants.TXT_CITY}
-              style={{
-                marginBottom: 100
-              }}
               disabled={store.loading}
               value={store.city == constants.TXT_CITY ? '' : store.city}
               updateMasterState={this._updateMasterState}
@@ -411,6 +423,31 @@ export default class AddAddress extends Component {
               }}
             />
 
+
+            {/* Address Types */}
+            <View
+              style={{ alignSelf: 'stretch',marginBottom: 100, marginTop: 30 }}
+            >
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  marginBottom:15,
+                  color: 'dimgrey'
+                }}
+
+              >
+                {'Type of Address'}
+              </Text>
+
+              <View
+                style={{ alignSelf: 'stretch', flexDirection: 'row' }}
+              >
+                {this.drawAddressTypes(store.addressTypes)}
+
+              </View>
+
+            </View>
 
             {/* <Text
               style={[styles.labelBorder, { marginBottom: 150 }]}
@@ -436,12 +473,12 @@ export default class AddAddress extends Component {
             style={[styles.largeButton, { width: undefined, marginLeft: 0, paddingHorizontal: 40 }]}
             rippleColor={colors.RIPPLE}
           >
-              <Text
-                style={styles.buttonText}
-              >
-                {this.state.mode == constants.MODE_EDIT ? global.capitalize(constants.TXT_UPDATE)
-                  : global.capitalize(constants.TXT_ADD)}{" "}
-              </Text>
+            <Text
+              style={styles.buttonText}
+            >
+              {this.state.mode == constants.MODE_EDIT ? global.capitalize(constants.TXT_UPDATE)
+                : global.capitalize(constants.TXT_ADD)}{" "}
+            </Text>
           </Ripple>
 
 
@@ -458,6 +495,73 @@ export default class AddAddress extends Component {
       </View>
     )
 
+  }
+
+
+  modifyAddressType(selIndex) {
+    var items = [...store.addressTypes];
+    console.log('modifyAddressType: ' + JSON.stringify(items))
+
+    for (let [index, item] of items.entries()) {
+      if (index == selIndex){
+        item.selected = true;
+        store.selectedAddressType = index;
+      }
+      else item.selected = false;
+    }
+
+    store.addressTypes = items
+  }
+
+  drawAddressTypes(items) {
+    return (
+      items.map((item, index) => {
+        let borderColor, backgroundColor, textColor;
+
+        if (item.selected) {
+          borderColor = colors.PRIMARY;
+          backgroundColor = colors.PRIMARY;
+          textColor = colors.WHITE
+        }
+        else {
+          borderColor = colors.GREY;
+          backgroundColor = colors.WHITE;
+          textColor = colors.BLACK
+        }
+
+        return (
+          <TouchableWithoutFeedback
+            onPress={() => {
+              this.modifyAddressType(index)
+            }}
+            key={(index).toString()}
+          >
+            <View
+              style={[styles.filterItem,
+              {
+                backgroundColor: backgroundColor,
+                borderColor: borderColor, paddingVertical: 1,
+                marginLeft: index ? 10 : 0, alignItems: 'center',
+                flexDirection: 'row'
+              }]}
+            >
+              <Text
+                style={{
+                  color: textColor,
+                  fontFamily: global.FONT_FAMILY.PopinsMed,
+                  fontSize: fonts._12
+                }}
+              >
+                {item.text}
+              </Text>
+
+            </View>
+
+
+          </TouchableWithoutFeedback>
+        )
+      })
+    )
   }
 
 

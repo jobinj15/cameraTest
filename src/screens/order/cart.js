@@ -423,6 +423,10 @@ class Cart extends Component {
   }
 
   bottomView() {
+
+    if(!cartStore.noOfItems)
+    return(<View/>)
+
     return (
 
       <View

@@ -9,6 +9,24 @@ export default class AddAddressStore {
   @observable city = constants.TXT_CITY
   @observable loading = false;
   @observable isValidPin = false;
+  @observable selectedAddressType = 0;
+  @observable addressTypes = [
+    {
+     id : 1,
+     text : 'Home',
+     selected :  true
+    },
+    {
+     id : 2,
+     text : 'Office',
+     selected :  false
+    },
+    {
+     id : 1,
+     text : 'Others',
+     selected :  false
+    },
+  ];
 
   constructor() {
     this.afterAddressAdded = undefined
