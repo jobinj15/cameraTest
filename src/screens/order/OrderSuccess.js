@@ -108,7 +108,7 @@ class OrderSuccess extends Component {
                         <Text
                             style={[styles.stripLabel, {
                                 marginVertical: 25, color: colors.GREY2,
-                                textAlign: 'center', fontStyle: 'PopinsReg'
+                                textAlign: 'center', fontStyle: global.FONT_FAMILY.PopinsReg
                             }]}
                         >
                             {constants.TXT_CAN_TRACK}

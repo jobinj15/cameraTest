@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   Text,
   Image,
+  Animated,
   ScrollView,
 } from 'react-native';
 import { Card, Button } from 'react-native-ui-lib';
@@ -116,7 +117,7 @@ export default class OrderDetails extends Component {
     }
 
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <Animated.ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ flex: 1, padding: 10, backgroundColor: 'white' }}>
           {this.orderOverview(orderData)}
           {this.orderStatusView(orderData)}
@@ -124,7 +125,7 @@ export default class OrderDetails extends Component {
           {this.deliveryAddressView(orderData)}
           {this.paymentView(orderData)}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
 
       // <PTRView
       //     onRefresh={this.callApi()}
@@ -138,7 +139,7 @@ export default class OrderDetails extends Component {
       //               styles.labelSmall,
       //               {
       //                 color: colors.DARKGRAY,
-      //                 fontWeight: 'PopinsBold',
+      //                 fontWeight: global.FONT_FAMILY.PopinsBold,
       //                 padding: 15,
       //               },
       //             ]}>
@@ -263,7 +264,7 @@ export default class OrderDetails extends Component {
         <Text
           style={[
             styles.labelKey,
-            { flex: 1, fontWeight: 'PopinsMed' },
+            { flex: 1, fontFamily: global.FONT_FAMILY.PopinsMed },
             fontColor,
           ]}>
           {key}

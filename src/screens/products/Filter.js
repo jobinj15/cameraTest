@@ -237,7 +237,7 @@ class Filter extends Component {
                                             <Text
                                                 style={{
                                                     color: textColor,
-                                                    fontFamily: 'PopinsMed',
+                                                    fontFamily: global.FONT_FAMILY.PopinsMed,
                                                     fontSize: fonts._14
                                                 }}
                                             >

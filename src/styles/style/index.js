@@ -2,7 +2,7 @@ import defaultTheme from './default.js'
 import darkTheme from './dark.js'
 import themeStore from '../../screens/stores/ThemeStore'
 import constants from '../../utility/constants.js';
-
+import global from '../../utility/global';
 // var currTheme = getCurrTheme()
 // export default currTheme;
 

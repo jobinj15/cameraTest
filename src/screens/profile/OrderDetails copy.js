@@ -135,7 +135,7 @@ export default class OrderDetails extends Component {
       //               styles.labelSmall,
       //               {
       //                 color: colors.DARKGRAY,
-      //                 fontWeight: 'PopinsBold',
+      //                 fontWeight: global.FONT_FAMILY.PopinsBold,
       //                 padding: 15,
       //               },
       //             ]}>
@@ -260,7 +260,7 @@ export default class OrderDetails extends Component {
         <Text
           style={[
             styles.labelKey,
-            {flex: 1, fontWeight: 'PopinsMed'},
+            {flex: 1, fontWeight: global.FONT_FAMILY.PopinsMed},
             fontColor,
           ]}>
           {key}

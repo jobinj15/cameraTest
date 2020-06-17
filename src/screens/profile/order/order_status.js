@@ -197,7 +197,7 @@ class OrderStatus extends Component {
               // backgroundColor: 'transparent',
             }}>
             {this.dashLine(index, 1)}
-            {item.selected ? this.renderRipple() : this.renderCircle(item)}
+            {item.selected ? this.renderCircle(item) : this.renderCircle(item)}
             {this.dashLine(index, 2)}
           </View>
           <View style={{ marginLeft: 15, justifyContent: 'center', height: 50 }}>

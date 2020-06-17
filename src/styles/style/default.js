@@ -11,6 +11,8 @@ import { Typography, Colors } from 'react-native-ui-lib';
 import colors from '../colors';
 import fonts from '../../utility/fonts';
 
+// import global from '../../utility/global';
+
 const CARD_PREVIEW_WIDTH = 20
 const CARD_MARGIN = 5;
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -83,30 +85,30 @@ var styles = {
     },
     viewAll: {
         fontSize: fonts._10,
-        fontFamily: 'PopinsBold',
+        fontFamily: fonts.FONT_FAMILY.PopinsBold,
         color: colors.PRIMARY
     },
     labelMini: {
         color: colors.WHITE,
-        fontFamily: 'PopinsBold',
+        fontFamily: fonts.FONT_FAMILY.PopinsBold,
         marginTop: 3,
         fontSize: fonts.FONT_SIZE_SMALL
     },
     stripLabel: {
         fontSize: fonts._16,
         flex: 1,
-        fontFamily: 'PopinsMed',
+        fontFamily: fonts.FONT_FAMILY.PopinsMed,
         color: colors.BLACK
     },
     labelKey: {
         fontSize: fonts._16,
         flex: 1,
-        fontFamily: 'PopinsMed',    
+        fontFamily: fonts.FONT_FAMILY.PopinsMed,    
         color: colors.BLACK
     },
     labelBorder: {
         fontSize: fonts._14,
-        fontFamily: 'PopinsMed',
+        fontFamily: fonts.FONT_FAMILY.PopinsMed,
         flex: 1,
         paddingBottom: 10,
         paddingHorizontal: 6,
@@ -128,7 +130,7 @@ var styles = {
         marginHorizontal: 15
     },
     bigBold: {
-        fontFamily: 'PopinsBold',
+        fontFamily: fonts.FONT_FAMILY.PopinsBold,
         fontSize: fonts._20,
         color: 'black'
     },
@@ -139,16 +141,16 @@ var styles = {
     },
     productKey:{
         fontSize: fonts._14,
-        fontFamily: 'PopinsBold',        
+        fontFamily: fonts.FONT_FAMILY.PopinsBold,        
         color: colors.BLACK
     },
     bigBoldOnBoard: {
-        fontFamily: 'PopinsBold',
+        fontFamily: fonts.FONT_FAMILY.PopinsBold,
         fontSize: fonts._24,
         color: colors.PRIMARY
     },
     VBigText: {
-        fontFamily: 'PopinsBold',
+        fontFamily: fonts.FONT_FAMILY.PopinsBold,
         fontSize: fonts._28,
         color: 'white'
     },
@@ -171,16 +173,16 @@ var styles = {
     },
     labelSmallX1: {
         color: colors.GREY2,
-        fontFamily: 'PopinsReg',
+        fontFamily: fonts.FONT_FAMILY.PopinsReg,
         fontSize: fonts._14
     },
     labelMed: {
         color: colors.BLACK,
-        fontFamily: 'PopinsMed',
+        fontFamily: fonts.FONT_FAMILY.PopinsMed,
         fontSize: fonts._13
     },
     amount: {
-        fontFamily: 'PopinsBold',
+        fontFamily: fonts.FONT_FAMILY.PopinsBold,
         color: colors.PRIMARY,
         fontSize: fonts._18
     },
@@ -188,7 +190,7 @@ var styles = {
         paddingVertical: 5,
         paddingHorizontal: 15,
         fontSize: fonts._14,
-        fontFamily: 'PopinsMed',
+        fontFamily: fonts.FONT_FAMILY.PopinsMed,
         borderRadius: 5,
         marginTop:2,
         borderWidth:1
@@ -197,7 +199,7 @@ var styles = {
         paddingVertical: 8,
         paddingHorizontal: 16,
         fontSize: fonts._14,
-        fontFamily: 'PopinsMed',
+        fontFamily: fonts.FONT_FAMILY.PopinsMed,
         borderRadius: 5,
         borderWidth: 1,
         backgroundColor: colors.WHITE,
@@ -207,7 +209,7 @@ var styles = {
         paddingVertical: 8,
         paddingHorizontal: 16,
         fontSize: fonts._14,
-        fontFamily: 'PopinsMed',
+        fontFamily: fonts.FONT_FAMILY.PopinsMed,
         borderRadius: 20,
         borderWidth: 1,
         backgroundColor: colors.WHITE,
@@ -223,7 +225,7 @@ var styles = {
     },
     labelSmall: {
         color: colors.GREY,
-        fontFamily: 'PopinsReg',
+        fontFamily: fonts.FONT_FAMILY.PopinsReg,
         fontSize: fonts._12
     },
     addressActions:{
@@ -232,7 +234,7 @@ var styles = {
     },
     labelMini2: {
         color: colors.GREY,
-        fontFamily: 'PopinsReg',
+        fontFamily: fonts.FONT_FAMILY.PopinsReg,
         fontSize: fonts.FONT_SIZE_SMALLER
     },
     orderStatus:{
@@ -252,7 +254,7 @@ var styles = {
     labelProfile: {
         color: colors.GREY,
         fontSize: fonts._18,
-        fontFamily: 'PopinsMed',
+        fontFamily: fonts.FONT_FAMILY.PopinsMed,
     },
     // plusContainer: {
     //     width: 138, height: 40,
@@ -281,7 +283,7 @@ var styles = {
     offerText:{
      color : colors.WHITE,
      fontSize : fonts._8,
-     fontFamily:'PopinsBold'
+     fontFamily:fonts.FONT_FAMILY.PopinsBold
     },
     bottomView: {
         backgroundColor: colors.GREEN_4,
@@ -308,18 +310,18 @@ var styles = {
     // plusBox: {
     //     alignItems: 'center',
     //     justifyContent: 'center',
-    //     width: 40, height: 40, fontSize: fonts._26, fontFamily: 'PopinsBold',
+    //     width: 40, height: 40, fontSize: fonts._26, fontFamily: fonts.FONT_FAMILY.PopinsBold,
     //     color: colors.DARKGRAY,
     //     backgroundColor: colors.ListViewBG
     // },
     plusBox: {
         alignItems: 'center',
         justifyContent: 'center',
-        width: 40, height: 40, fontSize: fonts._26, fontFamily: 'PopinsReg',
+        width: 40, height: 40, fontSize: fonts._26, fontFamily: fonts.FONT_FAMILY.PopinsReg,
         color: colors.DARKGRAY,
     },
     plusText: {
-        fontFamily: 'PopinsBold',
+        fontFamily: fonts.FONT_FAMILY.PopinsBold,
         marginTop: 3,
         color: colors.DARKGRAY,
     },
@@ -376,14 +378,14 @@ var styles = {
         fontSize: fonts._14,
         textAlign: "center",
         justifyContent: "center",
-        fontFamily: 'PopinsMed',
+        fontFamily: fonts.FONT_FAMILY.PopinsMed,
         color: "white"
     },
     buttonText2: {
         fontSize: fonts._14,
         textAlign: "center",
         justifyContent: "center",
-        fontFamily: 'PopinsMed',
+        fontFamily: fonts.FONT_FAMILY.PopinsMed,
         color: colors.WHITE
     },
     largeButton: {
@@ -439,12 +441,12 @@ var styles = {
     },
     row_title: {
         color: colors.PRIMARY_TEXTCOLOR,
-        fontFamily: 'PopinsBold',
+        fontFamily: fonts.FONT_FAMILY.PopinsBold,
         fontSize: fonts._14,
     },
     row_subtitle: {
         color: colors.SECONDARY_TEXTCOLOR,
-        fontFamily: 'PopinsReg',
+        fontFamily: fonts.FONT_FAMILY.PopinsReg,
         marginTop: 3,
         fontSize: fonts._13,
     },
@@ -456,12 +458,12 @@ var styles = {
     },
     weight: {
         fontSize: fonts._12,
-        fontFamily: 'PopinsReg',
+        fontFamily: fonts.FONT_FAMILY.PopinsReg,
         color: colors.GREY2,
     },
     address: {
         fontSize: fonts._16,
-        fontFamily: 'PopinsReg',
+        fontFamily: fonts.FONT_FAMILY.PopinsReg,
         color: colors.GREY2,
     },
     productImage: {
@@ -535,15 +537,15 @@ var styles = {
     },
     headertext: {
         fontSize: fonts._18,
-        fontFamily: 'PopinsReg',
+        fontFamily: fonts.FONT_FAMILY.PopinsReg,
     },
     subheadertext: {
         fontSize: fonts._14,
-        fontFamily: 'PopinsReg',
+        fontFamily: fonts.FONT_FAMILY.PopinsReg,
     },
     auto_grow_text: {
         fontSize: fonts._14,
-        fontFamily: 'PopinsReg',
+        fontFamily: fonts.FONT_FAMILY.PopinsReg,
     },
     taginput: {
         backgroundColor: colors.TRANSPARENT,
@@ -555,25 +557,25 @@ var styles = {
         alignSelf: 'center',
         marginRight: 10,
         fontSize: fonts._14,
-        fontFamily: 'PopinsReg',
+        fontFamily: fonts.FONT_FAMILY.PopinsReg,
     },
     row_settings_title:
     {
         color: colors.BLACK,
         fontSize: fonts._14,
-        fontFamily: 'PopinsReg',
+        fontFamily: fonts.FONT_FAMILY.PopinsReg,
     },
     row_settings_subtitle:
     {
         color: colors.SECONDARY_TEXTCOLOR,
         fontSize: fonts._13,
-        fontFamily: 'PopinsReg',
+        fontFamily: fonts.FONT_FAMILY.PopinsReg,
     },
     title: {
         color: colors.BLACK,
         fontSize: fonts._22,
         flex: 1,
-        fontFamily: 'PopinsMed'
+        fontFamily: fonts.FONT_FAMILY.PopinsMed
     },
     titleSmall: {
         color: colors.BLACK,
@@ -581,7 +583,7 @@ var styles = {
         flex: 1,
         marginLeft: 25,
         marginTop: 2,
-        fontFamily: 'PopinsMed'
+        fontFamily: fonts.FONT_FAMILY.PopinsMed
     },
     themeDialog: {
         backgroundColor: colors.WHITE,
@@ -595,7 +597,7 @@ var styles = {
     apply: {
         fontSize: fonts._12,
         color: colors.PRIMARY,
-        fontFamily: 'PopinsMed',
+        fontFamily: fonts.FONT_FAMILY.PopinsMed,
     }
 
 };

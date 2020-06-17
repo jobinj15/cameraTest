@@ -237,7 +237,7 @@ export default class Login extends Component {
               }}
             >
               <Text
-                style={[styles.stripLabel, { color: colors.PRIMARY, fontFamily: 'PopinsReg' }]}
+                style={[styles.stripLabel, { color: colors.PRIMARY, fontFamily: global.FONT_FAMILY.PopinsReg }]}
               >
                 {constants.TXT_FORGOT_PASS}
               </Text>
@@ -265,7 +265,7 @@ export default class Login extends Component {
           >
 
             <Text
-              style={[styles.stripLabel, { fontFamily: 'PopinsReg', flex: undefined }]}
+              style={[styles.stripLabel, { fontFamily: global.FONT_FAMILY.PopinsReg, flex: undefined }]}
             >
               {constants.TXT_DONT_ACCOUNT}
             </Text>
@@ -278,7 +278,7 @@ export default class Login extends Component {
               }
             >
               <Text
-                style={[styles.stripLabel, { color: colors.PRIMARY, flex: undefined, fontFamily: 'PopinsReg' }]}
+                style={[styles.stripLabel, { color: colors.PRIMARY, flex: undefined, fontFamily: global.FONT_FAMILY.PopinsReg }]}
               >
                 {constants.TXT_SIGNUP}
               </Text>

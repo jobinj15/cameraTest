@@ -29,7 +29,7 @@ const MyStatusBar = ({ backgroundColor, ...props }) => (
 );
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Dropdown } from '../components/custom_views/dropdown'
+// import { Dropdown } from '../components/custom_views/dropdown'
 import constants from '../utility/constants';
 
 export default class ToolBar extends Component {
@@ -101,7 +101,7 @@ export default class ToolBar extends Component {
             this.props.showDropdown &&
             <View style={{ alignItems: 'flex-start', flex: 1, paddingHorizontal: 15 }}>
               <Text numberOfLines={1} style={[styles.title, {
-                marginTop: 8, fontFamily: 'PopinsBold'
+                marginTop: 8, fontFamily: global.FONT_FAMILY.PopinsBold
               }]}>{this.props.title}</Text>
             </View>
           }

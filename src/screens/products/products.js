@@ -176,7 +176,10 @@ export default class Products extends Component {
 
         {prodStore.apiLoaded &&
           !prodStore.products.length &&
-          global.getNoDataView(constants.TXT_EMP_PRODUCTS,constants.FRM_PRODUCTS)}
+          global.getNoDataView(
+            constants.TXT_EMP_PRODUCTS,
+            constants.FRM_PRODUCTS,
+          )}
 
         {prodStore.message ? (
           global.getNoDataView(
@@ -298,7 +301,10 @@ export default class Products extends Component {
           }}
           backgroundColor={colors.GREEN_4}
           label={constants.TXT_ADDTOCART}
-          labelStyle={{fontFamily: 'PopinsBold', fontSize: fonts._10}}
+          labelStyle={{
+            fontFamily: global.FONT_FAMILY.PopinsBold,
+            fontSize: fonts._10,
+          }}
           borderRadius={3}
           enableShadow
         />
@@ -316,7 +322,7 @@ export default class Products extends Component {
             styles.stripLabel,
             {
               textAlign: 'center',
-              fontFamily: 'PopinsBold',
+              fontFamily: global.FONT_FAMILY.PopinsBold,
               flex: undefined,
               color: colors.BLACK,
               fontSize: fonts._18,
@@ -380,9 +386,7 @@ export default class Products extends Component {
           <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
             <View style={{flexDirection: 'row', flex: 1}}>
               <View style={styles.productImage}>
-                <Image 
-                source={image}             
-                style={styles.productThumbnail}/>
+                <Image source={image} style={styles.productThumbnail} />
                 {index == 0 && this.drawOfferView(item)}
               </View>
 
@@ -462,5 +466,8 @@ export default class Products extends Component {
 
 function onEndIcon2Clicked() {
   console.log('onEndIcon2Clicked!');
-  currObj.navigateTo('Filter');
+  this.navigateTo('Filter');
+  if (!currObj) {
+    
+  }
 }

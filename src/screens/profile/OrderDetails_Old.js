@@ -127,7 +127,7 @@ export default class OrderDetails extends Component {
                                 <Text
                                     style={[styles.labelSmall, {
                                         color: colors.DARKGRAY,
-                                        fontWeight: 'PopinsBold', padding: 15
+                                        fontWeight: global.FONT_FAMILY.PopinsBold, padding: 15
                                     }]}
                                 >
                                     {'Placed on ' + store.order.order_date}
@@ -248,7 +248,7 @@ export default class OrderDetails extends Component {
             >
 
                 <Text
-                    style={[styles.labelKey, { flex: 1, fontWeight: 'PopinsMed' }, fontColor]}
+                    style={[styles.labelKey, { flex: 1, fontFamily: global.FONT_FAMILY.PopinsMed }, fontColor]}
                 >
                     {key}
 

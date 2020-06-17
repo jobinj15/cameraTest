@@ -71,6 +71,9 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>PopinsBold.ttf</string>
+		<string>PopinsMed.ttf</string>
+		<string>PopinsReg.ttf</string>
 	</array>
 </dict>
 </plist>

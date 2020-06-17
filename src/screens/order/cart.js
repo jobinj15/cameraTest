@@ -192,7 +192,7 @@ class Cart extends Component {
             this.onAddToCart(index);
           }}
           labelStyle={{
-            fontFamily: 'PopinsBold',
+            fontFamily: global.FONT_FAMILY.PopinsBold,
             fontSize: fonts._10,
             marginTop: 3,
           }}
@@ -214,7 +214,7 @@ class Cart extends Component {
             styles.stripLabel,
             {
               textAlign: 'center',
-              fontFamily: 'PopinsBold',
+              fontFamily: global.FONT_FAMILY.PopinsBold,
               flex: undefined,
               color: colors.BLACK,
               fontSize: fonts._18,
@@ -371,9 +371,9 @@ class Cart extends Component {
               <Text
                 style={{
                   fontSize: fonts._16,
-                  fontWeight: cartStore.couponApplied
-                    ? 'PopinsBold'
-                    : 'PopinsReg',
+                  fontFamily: cartStore.couponApplied
+                    ? global.FONT_FAMILY.PopinsBold
+                    : global.FONT_FAMILY.PopinsReg,
                   color: colors.BLACK,
                 }}>
                 {cartStore.couponApplied && cartStore.couponCode

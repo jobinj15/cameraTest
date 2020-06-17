@@ -8,7 +8,8 @@
 import 'react-native-gesture-handler';
 import React, {Component} from 'react';
 import {
-  StyleSheet
+  StyleSheet,
+  SafeAreaView
 } from 'react-native';
 
 import { Provider } from "mobx-react";
@@ -60,11 +61,20 @@ class App extends Component {
   render() {
     return (
       <Provider {...stores}>
-      <RootContainer />
+            <SafeAreaView style={stylesLocal.container}>
+
+            <RootContainer />
+            </SafeAreaView>
       </Provider>
 
     );
   }
 
 }
+
+const stylesLocal = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 export default App;

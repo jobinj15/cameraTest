@@ -82,13 +82,24 @@ function normalizeHeight(value) {
 }
 
 export default global = {
-
   MAPHEIGHT: normalizeHeight(200),
   BANNERHEIGHT: normalizeHeight(160),
   DEVICE_WIDTH: Dimensions.get('window').width,
   DEVICE_HEIGHT: Dimensions.get('window').height,
   IMAGE: {
     THUMBNAIL_PLACEHOLDER: require('../assets/images/placeholder.jpeg')
+  },
+
+  // FONT_FAMILY:{
+  //   PopinsBold:'',
+  //   PopinsReg:'',
+  //   PopinsMed:''
+  // },
+
+  FONT_FAMILY: {
+    PopinsBold: Platform.OS === 'ios' ? 'Avenir-Heavy' : 'PopinsBold',
+    PopinsReg: Platform.OS === 'ios' ? 'Avenir-Black' : 'PopinsReg',
+    PopinsMed: Platform.OS === 'ios' ? 'Avenir-Medium' : 'PopinsMed',
   },
 
   CONSTANTS: {
@@ -197,7 +208,7 @@ export default global = {
         keyValue => {
           // console.log("Key value: " + keyValue); //Display key value
           const item = JSON.parse(keyValue);
-          resolve(item.user);
+          resolve(item?item.user:null);
         },
         error => {
           resolve(false);

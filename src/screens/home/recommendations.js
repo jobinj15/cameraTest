@@ -57,7 +57,7 @@ export default class Reommendations extends Component {
                     onPress={() => {
                         // this.onAddToCart(index);
                     }}
-                    labelStyle={{ fontFamily: 'PopinsBold', fontSize: fonts._10}}
+                    labelStyle={{ fontFamily: global.FONT_FAMILY.PopinsBold, fontSize: fonts._10}}
                     style={[styles.addContainer]}
                     borderRadius={3}
                     enableShadow
@@ -79,7 +79,7 @@ export default class Reommendations extends Component {
                 />
                 <Text
                     style={[styles.stripLabel, {
-                        textAlign: 'center',fontFamily:'PopinsBold',flex:undefined
+                        textAlign: 'center',fontFamily:global.FONT_FAMILY.PopinsBold,flex:undefined
                         , color: colors.BLACK,fontSize : fonts._18,paddingHorizontal:15
                     }]}
                 >{item.cart_quantity}</Text>
@@ -123,7 +123,7 @@ export default class Reommendations extends Component {
                     onPress={() => {
                         // this.onAddToCart(index);
                     }}
-                    labelStyle={{ fontFamily: 'PopinsBold', fontSize: fonts._10, marginTop: 3 }}
+                    labelStyle={{ fontFamily: global.FONT_FAMILY.PopinsBold, fontSize: fonts._10, marginTop: 3 }}
                     style={[styles.addContainer, { marginTop: 10 }]}
                     borderRadius={3}
                     enableShadow
