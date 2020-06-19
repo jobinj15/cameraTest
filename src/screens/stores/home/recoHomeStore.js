@@ -1,7 +1,7 @@
 import { observable, action } from "mobx";
 
 export default class RecoHomeStore {
-  // @observable banners = [];
+  // @observable recomm = [];
 
 
   @observable recomm = [
@@ -37,11 +37,7 @@ export default class RecoHomeStore {
     }
   ];
 
-  // @action increment() {
-  //   this.count += 1;
-  // }
-
-  // @action decrement() {
-  //   this.count -= 1;
-  // }
+  @action getRecomms(){
+    
+  }
 }

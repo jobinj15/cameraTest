@@ -5,6 +5,7 @@ import { Card, Button } from 'react-native-ui-lib';
 import { View, TouchableWithoutFeedback, Text, ActivityIndicator, FlatList, TextInput } from 'react-native';
 import { FloatingTitleTextInputField } from "../../components/custom_views/floatingtext";
 import { TextField } from "react-native-material-textfield";
+import Ripple from 'react-native-material-ripple';
 import { observer, inject } from "mobx-react";
 import constants from '../../utility/constants';
 import colors from '../../styles/colors';
@@ -61,16 +62,20 @@ class ApplyCoupon extends Component {
         };
     };
 
+    resetStore() {
+        couponStore.loading = false;
+        couponStore.coupons = [];
+        couponStore.apiLoaded = false;
+    }
+
 
     componentDidMount() {
 
         // store.onApiActionDone = this.onApiActionDone;
         global.getItem(constants.USER).then(result => {
             if (!result) return;
-
-            // this.setUserIdToApiData(result)
-
-            // this.callApi()
+            this.setUserIdToApiData(result)
+            this.callApi()
         });
 
 
@@ -78,9 +83,6 @@ class ApplyCoupon extends Component {
 
     setUserIdToApiData(result) {
         listApiData.user_id = result.user_id
-        addApiData.user_id = result.user_id
-        removeCartApiData.user_id = result.user_id
-        updateApiData.user_id = result.user_id
     }
 
     _updateMasterState = (attrName, value) => {
@@ -90,11 +92,7 @@ class ApplyCoupon extends Component {
 
 
     callApi() {
-        let formdata = new FormData();
-        for (let key in listApiData) {
-            formdata.append(key, listApiData[key]);
-        }
-        cartStore.getCart(formdata, listApiData.page_no)
+        couponStore.getCoupons()
     }
 
     applyCoupon() {
@@ -160,11 +158,17 @@ class ApplyCoupon extends Component {
                         }
                     }
                 >
-                    <Text
-                        style={[styles.apply, { marginLeft: 20 }]}
+                    <View
+                        style={[styles.largeButton, { width: undefined, marginLeft: 20, 
+                            paddingHorizontal: 10,paddingVertical:5 }]}
                     >
-                        {global.capitalize(constants.TXT_APPLY)}
-                    </Text>
+                        <Text
+                            style={[styles.apply]}
+                        >
+                            {constants.TXT_APPLY}
+                        </Text>
+
+                    </View>
 
                 </TouchableWithoutFeedback>
 
@@ -184,6 +188,7 @@ class ApplyCoupon extends Component {
                     extraData={this.state}
                     showsVerticalScrollIndicator={false}
                     data={couponStore.coupons}
+                    keyboardShouldPersistTaps='handled'
                     style={{ backgroundColor: colors.WHITE }}
                     ListHeaderComponent={this.getHeaders()}
                     renderItem={this.renderRow.bind(this)}
@@ -235,7 +240,7 @@ class ApplyCoupon extends Component {
         return (
 
             <View
-                style={styles.couponCard}
+                style={[styles.couponCard, { marginBottom: marginBottom }]}
             >
 
                 <View
@@ -263,15 +268,22 @@ class ApplyCoupon extends Component {
                         </Text>
                     </View>
 
-                    <Text
-                        style={[styles.buttonText, {
-                            color: colors.PRIMARY,
-                            fontSize: fonts._12
-                        }]}
+                    <Ripple
+                        rippleColor={colors.RIPPLE}
+                        onPress={() => {
+                            this.setState({ couponCode: item.code })
+                        }}
                     >
-                        {constants.TXT_APPLY}
-                    </Text>
+                        <Text
+                            style={[styles.buttonText, {
+                                color: colors.PRIMARY,
+                                fontSize: fonts._12
+                            }]}
+                        >
+                            {constants.TXT_APPLY}
+                        </Text>
 
+                    </Ripple>
 
                 </View>
 
@@ -279,7 +291,8 @@ class ApplyCoupon extends Component {
                 <Text
                     style={[styles.productKey, { marginTop: 10, color: colors.DARKGRAY2 }]}
                 >
-                    {item.title}
+                    {/* {item.title} */}
+                    {item.code}
                 </Text>
 
                 <View
@@ -289,16 +302,16 @@ class ApplyCoupon extends Component {
                 >
 
                     <Text
-                        style={[styles.labelSmall, {flex:1}]}
+                        style={[styles.labelSmall, { flex: 1 }]}
                     >
                         {item.description}
                     </Text>
 
                     <View
-                        style={{ flexDirection: 'row',alignItems:'center',marginLeft:15 }}
+                        style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 15 }}
                     >
                         <Text
-                            style={[styles.labelMini2, { color: colors.BLACK,marginRight:5 }]}
+                            style={[styles.labelMini2, { color: colors.BLACK, marginRight: 5 }]}
                         >
 
                             {constants.TXT_VIEW_MORE}
@@ -312,9 +325,6 @@ class ApplyCoupon extends Component {
 
 
                 </View>
-
-
-
 
             </View>
         )

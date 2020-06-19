@@ -9,14 +9,22 @@ import ToolBar from '../../components/toolbar';
 import { ScrollView } from 'react-native-gesture-handler';
 import Ripple from 'react-native-material-ripple';
 
-var store;
+var addressListStore,selectAddressStore;
 
 var addressApiData = {
     user_id: ''
 }
 
-@inject("addressListStore")
-@observer
+var shippingApiData = {
+    user_id: '',
+    pincode: ''
+}
+
+@inject((stores) => ({
+    addressListStore: stores.addressListStore,
+    selectAddressStore: stores.selectAddressStore,
+  }))
+@observer  
 export default class SelectAddress extends Component {
     constructor(props) {
         super(props);
@@ -25,7 +33,10 @@ export default class SelectAddress extends Component {
             selectedAddress: undefined
         }
 
-        store = this.props.addressListStore
+        addressListStore = this.props.addressListStore
+        selectAddressStore = this.props.selectAddressStore
+
+        this.resetStore()
 
         const { navigation } = this.props
         this.state.total = navigation.getParam('total', null)
@@ -33,20 +44,31 @@ export default class SelectAddress extends Component {
         this.onFirstAddressAdded = this.onFirstAddressAdded.bind(this)
         this.afterAddressListLoaded = this.afterAddressListLoaded.bind(this)
 
+        
+    }
 
+    resetStore(){
+        selectAddressStore.loadingCharges = false;
+        addressListStore.addressList = [];
+        selectAddressStore.shippingData = {}
     }
 
     onFirstAddressAdded() {
         console.log('onFirstAddressAdded called!')
-        store.getAddressList(global.sendAsFormData(addressApiData))
+        addressListStore.getAddressList(global.sendAsFormData(addressApiData))
     }
 
     afterAddressListLoaded() {
 
-        console.log('afterAddressListLoaded\n ' + JSON.stringify(this.props.navigation))
+        console.log('afterAddressListLoaded\n ' + JSON.stringify(addressListStore.addressList))
 
-        if (store.addressList.length == 0)
+        if (addressListStore.addressList.length == 0)
             this.navigateTo('AddAddress', constants.MODE_FIRST_ADD)
+        else {
+            var selectedAddress = addressListStore.addressList[0];
+            shippingApiData.pincode = selectedAddress.pin_code
+            selectAddressStore.getShippingCharges(global.sendAsFormData(shippingApiData))
+        }
     }
 
 
@@ -66,17 +88,18 @@ export default class SelectAddress extends Component {
     componentDidMount() {
         // this.props.navigation = this.props.navigation
         addressApiData.user_id = this.state.userId;
-        store.setAfterAddressListLoaded(this.afterAddressListLoaded);
-        store.getAddressList(global.sendAsFormData(addressApiData), 0)
+        shippingApiData.user_id = this.state.userId;
+        addressListStore.setAfterAddressListLoaded(this.afterAddressListLoaded);
+        addressListStore.getAddressList(global.sendAsFormData(addressApiData), 0)
 
         // console.log('currTheme :' + window.theme)
     }
 
     componentWillUnmount() {
         // store.addressList = [];
-        store.loadingCharges = false;
-        store.loadingAddress = false;
-        store.setAfterAddressListLoaded(undefined);
+        addressListStore.loadingCharges = false;
+        addressListStore.loadingAddress = false;
+        addressListStore.setAfterAddressListLoaded(undefined);
     }
 
     navigateTo(route, mode) {
@@ -84,7 +107,7 @@ export default class SelectAddress extends Component {
         console.log('navigateTo: ' + JSON.stringify(this.props.navigation))
 
         this.props.navigation.navigate(route, {
-            [constants.PARAM_ADDRESS]: store.selectedAddress,
+            [constants.PARAM_ADDRESS]: addressListStore.selectedAddress,
             [constants.PARAM_USER]: this.state.userId,
             [constants.PARAM_MODE]: mode,
             'onFirstAddressAdded': this.onFirstAddressAdded,
@@ -95,7 +118,7 @@ export default class SelectAddress extends Component {
 
     bottomView() {
 
-        if (!store.selectedAddress || !store.selectedAddress.id)
+        if (!addressListStore.selectedAddress || !addressListStore.selectedAddress.id)
             return (
                 <View />
             )
@@ -107,12 +130,12 @@ export default class SelectAddress extends Component {
                         this.navigateTo('SelectPayment')
                     }
                 }
-                style={[styles.bottomView,{bottom:15,marginHorizontal:10}]}
+                style={[styles.bottomView, { bottom: 15, marginHorizontal: 10 }]}
                 rippleColor={colors.RIPPLE}
             >
 
                 <Text
-                    style={[styles.stripLabel, { color: colors.WHITE,textAlign:'center'}]}
+                    style={[styles.stripLabel, { color: colors.WHITE, textAlign: 'center' }]}
                 >
                     {global.capitalize(constants.TXT_PROCEED_PAY)}
                 </Text>
@@ -121,7 +144,7 @@ export default class SelectAddress extends Component {
     }
 
     handleChangeAddress() {
-        if (store.addressList.length == 0) {
+        if (addressListStore.addressList.length == 0) {
             this.navigateTo('AddAddress', constants.MODE_FIRST_ADD)
         }
         else this.navigateTo('AddressList', constants.MODE_SELECT)
@@ -136,21 +159,21 @@ export default class SelectAddress extends Component {
                 style={[{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    marginTop:5,
+                    marginTop: 5,
                     flex: 1
                 }, moreStyles]}
             >
 
                 <Text
-                    style={[styles.labelSmall, { flex: 1,color:colors.BLACK}]}
+                    style={[styles.labelSmall, { flex: 1, color: colors.BLACK }]}
                 >
                     {key}
 
                 </Text>
 
                 <Text
-                    style={[styles.labelSmall, {color:colors.BLACK}]}
-                    >
+                    style={[styles.labelSmall, { color: colors.BLACK }]}
+                >
                     {value}
 
                 </Text>
@@ -169,21 +192,21 @@ export default class SelectAddress extends Component {
                 style={[{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    marginTop:10,
+                    marginTop: 10,
                     flex: 1
                 }, moreStyles]}
             >
 
                 <Text
-                    style={[styles.productKey, { flex: 1,color:colors.BLACK}]}
+                    style={[styles.productKey, { flex: 1, color: colors.BLACK }]}
                 >
                     {key}
 
                 </Text>
 
                 <Text
-                    style={[styles.labelSmall, {color:colors.PRIMARY}]}
-                    >
+                    style={[styles.labelSmall, { color: colors.PRIMARY }]}
+                >
                     {value}
 
                 </Text>
@@ -196,6 +219,11 @@ export default class SelectAddress extends Component {
 
 
     render() {
+
+        var shippingData;
+        if(selectAddressStore.shippingData && selectAddressStore.shippingData.data)
+        shippingData = selectAddressStore.shippingData.data;
+
         return (
             <View style={[styles.styleFull, { backgroundColor: colors.WHITE }]}>
 
@@ -208,41 +236,47 @@ export default class SelectAddress extends Component {
 
                         {this.drawAddressCard()}
 
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignSelft: 'stretch',
-                                marginTop: 25
-                            }}
-                        >
-                            <Text
-                                style={[styles.labelSmall, { color: colors.BLACK, flex: 1 }]}
-                            >
-                                {constants.TXT_APPLY_COUPON.replace('Apply', 'Applied')}
-                            </Text>
+                        {
+                            shippingData &&
+                            <View>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignSelft: 'stretch',
+                                        marginTop: 25
+                                    }}
+                                >
+                                    <Text
+                                        style={[styles.labelSmall, { color: colors.BLACK, flex: 1 }]}
+                                    >
+                                        {constants.TXT_APPLY_COUPON.replace('Apply', 'Applied')}
+                                    </Text>
 
 
-                            <Text
-                                style={[styles.labelSmall, { color: colors.PRIMARY }]}
-                            >
-                                {'New20'}
-                            </Text>
+                                    <Text
+                                        style={[styles.labelSmall, { color: colors.PRIMARY }]}
+                                    >
+                                        {'New20'}
+                                    </Text>
 
 
-                        </View>
+                                </View>
 
-                        <Text
-                            style={[styles.productKey, { marginTop: 25 }]}
-                        >
-                            {constants.TXT_SUMMARY}
+                                <Text
+                                    style={[styles.productKey, { marginTop: 25 }]}
+                                >
+                                    {constants.TXT_SUMMARY}
 
-                        </Text>
+                                </Text>
 
-                        {this.drawKeyValue('Subtotal', constants.SYMBOL_RUPEE+'150.00')}
-                        {this.drawKeyValue('Delivery Charges', constants.TXT_FREE)}
-                        {this.drawKeyValue('Discount','-10.00')}
-                        {this.drawTotal(constants.TXT_TOTAL.replace(':',''),constants.SYMBOL_RUPEE+ this.state.total)}
+                                {this.drawKeyValue('Subtotal', constants.SYMBOL_RUPEE + shippingData.subtotal)}
+                                {this.drawKeyValue('Delivery Charges', shippingData.shipping)}
+                                {/* {this.drawKeyValue('Delivery Charges', constants.TXT_FREE)} */}
+                                {this.drawKeyValue('Discount', shippingData.discount)}
+                                {this.drawTotal(constants.TXT_TOTAL.replace(':', ''), constants.SYMBOL_RUPEE + shippingData.total)}
 
+                            </View>
+                        }
 
                         {/* <Ripple
                             onPress={() => {
@@ -264,7 +298,7 @@ export default class SelectAddress extends Component {
                 {this.bottomView()}
 
                 {
-                    (store.loading || store.loadingCharges) &&
+                    (addressListStore.loading || selectAddressStore.loadingCharges) &&
                     global.getLoader()
                 }
 
@@ -275,7 +309,9 @@ export default class SelectAddress extends Component {
 
     drawAddressCard() {
 
-        var address = store.selectedAddress;
+        var address = addressListStore.selectedAddress;
+
+         console.log('drawAddressCard ' + JSON.stringify(address))
 
         if (!address || !address.id)
             return (<View />)

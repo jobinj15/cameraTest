@@ -324,7 +324,7 @@ class Cart extends Component {
         }}>
         <View
           style={{
-            marginBottom: 70,
+            marginBottom: 150,
             flex: 1,
             alignItems: 'center',
           }}>
@@ -424,8 +424,8 @@ class Cart extends Component {
 
   bottomView() {
 
-    if(!cartStore.noOfItems)
-    return(<View/>)
+    if (!cartStore.noOfItems)
+      return (<View />)
 
     return (
 
@@ -438,7 +438,7 @@ class Cart extends Component {
       >
 
         <View
-          style={{ flex: 1,marginTop:10 }}
+          style={{ flex: 1, marginTop: 10 }}
         >
 
           <Text
@@ -456,7 +456,7 @@ class Cart extends Component {
             {constants.SYMBOL_RUPEE + cartStore.total}
           </Text>
 
-          <Text style={[styles.labelSmall,{fontSize: fonts.FONT_SIZE_SMALLER}]}>
+          <Text style={[styles.labelSmall, { fontSize: fonts.FONT_SIZE_SMALLER }]}>
             {constants.TXT_COST_DESC}
           </Text>
 
@@ -466,7 +466,7 @@ class Cart extends Component {
           onPress={() => {
             if (cartStore.total) this.navigateTo('SelectAddress');
           }}
-          style={[styles.largeButton,{width:undefined}]}
+          style={[styles.largeButton, { width: undefined }]}
           rippleColor={colors.RIPPLE}>
           <Text style={[styles.buttonText]}>
             {constants.TXT_CHECKOUT}
@@ -507,36 +507,34 @@ class Cart extends Component {
 
               <View
                 style={{
-                  justifyContent: 'center',
+                  flexDirection: 'row',
+                  marginTop: 8,
                   flex: 1,
+                  alignItems: 'center',
                 }}>
-                <Text
-                  style={[
-                    styles.stripLabel,
-                    {
-                      flex: undefined,
-                    },
-                  ]}
-                  numberOfLines={2}>
-                  {item.name}
-                </Text>
-
-                {/* <Text
-                                    style={[styles.labelSmall]}
-                                    numberOfLines={2}
-                                >
-                                    {item.description}
-                                </Text> */}
-
-                <Text style={[styles.weight]}>{variant}</Text>
-
-                <Text style={[styles.amount, { marginTop: 8 }]}>
+                <Text style={[styles.amount]}>
                   {constants.SYMBOL_RUPEE + item.price}
                 </Text>
+
+                <Text
+                  style={[
+                    styles.amount,
+                    {
+                      marginLeft: 10,
+                      fontSize: fonts._15,
+                      flex: 1,
+                      textDecorationLine: 'line-through',
+                      color: colors.DISCOUNT,
+                    },
+                  ]}>
+                  {item.discount?constants.SYMBOL_RUPEE + item.discount:''}
+                </Text>
+
+                {this.drawButtonView(item, index)}
               </View>
             </View>
 
-            <View style={{ flexDirection: 'row', flex: 1 }}>
+            {/* <View style={{ flexDirection: 'row', flex: 1 }}>
               <View
                 style={{
                   flex: 1,
@@ -544,7 +542,7 @@ class Cart extends Component {
               />
 
               {this.drawButtonView(item, index)}
-            </View>
+            </View> */}
 
             <TouchableWithoutFeedback
               onPress={() => {

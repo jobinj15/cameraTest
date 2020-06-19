@@ -5,35 +5,19 @@ import global from "../../../utility/global";
 import prod_repository from "../../../repos/prod_repository";
 import user_repository from "../../../repos/user_repository";
 
-class ApplyCouponStore {
+class CouponStore {
 
-  setItemLoading(index) {
-
-    var allCart = [...this.cart];
-    var item = allCart[index];
-
-    console.log('setItemLoading: ' + JSON.stringify(item))
-
-    item.loading = true;
-
-    this.cart = allCart
-
-  }
-
-  
-  @action getCart(data, page) {
+  @action getCoupons() {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable)
         global.showMessage(constants.NO_INTERNET)
       else {
 
-        this.loading = !this.refreshing && page == 0;
-        this.page = page;
+        this.loading = true;
 
-        prod_repository.getCart(
-          data,
-          this.onCartLoaded.bind(this)
+        user_repository.getCoupons(
+          this.onCouponsLoaded.bind(this)
         );
 
       }
@@ -41,36 +25,18 @@ class ApplyCouponStore {
 
   }
 
-  onCartLoaded(isError, responseData) {
+  onCouponsLoaded(isError, responseData) {
 
-    console.log('onCartLoaded ' + JSON.stringify(responseData))
+    console.log('onCouponsLoaded ' + JSON.stringify(responseData))
 
-    if (this.loading)
-      this.loading = false;
+    this.loading = false;
+    this.apiLoaded = true; 
 
     if (!isError) {
-
-      // if(responseData.total_amount)
-      this.total = responseData.total_amount
-
-      // if(responseData.total_items)
-      this.noOfItems = responseData.total_items
-
-
-      if (this.page == 0)
-        this.cart = responseData.data
-      else {
-        var allCart = [...this.cart, ...responseData.data];
-        this.cart = allCart
-      }
+      this.coupons = responseData.data
     }
     else global.showMessage(responseData.message)
 
-    if (!this.apiLoaded)
-      this.apiLoaded = true
-
-    if (this.refreshing)
-      this.refreshing = false
   }
 
 
@@ -106,44 +72,42 @@ class ApplyCouponStore {
   }
 
 
-  
+
 
   @observable loading = false;
   @observable refreshing = false;
   @observable apiLoaded = false;
-  @observable isUpdating = false;
-  @observable onApiActionDone = undefined;
-  // @observable coupons = []
+  @observable coupons = []
 
-  @observable coupons = [
-    {
-      code : 'NEW30',
-      title : 'Get 30% discount',
-      description : 'Use code NEW30 to get 30% discount for new users'
-    },
-    {
-      code : 'NEW30',
-      title : 'Get 30% discount',
-      description : 'Use code NEW30 to get 30% discount for new users'
-    },
-    {
-      code : 'NEW30',
-      title : 'Get 30% discount',
-      description : 'Use code NEW30 to get 30% discount for new users'
-    },
-    {
-      code : 'NEW30',
-      title : 'Get 30% discount',
-      description : 'Use code NEW30 to get 30% discount for new users'
-    },
-    {
-      code : 'NEW30',
-      title : 'Get 30% discount',
-      description : 'Use code NEW30 to get 30% discount for new users'
-    },
-  ]
- 
+  // @observable coupons = [
+  //   {
+  //     code: 'NEW30',
+  //     title: 'Get 30% discount',
+  //     description: 'Use code NEW30 to get 30% discount for new users'
+  //   },
+  //   {
+  //     code: 'NEW30',
+  //     title: 'Get 30% discount',
+  //     description: 'Use code NEW30 to get 30% discount for new users'
+  //   },
+  //   {
+  //     code: 'NEW30',
+  //     title: 'Get 30% discount',
+  //     description: 'Use code NEW30 to get 30% discount for new users'
+  //   },
+  //   {
+  //     code: 'NEW30',
+  //     title: 'Get 30% discount',
+  //     description: 'Use code NEW30 to get 30% discount for new users'
+  //   },
+  //   {
+  //     code: 'NEW30',
+  //     title: 'Get 30% discount',
+  //     description: 'Use code NEW30 to get 30% discount for new users'
+  //   },
+  // ]
+
 
 }
 
-export default ApplyCouponStore
+export default CouponStore

@@ -7,27 +7,38 @@ import constants from '../../utility/constants';
 import colors from '../../styles/colors';
 import PlusView from '../../components/custom_views/plusView';
 import { observer, inject } from "mobx-react";
+import LabelStrip from './labelStrip';
+
+var store; 
 
 @inject("recoHomeStore")
 export default class Reommendations extends Component {
     constructor(props) {
         super(props);
+
+        store = this.props.recoHomeStore;
     }
 
     //0 4 8 
     render() {
+
+        if(!store.recomm || !store.recomm.length)
+        return(<View/>)
+
         return (
-            <View style={[styles.styleFull,{ backgroundColor: colors.WHITE }, this.props.style ? this.props.style : {}]}>
+
+            <View style={[styles.styleFull, { backgroundColor: colors.WHITE }, this.props.style ? this.props.style : {}]}>
 
                 <FlatList
                     navigation={this.props.navigation}
                     extraData={this.state}
                     showsVerticalScrollIndicator={false}
-                    data={this.props.recoHomeStore.recomm}
+                    data={store.recomm}
+                    ListHeaderComponent={this.getHeaders()}
                     renderItem={this.renderRow.bind(this)}
-                    style={{backgroundColor:colors.WHITE}}
+                    style={{ backgroundColor: colors.WHITE }}
                     ItemSeparatorComponent={this.renderSeparator}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={(item, index) =>'recomm' + index.toString()}
 
                 />
 
@@ -35,13 +46,24 @@ export default class Reommendations extends Component {
         );
     }
 
+    getHeaders() {
+        return (
+            <LabelStrip
+                style={{
+                    marginTop: 25
+                }}
+                label={constants.TXT_RECOMMENDATION}
+            />
+        )
+    }
+
     drawButtonView(item, index) {
 
-    
+
         if (item.loading)
             return (
                 <View
-                    style={[styles.plusContainer,{justifyContent:'center'}]}
+                    style={[styles.plusContainer, { justifyContent: 'center' }]}
                 >
                     <ActivityIndicator size="small" color={colors.DARKGRAY} />
 
@@ -57,7 +79,7 @@ export default class Reommendations extends Component {
                     onPress={() => {
                         // this.onAddToCart(index);
                     }}
-                    labelStyle={{ fontFamily: global.FONT_FAMILY.PopinsBold, fontSize: fonts._10}}
+                    labelStyle={{ fontFamily: global.FONT_FAMILY.PopinsBold, fontSize: fonts._10 }}
                     style={[styles.addContainer]}
                     borderRadius={3}
                     enableShadow
@@ -75,19 +97,19 @@ export default class Reommendations extends Component {
                 <PlusView
                     index={index}
                     type={constants.TYPE_MINUS}
-                    // onPress={this.onMinusClicked}
+                // onPress={this.onMinusClicked}
                 />
                 <Text
                     style={[styles.stripLabel, {
-                        textAlign: 'center',fontFamily:global.FONT_FAMILY.PopinsBold,flex:undefined
-                        , color: colors.BLACK,fontSize : fonts._18,paddingHorizontal:15
+                        textAlign: 'center', fontFamily: global.FONT_FAMILY.PopinsBold, flex: undefined
+                        , color: colors.BLACK, fontSize: fonts._18, paddingHorizontal: 15
                     }]}
                 >{item.cart_quantity}</Text>
 
                 <PlusView
                     index={index}
                     type={constants.TYPE_PLUS}
-                    // onPress={this.onPlusClicked}
+                // onPress={this.onPlusClicked}
                 />
             </View>
         )
@@ -143,7 +165,7 @@ export default class Reommendations extends Component {
                 <PlusView
                     index={index}
                     type={constants.TYPE_MINUS}
-                    // onPress={this.onMinusClicked}
+                // onPress={this.onMinusClicked}
                 />
                 <Text
                     style={[styles.stripLabel, {
@@ -155,7 +177,7 @@ export default class Reommendations extends Component {
                 <PlusView
                     index={index}
                     type={constants.TYPE_PLUS}
-                    // onPress={this.onPlusClicked}
+                // onPress={this.onPlusClicked}
                 />
             </View>
         )
@@ -256,7 +278,7 @@ export default class Reommendations extends Component {
 
                                     <Text
                                         style={[styles.amount, {
-                                            marginLeft: 10, fontSize: fonts._15,flex:1,
+                                            marginLeft: 10, fontSize: fonts._15, flex: 1,
                                             textDecorationLine: 'line-through', color: colors.DISCOUNT
                                         }]}
                                     >

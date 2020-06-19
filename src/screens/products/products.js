@@ -456,7 +456,7 @@ export default class Products extends Component {
                             {this.drawButtonView(item, index)}
 
 
-                        </View> */}
+              </View> */}
           </View>
         </Card>
       </TouchableWithoutFeedback>

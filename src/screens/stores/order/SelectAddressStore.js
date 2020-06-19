@@ -9,6 +9,7 @@ class SelectAddressStore {
 
   @observable loadingAddress = false;
   @observable loadingCharges = false;
+  @observable shippingData = {};
   @observable addressList = [];
 
     constructor(){
@@ -50,6 +51,35 @@ class SelectAddressStore {
     }
     else global.showMessage(responseData.message)
 
+  }
+
+
+
+  @action getShippingCharges(data) {
+
+    global.isOnline().then(isNetworkAvailable => {
+      if (isNetworkAvailable) {
+
+        this.loadingCharges = true;
+
+        user_repository.getShipmentCharges(
+          data,
+          this.onShippingChargesLoaded.bind(this)
+        );
+
+      }
+    });
+
+  }
+
+  onShippingChargesLoaded(isError,responseData){
+
+    this.loadingCharges = false;
+
+    if(!isError){
+       this.shippingData = responseData;
+    }
+    else global.showMessage(responseData.message)
   }
 
 

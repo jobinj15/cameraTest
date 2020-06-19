@@ -119,24 +119,11 @@ class HomeTab extends Component {
           source={require('../../assets/images/pic1.jpg')}
         />
 
-        <LabelStrip
-          style={{
-            marginTop: 30
-          }}
-          label={constants.TXT_SEARCH_BYBRAND}
-        />
-
+        
         <SearchByBrands
           style={{
-            marginTop: 8
+            marginTop: 8,
           }}
-        />
-
-        <LabelStrip
-          style={{
-            marginTop: 25
-          }}
-          label={constants.TXT_RECOMMENDATION}
         />
 
         <Recommendations

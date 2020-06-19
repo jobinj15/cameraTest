@@ -235,6 +235,28 @@ export default userRepo = {
 
 
 
+   getBrands(callback) { 
+     fetch(URL_FILE.urlBrands, {
+       method: "POST",
+       headers: global.getEncodedHeader(),
+     })
+       .then(response => response.json())
+       .then(responseData => {
+         console.log("Data from getBrands Api : " + JSON.stringify(responseData));
+         var hasError = responseData.error;
+         callback(hasError, responseData);
+ 
+       })
+       .catch(err => {
+         console.log("response error :: " + err);
+         callback(true, global.getExceptionMessage());
+       })
+       .done();
+ 
+   },
+
+
+
    
 
 

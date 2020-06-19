@@ -39,7 +39,10 @@ export default urls = {
   urlImpMessage: baseUrl + 'checkImportantMessage/checkImportantMessage',
   urlForgotPass: baseUrl + 'login/forgot_password',
   urlPayUHash: baseUrl + '/payu_hash/gethash',
-  urlGetFilters: baseUrl + '/filter/filters'
+  urlGetFilters: baseUrl + '/filter/filters',
+  urlShipment: baseUrl + '/shipment_charges/get',
+  urlCoupons: baseUrl + '/coupons/coupons',
+  urlBrands: baseUrl + '/masters/brands',
 };
 
 // findsrinivas.guni@gmail.com

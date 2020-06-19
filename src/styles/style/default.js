@@ -596,7 +596,7 @@ var styles = {
     },
     apply: {
         fontSize: fonts._12,
-        color: colors.PRIMARY,
+        color: colors.WHITE,
         fontFamily: fonts.FONT_FAMILY.PopinsMed,
     }
 
