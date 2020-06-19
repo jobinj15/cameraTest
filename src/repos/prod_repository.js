@@ -3,6 +3,7 @@ import React from "react";
 import URL_FILE from "../utility/urls";
 import CONS from "../utility/constants";
 import global from "../utility/global";
+import constants from "../utility/constants";
 
 
 export default userRepo = {
@@ -81,11 +82,16 @@ export default userRepo = {
  
  
 
-  getProducts(data, callback) {
+  getProducts(data, callback,type) {
 
    console.log('dATA SENT: ' + JSON.stringify(data))
 
-    fetch(URL_FILE.urlProductsList, {
+    var url;
+    if(type==constants.TYPE_SEARCH)
+    url = URL_FILE.urlProductsSearch;
+    else url = URL_FILE.urlProductsList;
+
+    fetch(url, {
       method: "POST",
       headers: global.getEncodedHeader(),
       body : data

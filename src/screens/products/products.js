@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import styles from '../../styles/style';
 import global from '../../utility/global';
-import {Card, Button} from 'react-native-ui-lib';
+import { Card, Button } from 'react-native-ui-lib';
 import {
   View,
   TouchableWithoutFeedback,
@@ -10,7 +10,7 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
-import {observer, inject} from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import Ripple from 'react-native-material-ripple';
 import constants from '../../utility/constants';
 import colors from '../../styles/colors';
@@ -18,11 +18,14 @@ import ToolBar from '../../components/toolbar';
 import PlusView from '../../components/custom_views/plusView';
 import fonts from '../../utility/fonts';
 
+const START_PAGE = 0
+
 var listApiData = {
-  page_no: 0,
+  page_no: START_PAGE,
   per_page: 10,
   cat_id: '',
   value_id: '',
+  search: '',
   user_id: '',
 };
 
@@ -71,7 +74,7 @@ export default class Products extends Component {
     this.resetStore();
     currObj = this;
 
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     const item = navigation.getParam([constants.PARAM_ITEM], null);
     listApiData.cat_id = item.id;
     prodStore.cat_id = item.id;
@@ -95,7 +98,7 @@ export default class Products extends Component {
     console.log('setTheme Prod' + window.theme);
   }
 
-  static navigationOptions = ({navigation}) => {
+  static navigationOptions = ({ navigation }) => {
     console.log(
       'Navigation ProdList: ' + JSON.stringify(navigation.state.params),
     );
@@ -104,13 +107,16 @@ export default class Products extends Component {
       header: (
         <ToolBar
           title={navigation.state.params.Title}
-          showTitle={true}
-          showEndButton={true}
+          showTitle={!navigation.state.params.showSearchView}
+          showEndButton={!navigation.state.params.showSearchView}
           endIcon={'settings'}
           iconType={constants.IC_OCT}
-          showEndButton2={true}
+          showSearchView={navigation.state.params.showSearchView}
+          showEndButton2={!navigation.state.params.showSearchView}
           endIcon2={'ios-search'}
           onEndIconClicked={onEndIcon2Clicked}
+          onSubmit = {onSubmit}
+          onEndIconClicked2={onSearchClicked}
           iconType2={constants.IC_IONIC}
           navigation={navigation}
           showBackButton={true}
@@ -134,16 +140,19 @@ export default class Products extends Component {
     updateApiData.user_id = result.user_id;
   }
 
-  callApi() {
+  callApi(search) {
     let formdata = new FormData();
     for (let key in listApiData) {
       formdata.append(key, listApiData[key]);
     }
+    if(search)
+    prodStore.getProducts(formdata, listApiData.page_no,constants.TYPE_SEARCH);
+    else
     prodStore.getProducts(formdata, listApiData.page_no);
   }
 
   handleRefresh(isFilter) {
-    listApiData.page_no = 0;
+    listApiData.page_no = START_PAGE;
     isFilter ? (prodStore.loading = true) : (prodStore.refreshing = true);
     this.callApi();
   }
@@ -156,13 +165,13 @@ export default class Products extends Component {
 
   render() {
     return (
-      <View style={[styles.styleFull, {backgroundColor: colors.WHITE}]}>
+      <View style={[styles.styleFull, { backgroundColor: colors.WHITE }]}>
         <FlatList
           navigation={this.props.navigation}
           extraData={this.state}
           showsVerticalScrollIndicator={false}
           data={prodStore.products}
-          style={{backgroundColor: colors.WHITE}}
+          style={{ backgroundColor: colors.WHITE }}
           renderItem={this.renderRow.bind(this)}
           onRefresh={this.handleRefresh.bind(this)}
           onEndReached={this.handleLoadMore.bind(this)}
@@ -187,8 +196,8 @@ export default class Products extends Component {
             constants.NO_INTERNET_REF,
           )
         ) : (
-          <View />
-        )}
+            <View />
+          )}
       </View>
     );
   }
@@ -287,7 +296,7 @@ export default class Products extends Component {
   drawButtonView(item, index) {
     if (item.loading)
       return (
-        <View style={[styles.plusContainer, {justifyContent: 'center'}]}>
+        <View style={[styles.plusContainer, { justifyContent: 'center' }]}>
           <ActivityIndicator size="small" color={colors.DARKGRAY} />
         </View>
       );
@@ -348,7 +357,7 @@ export default class Products extends Component {
     prodStore.apiLoaded = false;
     prodStore.loading = false;
     prodStore.refreshing = false;
-    prodStore.page = 0;
+    prodStore.page = START_PAGE;
     prodStore.message = '';
   }
 
@@ -356,10 +365,34 @@ export default class Products extends Component {
     console.log('updateToolbarTitle: ' + titleText);
     this.props.navigation.setParams({
       Title: titleText,
+      showSearchView: false
     });
   };
 
-  renderRow({item, index}) {
+  toggleSearchView = (visible) => {
+    this.props.navigation.setParams({
+      showSearchView: visible
+    });
+  };
+
+  handleSearchSubmit = (searchText, clear) => {
+
+    if (clear) {
+      listApiData.page_no = START_PAGE;
+      this.callApi(false);
+      this.toggleSearchView(false)
+    }
+    else {
+      this.state.selectedFilters = [];
+      listApiData.value_id = '';
+      listApiData.search = searchText;
+      listApiData.page_no = START_PAGE;
+      this.callApi(true);
+    }
+
+  }
+
+  renderRow({ item, index }) {
     let image = require('../../assets/images/placeholder.jpeg');
     // let image = '';
     let variant = '';
@@ -368,7 +401,7 @@ export default class Products extends Component {
       variant = item.variants[0].value;
 
     if (Array.isArray(item.images) && item.images.length) {
-      image = {uri: item.images[0]};
+      image = { uri: item.images[0] };
     }
 
     // console.log(image);
@@ -379,12 +412,12 @@ export default class Products extends Component {
           this.navigateTo('ProductDetail', index);
         }}>
         <Card
-          style={{flex: 1, borderRadius: 0}}
+          style={{ flex: 1, borderRadius: 0 }}
           key={index}
           elevation={0}
           enableShadow={false}>
-          <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
-            <View style={{flexDirection: 'row', flex: 1}}>
+          <View style={{ paddingHorizontal: 15, paddingVertical: 15 }}>
+            <View style={{ flexDirection: 'row', flex: 1 }}>
               <View style={styles.productImage}>
                 <Image source={image} style={styles.productThumbnail} />
                 {index == 0 && this.drawOfferView(item)}
@@ -468,6 +501,15 @@ function onEndIcon2Clicked() {
   console.log('onEndIcon2Clicked!');
   currObj.navigateTo('Filter');
   if (!currObj) {
-    
+
   }
+}
+
+function onSubmit(searchText, clear) {
+  currObj.handleSearchSubmit(searchText, clear);
+}
+
+function onSearchClicked() {
+  console.log('onSearchClicked!');
+  currObj.toggleSearchView(true)
 }

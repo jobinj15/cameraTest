@@ -24,7 +24,7 @@ class ProductsStore {
     this.onApiActionDone = undefined
   }
 
-  @action getProducts(data, page) {
+  @action getProducts(data, page,type) {
 
     global.isOnline().then(isNetworkAvailable => {
       if (!isNetworkAvailable) {
@@ -41,7 +41,8 @@ class ProductsStore {
 
         prod_repository.getProducts(
           data,
-          this.onProducts.bind(this)
+          this.onProducts.bind(this),
+          type
         );
 
       }

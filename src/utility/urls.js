@@ -18,6 +18,7 @@ export default urls = {
   urlRegister: baseUrl + 'login/register',
   urlCategories: baseUrl + 'categories/categories',
   urlProductsList: baseUrl + 'products/products',
+  urlProductsSearch: baseUrl + 'products/search',
   urlProductsDetails: baseUrl + 'products/productdetails',
   urlAddToCart: baseUrl + 'cart/add',
   urlUpdateCart: baseUrl + 'cart/update',

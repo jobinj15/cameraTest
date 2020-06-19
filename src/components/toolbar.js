@@ -31,6 +31,7 @@ import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // import { Dropdown } from '../components/custom_views/dropdown'
 import constants from '../utility/constants';
+import fonts from '../utility/fonts';
 
 export default class ToolBar extends Component {
 
@@ -67,7 +68,7 @@ export default class ToolBar extends Component {
     super(props);
     console.log('\n---------- ToolBar Called -----------\n');
     this.state = {
-      doRefresh: false,
+      searchText: '',
     }
     // console.log('showLocationView'+this.props.showLocationView);
 
@@ -141,7 +142,7 @@ export default class ToolBar extends Component {
           {this.props.showEndButton2 &&
             <TouchableOpacity
               style={{ padding: 10 }}
-              // onPress={() => this.route('search')}
+              onPress={() => this.props.onEndIconClicked2()}
               underlayColor='#dddddd'>
               {this.getEndIcon(this.props.iconType2, this.props.endIcon2)}
             </TouchableOpacity>
@@ -160,20 +161,67 @@ export default class ToolBar extends Component {
             </View>
           }
 
+          {
+            this.props.showSearchView &&
+            <View
+              style={{ flex: 1, justifyContent: 'center' }}
+            >
+
+              <TextInput
+                value={this.state.searchText}
+                style={{
+                  flex: 1,
+                  underlineColorAndroid: 'transparent',
+                  fontSize: fonts._16,
+                  paddingRight: 60,
+                }}
+                autoFocus={true}
+                onSubmitEditing={()=>{
+                  if(this.props.onSubmit && this.state.searchText)
+                  this.props.onSubmit(this.state.searchText,false)
+                }}
+                placeholder={constants.TXT_SEARCH}
+                underlineColorAndroid='transparent'
+                autoCorrect={false}
+                onChangeText={(searchText) => {
+                  this.setState({searchText})
+                }}
+
+              />
+
+              <Ripple
+                rippleColor={colors.RIPPLE}
+                style={{
+                  position: 'absolute',
+                  right: 10
+                }}
+                onPress={()=>{
+                  this.setState({searchText:''},()=>{
+                    this.props.onSubmit('',true)
+                  })
+                }}
+              >
+                <IconM name={'close'} size={25} color={colors.BLACK} />
+
+              </Ripple>
+
+            </View>
+          }
+
 
           {this.props.showBoxButton &&
             <Ripple style={{
-              justifyContent: 'center', paddingVertical: 3,paddingHorizontal:8,
-              borderWidth:0.5,
+              justifyContent: 'center', paddingVertical: 3, paddingHorizontal: 8,
+              borderWidth: 0.5,
               borderRadius: 5
             }}
-            rippleColor = {colors.RIPPLE}
+              rippleColor={colors.RIPPLE}
             >
 
               <Text
-              style={[styles.labelSmall]}
+                style={[styles.labelSmall]}
               >
-               {this.props.boxText}
+                {this.props.boxText}
               </Text>
 
             </Ripple>
