@@ -123,7 +123,6 @@ export default class ToolBar extends Component {
             <TouchableHighlight
               onPress={() => this.route('edit_task')}
               style={[styles.touchable, { padding: 10 }]}
-
               underlayColor='#dddddd'>
               <IconM name={'ios-edit'} size={25} color={colors.BLACK} />
 
@@ -132,7 +131,7 @@ export default class ToolBar extends Component {
 
           {this.props.showEndButton &&
             <TouchableOpacity
-              style={{ padding: 10 }}
+              style={{ padding: 10,marginBottom:3 }}
               onPress={() => this.props.onEndIconClicked()}
               underlayColor='#dddddd'>
               {this.getEndIcon(this.props.iconType, this.props.endIcon)}
@@ -141,7 +140,7 @@ export default class ToolBar extends Component {
 
           {this.props.showEndButton2 &&
             <TouchableOpacity
-              style={{ padding: 10 }}
+              style={{ padding: 10,marginBottom:3 }}
               onPress={() => this.props.onEndIconClicked2()}
               underlayColor='#dddddd'>
               {this.getEndIcon(this.props.iconType2, this.props.endIcon2)}

@@ -44,8 +44,8 @@ def flipper_post_install(installer)
   end
 end
 
-target 'GroceryApp' do
-  # Pods for GroceryApp
+target 'CRFWeb' do
+  # Pods for CRFWeb
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -87,7 +87,7 @@ target 'GroceryApp' do
 
   pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
 
-  target 'GroceryAppTests' do
+  target 'GCRFWebTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -104,10 +104,10 @@ target 'GroceryApp' do
   end
 end
 
-target 'GroceryApp-tvOS' do
-  # Pods for GroceryApp-tvOS
+target 'CRFWeb-tvOS' do
+  # Pods for CRFWeb-tvOS
 
-  target 'GroceryApp-tvOSTests' do
+  target 'CRFWeb-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

@@ -6,12 +6,9 @@ import Products from '../products/products';
 import Filter from '../products/Filter';
 import ProductDetail from '../products/productDetails';
 
-
 const onBoardStack = createStackNavigator(
   {
-    Categories: {
-      screen: Categories,
-    },
+    Categories: () => <Categories type='main'/>,
     Filter: {
       screen: Filter,
     },
@@ -26,8 +23,6 @@ const onBoardStack = createStackNavigator(
     initialRouteName: 'Categories',
   },
 );
-
-
 
 const Container = createAppContainer(onBoardStack);
 

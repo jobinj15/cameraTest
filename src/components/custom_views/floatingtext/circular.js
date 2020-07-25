@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { View, Animated, StyleSheet, TextInput, TouchableWithoutFeedback, Text } from 'react-native';
 import { string, func, object, number } from 'prop-types';
 import colors from '../../../styles/colors'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ripple from 'react-native-material-ripple';
+import global from '../../../utility/global';
 
 export class FloatingTitleTextInputField extends Component {
     static propTypes = {
@@ -85,7 +88,7 @@ export class FloatingTitleTextInputField extends Component {
 
     render() {
 
-        
+
         return (
             <View style={[Styles.container, this.props.style]}
                 pointerEvents={this.props.disabled ? 'none' : 'auto'}
@@ -99,11 +102,11 @@ export class FloatingTitleTextInputField extends Component {
                 <View>
                     <TextInput
                         value={this.props.value}
-                        style={[Styles.textInput, this.props.textInputStyles,{
-                            underlineColorAndroid : 'transparent'
+                        style={[Styles.textInput, this.props.textInputStyles, {
+                            underlineColorAndroid: 'transparent'
                         }]}
                         // editable={this.props.disabled}   
-                        placeholder ={this.props.title}
+                        placeholder={this.props.title}
                         // placeholderTextColor={colors.BLACK}
                         // selectTextOnFocus={this.props.disabled}
                         underlineColorAndroid='transparent'
@@ -121,23 +124,22 @@ export class FloatingTitleTextInputField extends Component {
                         <TouchableWithoutFeedback
                             onPress={
                                 () => {
+                                    // global.showMessage('clicked!')
                                     this.setState({
                                         secureTextEntry: !this.state.secureTextEntry
                                     })
                                 }
                             }
                         >
-                            <Text
+                            <Icon name="eye-outline" size={25} color={colors.DARKGRAY2}
                                 style={{
                                     position: 'absolute',
-                                    fontSize: 15,
                                     right: 12,
-                                    top: 35,
-                                    color: colors.ORANGE
+                                    top: 25,
                                 }}
-                            >
-                                Show
-                        </Text>
+
+                            />
+
                         </TouchableWithoutFeedback>
                     }
 
@@ -157,8 +159,10 @@ const Styles = StyleSheet.create({
     textInput: {
         fontSize: 18,
         paddingVertical: 12,
-        paddingHorizontal: 12,
-        borderRadius: 18,
+        paddingHorizontal: 18,
+        borderRadius: 22,
+        borderColor: colors.LIGHT_GRAY,
+        borderWidth: 1.5,
         color: colors.BLACK,
         backgroundColor: colors.WHITE,
         marginTop: 10,

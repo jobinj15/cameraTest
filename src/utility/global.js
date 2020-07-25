@@ -4,6 +4,7 @@ import {
   PixelRatio,
   Text,
   Image,
+  StatusBar,
   TouchableOpacity,
   Alert
 } from 'react-native';
@@ -12,7 +13,11 @@ import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from '@react-native-community/async-storage';
 import { StackActions, NavigationActions } from 'react-navigation';
 var dateFormat = require('dateformat');
-import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 import constants from './constants';
 import { View } from 'react-native-ui-lib';
 import Loader from '../utility/loader';
@@ -23,6 +28,12 @@ import { TouchableNativeFeedback } from 'react-native-gesture-handler';
 
 const x = Dimensions.get('window').width;
 const y = Dimensions.get('window').height;
+const MyStatusBar = ({ backgroundColor, ...props }) => (
+  <View style={[styles.statusBar, { backgroundColor }]}>
+    <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+  </View>
+);
+{/* <MyStatusBar backgroundColor="#5E8D48" barStyle="light-content" /> */}
 
 // Calculating ratio from iPhone breakpoints
 const ratioX = x < 375 ? (x < 320 ? 0.75 : 0.875) : 1;
@@ -86,8 +97,10 @@ export default global = {
   BANNERHEIGHT: normalizeHeight(160),
   DEVICE_WIDTH: Dimensions.get('window').width,
   DEVICE_HEIGHT: Dimensions.get('window').height,
+  rw: wp,
+  rh: hp,
   IMAGE: {
-    THUMBNAIL_PLACEHOLDER: require('../assets/images/placeholder.jpeg')
+    THUMBNAIL_PLACEHOLDER: require('../assets/images/circles.jpeg')
   },
 
   // FONT_FAMILY:{
@@ -200,7 +213,11 @@ export default global = {
     DEVICE_HEIGHT: Dimensions.get('window').height,
   },
 
-
+  statusBar(backgroundColor, ...props ) {
+    return (<View style={[styles.statusBar, { backgroundColor }]}>
+      <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+    </View>)
+  },
 
   getItem(key) {
     return new Promise((resolve, reject) => {
@@ -208,7 +225,7 @@ export default global = {
         keyValue => {
           // console.log("Key value: " + keyValue); //Display key value
           const item = JSON.parse(keyValue);
-          resolve(item?item.user:null);
+          resolve(item ? item.user : null);
         },
         error => {
           resolve(false);
@@ -315,7 +332,7 @@ export default global = {
           <Image
             style={{
               height: from ? 160 : 30, width: from ? 160 : 30, tintcolor: colors.PRIMARY,
-              marginRight: 10, marginBottom: from ? 20 : 10,marginTop:-20
+              marginRight: 10, marginBottom: from ? 20 : 10, marginTop: -20
             }}
             source={getIcon(from)}
           />
@@ -509,17 +526,17 @@ export default global = {
     return currentDate;
   },
 
-  formatDate(date,format='isoDateTime'){
-    
-    if(!date)
-    return;
+  formatDate(date, format = 'isoDateTime') {
+
+    if (!date)
+      return;
 
     // console.log('formatDate: ' + date)
 
-    date = dateFormat(date,format)
-    return date; 
+    date = dateFormat(date, format)
+    return date;
   },
-   
+
   getRelativeTime1(current, lastSync) {
     console.log('getRelativeTime');
     console.log('current :: ' + current);
@@ -627,23 +644,22 @@ function getIcon(from) {
   switch (from) {
 
     case constants.NO_INTERNET_REF:
-      return require('../assets/images/no_data.jpg');
+      return require('../assets/images/circles.jpg');
 
     case constants.FRM_PRODUCTS:
-      return require('../assets/images/empty_products.png');
+      return require('../assets/images/circles.png');
 
     case constants.FRM_ORDERS:
-      return require('../assets/images/empty_orders.png');
+      return require('../assets/images/circles.png');
 
     case constants.FRM_ADDRESS:
-      return require('../assets/images/empty_address.png');
+      return require('../assets/images/circles.png');
 
     case constants.FRM_CART:
-      return require('../assets/images/empty_cart.png');
-
+      return require('../assets/images/circles.png');
 
     default:
-      return require('../assets/images/no_data.jpg')
+      return require('../assets/images/circles.jpg')
 
   }
 }

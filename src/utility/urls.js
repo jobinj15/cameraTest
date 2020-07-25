@@ -1,17 +1,8 @@
 import React from 'react';
 
-const baseUrl = "http://www.appoctet.com/ecommerce/app_api/";
+const baseUrl = "http://www.test.com/app_api/";
+// git remote add origin https://jobinj151@bitbucket.org/rahulbawaskar/reactnativeapp
 
-// appoctet@gmail.com
-// appoctet@2020
-//https://www.freecodecamp.org/forum/t/push-a-new-local-branch-to-a-remote-git-repository-and-track-it-too/13222
-// cd D:/Android/Projects/srinivas_guni-ecommerce-050e8e904900/srinivas_guni-ecommerce-050e8e904900
-// pip install --no-index --find-links file://D:/py/hello/packages -r requirements.txt
-
-// git push -u origin V1Jobin
-// pip install 'tensorflow-2.2.0-cp38-cp38-win_amd64.whl' --no-index --find-links '.'
-// pip install -r /D:/py/hello/packages/requirements.txt
-// pip install ../pyfuzzy-0.1.0.tar.gz.
 
 export default urls = {
   urlLogin: baseUrl + "login/checkUser",
@@ -46,47 +37,3 @@ export default urls = {
   urlBrands: baseUrl + '/masters/brands',
 };
 
-// findsrinivas.guni@gmail.com
-// $PayUsalt1!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[{
-  "optionmasterid": 1, "optionmastername": "Weight", "data": [{ "value_id": 1, "name": "500g" },
-  { "value_id": 2, "name": "1Kg" }]
-}, {
-  "optionmasterid": 3, "optionmastername": "Size",
-  "data": [{ "value_id": 3, "name": "S" }, { "value_id": 4, "name": "M" }]
-}]
-
-
-
-{/* <TouchableWithoutFeedback
-onPress={() => {
-}}
->
-<Card style={{ flex: 1, borderRadius: 0 }} key={index}>
-
-    <View
-        style={{ padding: 10 }}
-    >
-
-
-
-           
-    </View>
-
-</Card>
-
-</TouchableWithoutFeedback> */}

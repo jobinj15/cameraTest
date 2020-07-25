@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, Image, StyleSheet, Platform } from 'react-native';
-import HomeContainer from './home/homeContainer';
-import CartContainer from './order/CartContainer';
-import CategoryContainer from './home/CategoryContainer';
-import ProfileContainer from './profile/profileContainer';
-import ColorsTab from './home/colorsTab';
-import BodyChart from './test/bodychart';
-import LottieExample from './test/lottie_test';
-import Counter from './home/Counter';
 import { createStackNavigator, Header, HeaderTitle } from 'react-navigation-stack';
 import { createMaterialTopTabNavigator, createBottomTabNavigator } from 'react-navigation-tabs';
 import { Avatar, AvatarHelper, Typography } from 'react-native-ui-lib';
@@ -62,19 +54,19 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   const urlPrefix = '../assets/images/';
 
   if (routeName === 'Home') {
-    iconName = require(urlPrefix + 'home.png');
+    iconName = require(urlPrefix + 'circles.png');
   } 
   else if (routeName === 'Categories' ) {
-    iconName = require(urlPrefix + 'list.png');
+    iconName = require(urlPrefix + 'circles.png');
   }
   else if (routeName === 'Profile') {
-    iconName = require(urlPrefix + 'user.png');
+    iconName = require(urlPrefix + 'circles.png');
   }
   else if (routeName === 'Cart') {
-    iconName = require(urlPrefix + 'cart.png');
+    iconName = require(urlPrefix + 'circles.png');
   }
   else if (routeName === 'Like') {
-    iconName = require(urlPrefix + 'like.png');
+    iconName = require(urlPrefix + 'circles.png');
   }
  
 
@@ -100,18 +92,12 @@ return(
 
 const screens = {
   Home: {
-    screen: HomeContainer,
+    screen: Dummy,
   },
-  Categories: () => <CategoryContainer/>,
-  Cart: {
-    screen:CartContainer,
-    navigationOptions: {      
-      gesturesEnabled: true,
-      tabBarVisible: false,
-   }
+  // Categories: () => <CategoryContainer/>,
+  Categories: {
+    screen : Dummy
   },
-  Like : Dummy,
-  Profile: ProfileContainer,
 }
 
 const BottomTabNavigator = createBottomTabNavigator(

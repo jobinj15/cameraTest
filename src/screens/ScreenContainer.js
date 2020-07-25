@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import {createAppContainer} from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import Splashscreen from './SplashScreen';
 import Signin from './onboard/login';
 import MainScreen from './MainScreen';
-import AnimationScreen from './test/animationscreen';
+import Splash from '../screens/Splash';
 import Signup from './onboard/signup';
 import Forgot from './onboard/forgot';
-import SplashTest from './test/splashtest';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -52,17 +50,14 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const NavigationStack = createStackNavigator(
   {
-    SplashTest: {
-      screen: SplashTest,
+    Splash: {
+      screen: Splash,
     },
     MainScreen: {
       screen: MainScreen,
     },
     Signin: {
       screen: Signin,
-    },
-    Splashscreen: {
-      screen: AnimationScreen,
     },
     Signup: {
       screen: Signup,
@@ -72,7 +67,7 @@ const NavigationStack = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'SplashTest',
+    initialRouteName: 'Splash',
     headerMode: 'none',
     navigationOptions: {
       headerVisible: false,

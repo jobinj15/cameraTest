@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, ScrollView, StatusBar, TouchableOpacity, Image } from 'react-native';
 import styles from '../../styles/style';
 import global from '../../utility/global'
-import { FloatingTitleTextInputField } from "../../components/custom_views/floatingtext";
+import { FloatingTitleTextInputField } from "../../components/custom_views/floatingtext/circular";
+import Checkbox from "../../components/custom_views/checkbox";
 import constants from '../../utility/constants'
-import user_repository from '../../repos/user_repository'
+import user_repository from '../../repos/user_repository';
+import { Card, Button } from 'react-native-ui-lib';
 import { StackActions, NavigationActions } from 'react-navigation';
 import Ripple from 'react-native-material-ripple';
 import colors from '../../styles/colors';
@@ -48,6 +50,7 @@ export default class Login extends Component {
     }
 
     objToSet.loading = false;
+    objToSet.isChecked = false;
 
     console.log('mapKeysToState: ' + JSON.stringify(objToSet))
     return objToSet
@@ -93,7 +96,7 @@ export default class Login extends Component {
     if (!data)
       return;
 
-    this.doLogin(data)
+    // this.doLogin(data)
 
     console.log('handleRegister ' + JSON.stringify(data))
 
@@ -156,148 +159,209 @@ export default class Login extends Component {
     });
   }
 
+  onCheckChanged(isChecked) {
+    this.setState({
+      isChecked: !isChecked
+    })
+  }
+
+
   render() {
 
     return (
       <View
         style={[
           styles.styleFull, {
-            padding: 15
           }
         ]}
       >
 
-        {global.getIosToolbar(this.props.navigation)}
+        {global.statusBar(colors.WHITE,{barStyle:"light-content"})}
 
         <ScrollView
-          keyboardShouldPersistTaps='handled'
           style={{
-            paddingHorizontal: 15, flex: 1
+            flex: 1
           }}
-          showsVerticalScrollIndicator={false}
+          {...constants.SCROLL_VIEW_PROPS}
         >
+
           <View
-            style={{ flex: 1 }}
-          >
-
-            <Text
-              style={[styles.bigBoldOnBoard, { marginHorizontal: 15, marginBottom: 15 }]}
-            >
-
-              {constants.TXT_LOGIN_TO}
-
-            </Text>
-
-            <FloatingTitleTextInputField
-              attrName={fields.USER_NAME}
-              title={constants.TXT_USERNAME}
-              value={this.state[fields.USER_NAME]}
-              style={{
-                marginBottom: 15
-              }}
-              disabled={this.state.loading}
-              updateMasterState={this._updateMasterState}
-
-              otherTextInputProps={{   // here you can add other TextInput props of your choice
-                maxLength: 45,
-              }}
-            />
-
-
-            <FloatingTitleTextInputField
-              attrName={fields.PASSWORD}
-              title={constants.TXT_PASSWORD}
-              value={this.state[fields.PASSWORD]}
-              style={{
-                marginBottom: 15
-              }}
-              disabled={this.state.loading}
-              updateMasterState={this._updateMasterState}
-              otherTextInputProps={{   // here you can add other TextInput props of your choice
-                maxLength: 40,
-                secureTextEntry: true
-              }}
-            />
-
-          </View>
-
-
-          <TouchableWithoutFeedback
-            onPress={
-              () => {
-                this.navigateTo('Forgot')
-              }
-            }
-          >
-            <View
-              style={{
-                marginTop: 10,
-                flex: 1,
-                alignItems: 'flex-end'
-              }}
-            >
-              <Text
-                style={[styles.stripLabel, { color: colors.PRIMARY, fontFamily: global.FONT_FAMILY.PopinsReg }]}
-              >
-                {constants.TXT_FORGOT_PASS}
-              </Text>
-
-            </View>
-          </TouchableWithoutFeedback>
-
-          <Ripple
-            style={[styles.largeButton, { paddingHorizontal: 40, marginTop: 20}]}
-            rippleColor={colors.RIPPLE}
-            onPress={() => {
-              this.handleLogin();
+            style={{
+              flex: 1
             }}
           >
-              <Text
-                style={styles.buttonText}
-              >
-                {global.capitalize(constants.TXT_LOGIN)}{" "}
-              </Text>
-          </Ripple>
+
+            <Image
+              style={{
+                width: wp(100),
+                height: wp(60),
+                backgroundColor: colors.WHITE,
+              }}
+              resizeMode='contain'
+              source={require('../../assets/images/login_top.png')}
+            />
 
 
-          <View
-            style={{ marginTop: hp('33%'), flexDirection: 'row', justifyContent: 'center' }}
-          >
-
-            <Text
-              style={[styles.stripLabel, { fontFamily: global.FONT_FAMILY.PopinsReg, flex: undefined }]}
+            <Card
+              style={{
+                flex: 1, backgroundColor: colors.WHITE,
+                borderTopLeftRadius: 25,
+                borderTopRightRadius: 25,
+                marginTop: 10,
+                borderRadius: 0
+              }}
             >
-              {constants.TXT_DONT_ACCOUNT}
-            </Text>
 
-            <TouchableWithoutFeedback
-              onPress={
-                () => {
-                  this.navigateTo('Signup')
-                }
-              }
-            >
-              <Text
-                style={[styles.stripLabel, { color: colors.PRIMARY, flex: undefined, fontFamily: global.FONT_FAMILY.PopinsReg }]}
+              <View
+                style={{
+                  flex: 1, alignItems: 'center',
+                  padding: 25
+                }}
               >
-                {constants.TXT_SIGNUP}
-              </Text>
 
-            </TouchableWithoutFeedback>
+                <Image
+                  style={styles.circles}
+                  resizeMode='contain'
+                  source={require('../../assets/images/circles.png')}
+                />
 
+
+                <Image
+                  style={styles.logo}
+                  resizeMode='contain'
+                  source={require('../../assets/images/logo.png')}
+                />
+
+                <Text
+                  style={[styles.bigBoldOnBoard, {
+                    marginHorizontal: 15,
+                    marginTop: 30
+                  }]}
+                >
+
+                  {constants.TXT_WELCOME}
+
+                </Text>
+
+                <Text
+                  style={[styles.stripLabel, { color: colors.GREY }]}
+                >
+                  {constants.TXT_LOGIN_TO}
+                </Text>
+
+                <FloatingTitleTextInputField
+                  attrName={fields.USER_NAME}
+                  title={constants.TXT_EMAIL}
+                  value={this.state[fields.USER_NAME]}
+                  style={{
+                    marginBottom: 5,
+                    marginTop: 25
+                  }}
+                  keyboardType={constants.KEYBOARD_EMAIL}
+                  disabled={this.state.loading}
+                  updateMasterState={this._updateMasterState}
+                  otherTextInputProps={{   // here you can add other TextInput props of your choice
+                    maxLength: 45,
+                  }}
+                />
+
+
+                <FloatingTitleTextInputField
+                  attrName={fields.PASSWORD}
+                  title={constants.TXT_PASSWORD}
+                  securedText={true}
+                  value={this.state[fields.PASSWORD]}
+                  style={{
+                    marginBottom: 15
+                  }}
+                  disabled={this.state.loading}
+                  updateMasterState={this._updateMasterState}
+                  otherTextInputProps={{   // here you can add other TextInput props of your choice
+                    maxLength: 40,
+                    secureTextEntry: true
+                  }}
+                />
+
+                <View
+                  style={{
+                    alignSelf: 'stretch',
+                    alignItems: 'center',
+                    marginTop: 10,
+                    flexDirection: 'row'
+                  }}
+                >
+
+                  <Checkbox
+                    onCheckChanged={
+                      this.onCheckChanged.bind(this)
+                    }
+                    isChecked={this.state.isChecked}
+                  />
+
+                  <Text
+                    style={[styles.stripLabel, {
+                      color: colors.GREY3,
+                      fontFamily: global.FONT_FAMILY.PopinsReg, marginLeft: 15, marginTop: 4
+                    }]}
+                  >
+                    {constants.TXT_REMEMBER}
+                  </Text>
+
+
+                </View>
+
+                <Ripple
+                  style={[styles.largeButton, { paddingHorizontal: 40, marginTop: 20 }]}
+                  rippleColor={colors.RIPPLE}
+                  onPress={() => {
+                    this.handleLogin();
+                  }}
+                >
+                  <Text
+                    style={styles.buttonText}
+                  >
+                    {constants.TXT_LOGIN}{" "}
+                  </Text>
+                </Ripple>
+
+                <TouchableOpacity
+                  onPress={
+                    () => {
+                      this.navigateTo('Forgot')
+                    }
+                  }
+                >
+                  <View
+                    style={{
+                      marginTop: 15,
+                      flex: 1,
+                      marginBottom: 60,
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Text
+                      style={[styles.stripLabel, { color: colors.GREY3, fontFamily: global.FONT_FAMILY.PopinsReg }]}
+                    >
+                      {constants.TXT_FORGOT_PASS}
+                    </Text>
+
+                  </View>
+                </TouchableOpacity>
+
+
+              </View>
+
+            </Card>
 
           </View>
-
 
 
         </ScrollView>
-
 
         {
           this.state.loading &&
           global.getLoader()
         }
-
 
       </View>
     )

@@ -3,16 +3,19 @@
 import {
     StyleSheet,
     Dimensions,
-    PixelRatio,
+    StatusBar,
     Platform
 } from 'react-native';
 
 import { Typography, Colors } from 'react-native-ui-lib';
 import colors from '../colors';
 import fonts from '../../utility/fonts';
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 
-// import global from '../../utility/global';
-
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 const CARD_PREVIEW_WIDTH = 20
 const CARD_MARGIN = 5;
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -26,7 +29,6 @@ const base_unit = 16;
 const ratioX = DEVICE_WIDTH < 375 ? (DEVICE_WIDTH < 320 ? 0.75 : 0.875) : 1;
 const ratioY = DEVICE_HEIGHT < 568 ? (DEVICE_HEIGHT < 480 ? 0.75 : 0.875) : 1;
 const unit = base_unit * ratioX;
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 
 
@@ -56,7 +58,7 @@ var styles = {
     statusBar: {
         height: STATUSBAR_HEIGHT,
     },
-    iosElevation:{
+    iosElevation: {
         shadowColor: colors.BLACK,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.5,
@@ -103,7 +105,7 @@ var styles = {
     labelKey: {
         fontSize: fonts._16,
         flex: 1,
-        fontFamily: fonts.FONT_FAMILY.PopinsMed,    
+        fontFamily: fonts.FONT_FAMILY.PopinsMed,
         color: colors.BLACK
     },
     labelBorder: {
@@ -134,20 +136,20 @@ var styles = {
         fontSize: fonts._20,
         color: 'black'
     },
-    topLeft:{
-      position:'absolute',
-      top:10,
-      left:10
+    topLeft: {
+        position: 'absolute',
+        top: 10,
+        left: 10
     },
-    productKey:{
+    productKey: {
         fontSize: fonts._14,
-        fontFamily: fonts.FONT_FAMILY.PopinsBold,        
+        fontFamily: fonts.FONT_FAMILY.PopinsBold,
         color: colors.BLACK
     },
     bigBoldOnBoard: {
-        fontFamily: fonts.FONT_FAMILY.PopinsBold,
-        fontSize: fonts._24,
-        color: colors.PRIMARY
+        fontFamily: fonts.FONT_FAMILY.PopinsReg,
+        fontSize: fonts._28,
+        color: colors.BLACK
     },
     VBigText: {
         fontFamily: fonts.FONT_FAMILY.PopinsBold,
@@ -192,8 +194,8 @@ var styles = {
         fontSize: fonts._14,
         fontFamily: fonts.FONT_FAMILY.PopinsMed,
         borderRadius: 5,
-        marginTop:2,
-        borderWidth:1
+        marginTop: 2,
+        borderWidth: 1
     },
     filterItem: {
         paddingVertical: 8,
@@ -228,7 +230,7 @@ var styles = {
         fontFamily: fonts.FONT_FAMILY.PopinsReg,
         fontSize: fonts._12
     },
-    addressActions:{
+    addressActions: {
         padding: 3, backgroundColor: colors.SEPARATOR,
         borderRadius: 3
     },
@@ -237,17 +239,17 @@ var styles = {
         fontFamily: fonts.FONT_FAMILY.PopinsReg,
         fontSize: fonts.FONT_SIZE_SMALLER
     },
-    orderStatus:{
-      width:100,
-      borderRadius:5,
-      alignItems:'center',
-      justifyContent:'center'
+    orderStatus: {
+        width: 100,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     addressListCard: {
         flex: 1,
         flexDirection: 'row',
         paddingTop: 20, paddingBottom: 10,
-        alignItems:'center',
+        alignItems: 'center',
         paddingHorizontal: 15,
         backgroundColor: colors.WHITE
     },
@@ -256,41 +258,38 @@ var styles = {
         fontSize: fonts._18,
         fontFamily: fonts.FONT_FAMILY.PopinsMed,
     },
-    // plusContainer: {
-    //     width: 138, height: 40,
-    //     borderColor: colors.ListViewBG,
-    //     borderWidth: 1, borderRadius: 3,
-    //     flexDirection: 'row'
-    // },
-    plusContainer: {
-        height: 40,
-        width:120,
-        flexDirection: 'row',
-        alignItems:'center'
+    circles: {
+        height: wp(10),
+        width: wp(10),
     },
-    offer:{
-     height:18,
-     paddingHorizontal:8,
-     paddingVertical:5,
-     borderRadius:5,
-     alignItems:'center',
-     justifyContent:'center',
-     position:'absolute',
-     top:5,
-     left:5,
-     backgroundColor:colors.GRAD_RED2
+    logo: {
+        height: wp(6),
+        width: wp(40),
+        marginTop: 10
     },
-    offerText:{
-     color : colors.WHITE,
-     fontSize : fonts._8,
-     fontFamily:fonts.FONT_FAMILY.PopinsBold
+    offer: {
+        height: 18,
+        paddingHorizontal: 8,
+        paddingVertical: 5,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        top: 5,
+        left: 5,
+        backgroundColor: colors.GRAD_RED2
+    },
+    offerText: {
+        color: colors.WHITE,
+        fontSize: fonts._8,
+        fontFamily: fonts.FONT_FAMILY.PopinsBold
     },
     bottomView: {
         backgroundColor: colors.GREEN_4,
         position: 'absolute',
         alignSelf: 'stretch',
         bottom: 0,
-        borderRadius:5,
+        borderRadius: 5,
         flexDirection: 'row',
         paddingVertical: 10,
         paddingHorizontal: 10,
@@ -300,9 +299,9 @@ var styles = {
         position: 'absolute',
         alignSelf: 'stretch',
         bottom: 0,
-        borderWidth:1,
-        borderColor:colors.PRIMARY,
-        borderRadius:5,
+        borderWidth: 1,
+        borderColor: colors.PRIMARY,
+        borderRadius: 5,
         flexDirection: 'row',
         paddingVertical: 10,
         paddingHorizontal: 10,
@@ -327,7 +326,7 @@ var styles = {
     },
     addContainer: {
         height: 40,
-        marginBottom:5,
+        marginBottom: 5,
         borderColor: colors.GREEN,
     },
     bannerSeperator: {
@@ -339,7 +338,7 @@ var styles = {
     },
     productSeperator2: {
         height: 0.5,
-        marginHorizontal:25,
+        marginHorizontal: 25,
         backgroundColor: colors.SEPARATOR
     },
     banner: {
@@ -393,11 +392,11 @@ var styles = {
         paddingVertical: 10,
         justifyContent: "center",
         alignSelf: "center",
-        rippleColor: colors.PINK_4,
+        rippleColor: colors.WHITE,
         alignItems: "center",
         paddingHorizontal: 30,
-        borderRadius: 5,
-        backgroundColor: colors.GREEN,
+        borderRadius: 25,
+        backgroundColor: colors.PRIMARY,
     },
     largeButton2: {
         width: '100%',
@@ -405,7 +404,7 @@ var styles = {
         justifyContent: "center",
         alignSelf: "center",
         alignItems: "center",
-        borderRadius: 5,        
+        borderRadius: 5,
         paddingHorizontal: 15,
         backgroundColor: colors.TAB_INACTIVE,
     },
@@ -472,9 +471,9 @@ var styles = {
         borderRadius: 15, backgroundColor: colors.PRODUCT_BG
     },
 
-    productThumbnail:{
+    productThumbnail: {
         resizeMode: 'contain',
-        height: 110, 
+        height: 110,
         width: 110,
     },
 
@@ -484,9 +483,9 @@ var styles = {
         borderRadius: 8, backgroundColor: colors.PRODUCT_BG
     },
 
-    productThumbnailSmall:{
+    productThumbnailSmall: {
         resizeMode: 'contain',
-        height: 78, 
+        height: 78,
         width: 78,
     },
 

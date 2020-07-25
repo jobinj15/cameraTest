@@ -36,20 +36,8 @@ export default class PlusView extends Component {
                     }
                 ]}
             >
-                <View
-
-                >
-
-                    {/* <Text
-                            style={[styles.plusText,type==constants.TYPE_MINUS?{fontSize: 40}:{fontSize: 28}]}
-                        >
-                            {type == constants.TYPE_MINUS ? constants.MINUS_SYMBOL : constants.PLUS_SYMBOL}
-                        </Text> */}
-
-                    <Icon name={type == constants.TYPE_MINUS ? 'minus' : 'plus'} size={25} color={colors.GREY} />
-
-
-                </View>
+                    <Icon name={type == constants.TYPE_MINUS ? 'minus' : 'plus'} 
+                    size={type == constants.TYPE_MINUS?25:20} color={colors.GREY} />
 
             </Ripple>
 

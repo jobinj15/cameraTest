@@ -4,7 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import OnBoard from './onboardContainer';
 import Home from './MainContainer';
 import Login from './onboard/login';
-import Splash from '../screens/test/splashtest';
+import Splash from './Splash';
 
 const NavigationStack = createStackNavigator({
     Splash: {

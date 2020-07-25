@@ -38,19 +38,21 @@ export default class Categories extends Component {
     };
   }
 
-  static navigationOptions = ({navigation}) => {
+  static navigationOptions = ({ navigation }) => {
     //return header with Custom View which will replace the original header
     return {
       header: (
         <ToolBar
-          title='Categories'
+          title="Categories"
           showTitleH={false}
           showDropdown={true}
           showBackButton={false}
+          navigation={navigation}
         />
       ),
     };
   };
+
 
   componentDidMount() {
     const store = this.props.catHomeStore;
@@ -64,7 +66,7 @@ export default class Categories extends Component {
   //0 4 8
   render() {
     return (
-      <View style={[{}, this.props.style ? this.props.style : {}]}>
+      <View style={[styles.styleFull,{backgroundColor:colors.WHITE}]}>
 
         <FlatList
           navigation={this.props.navigation}

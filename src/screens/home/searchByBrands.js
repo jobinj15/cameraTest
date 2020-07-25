@@ -9,6 +9,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 var store;
 
 @inject("searchByBrandsStore")
+@observer
 export default class SearchByBrands extends Component {
     constructor(props) {
         super(props);

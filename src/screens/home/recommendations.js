@@ -102,7 +102,7 @@ export default class Reommendations extends Component {
                 <Text
                     style={[styles.stripLabel, {
                         textAlign: 'center', fontFamily: global.FONT_FAMILY.PopinsBold, flex: undefined
-                        , color: colors.BLACK, fontSize: fonts._18, paddingHorizontal: 15
+                        , color: colors.BLACK, fontSize: fonts._17, paddingHorizontal: 10
                     }]}
                 >{item.cart_quantity}</Text>
 
