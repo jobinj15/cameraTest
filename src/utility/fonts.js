@@ -7,6 +7,8 @@ const ratioX = DEVICE_WIDTH < 375 ? (DEVICE_WIDTH < 320 ? 0.75 : 0.875) : 1;
 const ratioY = DEVICE_HEIGHT < 568 ? (DEVICE_HEIGHT < 480 ? 0.75 : 0.875) : 1;
 const unit = base_unit * ratioX;
 
+// git remote set-url origin https://github.com/USERNAME/REPOSITORY.git
+
 export default fonts = {
   _6: normalize(6),
   _7: normalize(7),

@@ -12,12 +12,8 @@ import {
   SafeAreaView
 } from 'react-native';
 
-import { Provider } from "mobx-react";
-import stores from "./src/screens/stores";
-import ScreenContainer from './src/screens/ScreenContainer'
 import RootContainer from './src/screens/rootContainer'
-import SplashScreen from 'react-native-splash-screen';
-import 'mobx-react/batchingForReactNative'
+// import SplashScreen from 'react-native-splash-screen';
 
 class App extends Component {
 
@@ -60,12 +56,10 @@ class App extends Component {
 
   render() {
     return (
-      <Provider {...stores}>
             <SafeAreaView style={stylesLocal.container}>
 
             <RootContainer />
             </SafeAreaView>
-      </Provider>
 
     );
   }
